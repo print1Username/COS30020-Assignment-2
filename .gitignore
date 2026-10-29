@@ -1,0 +1,65 @@
+# ==========================================
+# 1. Dependency Directories (Core: NEVER commit third-party libraries)
+# ==========================================
+/vendor/
+/node_modules/
+
+# ==========================================
+# 2. Environment Variables & Sensitive Configs (Core: Prevent leaks of passwords/keys)
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.env
+
+# ==========================================
+# 3. Code Editors & IDE Configurations
+# ==========================================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# ==========================================
+# 4. Frontend Build Artifacts & Temp Files (If using Vite/Webpack, etc.)
+# ==========================================
+/dist/
+/build/
+.output/
+.temp/
+.cache/
+.vite/
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+# 5. PHP Runtime Logs, Caches & Test Artifacts
+# ==========================================
+*.log
+/logs/
+/cache/
+/storage/logs/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
+.phpunit.result.cache
+
+# ==========================================
+# 6. Operating System Junk Files
+# ==========================================
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# ==========================================
+# 7. User Uploads / Media Assets (Optional: Adjust based on project)
+# ==========================================
+/uploads/
+/public/uploads/
