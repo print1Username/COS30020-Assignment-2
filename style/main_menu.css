@@ -1,0 +1,342 @@
+/*
+ * ==========================
+ * Main Menu
+ * ==========================
+ */
+
+:root {
+    --main-menu-purple: #6f42c1;
+    --main-menu-purple-dark: #59359a;
+    --main-menu-purple-light: #8b68d1;
+    --main-menu-background: #f8f7fc;
+    --main-menu-border: #e5e1ef;
+    --main-menu-text: #212529;
+    --main-menu-muted: #6c757d;
+    --main-menu-white: #ffffff;
+}
+
+
+/*
+ * ==========================
+ * Page
+ * ==========================
+ */
+
+body {
+    background-color: var(--main-menu-background);
+    color: var(--main-menu-text);
+}
+
+
+/*
+ * ==========================
+ * Hero Section
+ * ==========================
+ */
+
+.main-menu-hero {
+    padding: 72px 0 64px;
+    background-color: var(--main-menu-white);
+    border-bottom: 1px solid var(--main-menu-border);
+}
+
+.main-menu-hero-content {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.main-menu-eyebrow {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: var(--main-menu-purple);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.main-menu-hero h1 {
+    margin-bottom: 16px;
+    color: var(--main-menu-text);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.main-menu-hero p {
+    max-width: 650px;
+    margin: 0 auto;
+    color: var(--main-menu-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+
+/*
+ * ==========================
+ * Main Menu Section
+ * ==========================
+ */
+
+.main-menu-section {
+    padding: 56px 0 32px;
+}
+
+.main-menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+
+/*
+ * ==========================
+ * Menu Cards
+ * ==========================
+ */
+
+.main-menu-card {
+    display: flex;
+    min-height: 260px;
+    padding: 28px;
+    background-color: var(--main-menu-white);
+    border: 1px solid var(--main-menu-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(33, 37, 41, 0.04);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.main-menu-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--main-menu-purple-light);
+    box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
+}
+
+.main-menu-card-icon {
+    display: flex;
+    flex: 0 0 52px;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin-right: 20px;
+    color: var(--main-menu-purple);
+    background-color: #f0ebf8;
+    border-radius: 10px;
+    font-size: 1.4rem;
+}
+
+.main-menu-card-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.main-menu-card h2 {
+    margin: 2px 0 10px;
+    color: var(--main-menu-text);
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.main-menu-card p {
+    margin-bottom: 20px;
+    color: var(--main-menu-muted);
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.main-menu-card-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding: 8px 16px;
+    color: var(--main-menu-purple);
+    background-color: transparent;
+    border: 1px solid var(--main-menu-purple);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.main-menu-card-button:hover,
+.main-menu-card-button:focus {
+    color: var(--main-menu-white);
+    background-color: var(--main-menu-purple);
+    border-color: var(--main-menu-purple);
+}
+
+.main-menu-card-button i {
+    transition: transform 0.2s ease;
+}
+
+.main-menu-card-button:hover i {
+    transform: translateX(3px);
+}
+
+
+/*
+ * ==========================
+ * Login Section
+ * ==========================
+ */
+
+.main-menu-login-section {
+    padding: 24px 0 64px;
+}
+
+.main-menu-login-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px 32px;
+    background-color: var(--main-menu-purple);
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(111, 66, 193, 0.18);
+}
+
+.main-menu-login-content {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.main-menu-login-content > i {
+    flex-shrink: 0;
+    color: var(--main-menu-white);
+    font-size: 2.25rem;
+}
+
+.main-menu-login-content h2 {
+    margin-bottom: 5px;
+    color: var(--main-menu-white);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.main-menu-login-content p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.main-menu-login-button {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 110px;
+    padding: 10px 20px;
+    color: var(--main-menu-purple);
+    background-color: var(--main-menu-white);
+    border: 1px solid var(--main-menu-white);
+    border-radius: 6px;
+    font-weight: 600;
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.main-menu-login-button:hover,
+.main-menu-login-button:focus {
+    color: var(--main-menu-purple-dark);
+    background-color: #f3f0f8;
+    border-color: #f3f0f8;
+}
+
+
+/*
+ * ==========================
+ * Responsive Design
+ * ==========================
+ */
+
+@media (max-width: 767.98px) {
+    .main-menu-hero {
+        padding: 52px 0 44px;
+    }
+
+    .main-menu-hero h1 {
+        font-size: 2rem;
+    }
+
+    .main-menu-hero p {
+        font-size: 0.95rem;
+    }
+
+    .main-menu-section {
+        padding: 40px 0 24px;
+    }
+
+    .main-menu-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .main-menu-card {
+        min-height: 0;
+        padding: 24px;
+    }
+
+    .main-menu-login-section {
+        padding: 18px 0 48px;
+    }
+
+    .main-menu-login-card {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 24px;
+    }
+
+    .main-menu-login-content {
+        align-items: flex-start;
+    }
+
+    .main-menu-login-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .main-menu-card {
+        display: block;
+    }
+
+    .main-menu-card-icon {
+        margin-right: 0;
+        margin-bottom: 18px;
+    }
+
+    .main-menu-card h2 {
+        font-size: 1.25rem;
+    }
+
+    .main-menu-login-content {
+        gap: 14px;
+    }
+
+    .main-menu-login-content > i {
+        font-size: 1.9rem;
+    }
+
+    .main-menu-login-content h2 {
+        font-size: 1.15rem;
+    }
+
+    .main-menu-login-content p {
+        font-size: 0.85rem;
+    }
+}

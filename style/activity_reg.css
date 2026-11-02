@@ -1,0 +1,516 @@
+/*
+ * ==========================
+ * Activity Registration Page
+ * Bootstrap-inspired Purple + White
+ * ==========================
+ */
+
+:root {
+    --activity-reg-purple: #6f42c1;
+    --activity-reg-purple-dark: #59359a;
+    --activity-reg-purple-light: #8b68d1;
+    --activity-reg-purple-soft: #f3effb;
+    --activity-reg-border: #e5e1ec;
+    --activity-reg-text: #212529;
+    --activity-reg-muted: #6c757d;
+    --activity-reg-white: #ffffff;
+}
+
+/*
+ * ==========================
+ * Page
+ * ==========================
+ */
+
+.activity-registration-page {
+    min-height: calc(100vh - 70px);
+    background-color: #ffffff;
+}
+
+.activity-registration-page .container {
+    max-width: 1000px;
+}
+
+/*
+ * ==========================
+ * Back Button
+ * ==========================
+ */
+
+.activity-registration-back {
+    margin-bottom: 1.5rem;
+}
+
+.activity-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--activity-reg-purple);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.activity-back-button:hover,
+.activity-back-button:focus {
+    color: var(--activity-reg-purple-dark);
+}
+
+.activity-back-button i {
+    font-size: 1rem;
+}
+
+/*
+ * ==========================
+ * Page Heading
+ * ==========================
+ */
+
+.activity-registration-heading {
+    margin-bottom: 2rem;
+}
+
+.activity-registration-eyebrow {
+    display: inline-block;
+    margin-bottom: 0.4rem;
+    color: var(--activity-reg-purple);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.activity-registration-heading h1 {
+    margin: 0;
+    color: var(--activity-reg-text);
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.activity-registration-heading p {
+    max-width: 700px;
+    margin: 0.55rem 0 0;
+    color: var(--activity-reg-muted);
+    line-height: 1.6;
+}
+
+/*
+ * ==========================
+ * Alert
+ * ==========================
+ */
+
+.activity-registration-alert {
+    margin-bottom: 1.5rem;
+    border-radius: 0.6rem;
+}
+
+/*
+ * ==========================
+ * Registration Card
+ * ==========================
+ */
+
+.activity-registration-card {
+    margin-bottom: 1.5rem;
+    padding: 1.75rem;
+    border: 1px solid var(--activity-reg-border);
+    border-radius: 0.8rem;
+    background-color: var(--activity-reg-white);
+    box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.04);
+}
+
+/*
+ * ==========================
+ * Card Header
+ * ==========================
+ */
+
+.activity-registration-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: -1.75rem -1.75rem 1.5rem;
+    padding: 1.15rem 1.75rem;
+    border-bottom: 0;
+    border-radius: 0.8rem 0.8rem 0 0;
+    background-color: var(--activity-reg-purple);
+    color: var(--activity-reg-white);
+}
+
+.activity-registration-card-header h2 {
+    margin: 0;
+    color: var(--activity-reg-white);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.activity-registration-card-header > i {
+    color: var(--activity-reg-white);
+    font-size: 1.5rem;
+}
+
+.activity-section-eyebrow {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+/*
+ * ==========================
+ * Selected Activity Card
+ * ==========================
+ */
+
+.activity-selected-card {
+    border-color: var(--activity-reg-purple);
+    background-color: var(--activity-reg-purple);
+    color: var(--activity-reg-white);
+    box-shadow: 0 0.3rem 1rem rgba(111, 66, 193, 0.18);
+}
+
+.activity-selected-card .activity-registration-card-header {
+    background-color: transparent;
+    color: var(--activity-reg-white);
+}
+
+.activity-selected-card .activity-registration-card-header h2 {
+    color: var(--activity-reg-white);
+}
+
+.activity-selected-card .activity-registration-card-header > i {
+    color: var(--activity-reg-white);
+}
+
+.activity-selected-card .activity-section-eyebrow {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/*
+ * ==========================
+ * Selected Activity Details
+ * ==========================
+ */
+
+.activity-detail-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.activity-detail-block {
+    min-width: 0;
+}
+
+.activity-detail-title {
+    margin-bottom: 1.5rem;
+}
+
+.activity-detail-title h3 {
+    margin: 0.35rem 0 0;
+    color: var(--activity-reg-text);
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.activity-detail-label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--activity-reg-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.activity-detail-value {
+    display: block;
+    color: var(--activity-reg-text);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/*
+ * ==========================
+ * Selected Activity Text
+ * ==========================
+ */
+
+.activity-selected-card .activity-detail-title h3 {
+    color: var(--activity-reg-white);
+}
+
+.activity-selected-card .activity-detail-label {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.activity-selected-card .activity-detail-value {
+    color: var(--activity-reg-white);
+}
+
+/*
+ * ==========================
+ * Registration Fee
+ * ==========================
+ */
+
+.activity-fee-block {
+    margin-top: 0.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.activity-fee-value {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--activity-reg-purple-dark);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.activity-selected-card .activity-fee-value {
+    color: var(--activity-reg-white);
+}
+
+/*
+ * ==========================
+ * User Details Form
+ * ==========================
+ */
+
+.activity-form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.activity-form-row:last-child {
+    margin-bottom: 0;
+}
+
+.activity-form-field {
+    min-width: 0;
+}
+
+.activity-form-field .form-label {
+    margin-bottom: 0.45rem;
+    color: var(--activity-reg-text);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.activity-form-field .form-control {
+    min-height: 46px;
+    border-color: var(--activity-reg-border);
+    border-radius: 0.5rem;
+    color: var(--activity-reg-text);
+    box-shadow: none;
+}
+
+.activity-form-field .form-control:focus {
+    border-color: var(--activity-reg-purple);
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.12);
+}
+
+.activity-form-field .form-control::placeholder {
+    color: #adb5bd;
+}
+
+/*
+ * ==========================
+ * Form Actions
+ * ==========================
+ */
+
+.activity-registration-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.activity-cancel-button,
+.activity-submit-button {
+    min-height: 44px;
+    padding: 0.65rem 1.1rem;
+    border-radius: 0.5rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.activity-cancel-button {
+    border: 1px solid var(--activity-reg-border);
+    background-color: var(--activity-reg-white);
+    color: var(--activity-reg-muted);
+}
+
+.activity-cancel-button:hover,
+.activity-cancel-button:focus {
+    border-color: var(--activity-reg-purple);
+    background-color: var(--activity-reg-purple-soft);
+    color: var(--activity-reg-purple-dark);
+}
+
+.activity-submit-button {
+    border: 1px solid var(--activity-reg-purple);
+    background-color: var(--activity-reg-purple);
+    color: var(--activity-reg-white);
+}
+
+.activity-submit-button:hover,
+.activity-submit-button:focus {
+    border-color: var(--activity-reg-purple-dark);
+    background-color: var(--activity-reg-purple-dark);
+    color: var(--activity-reg-white);
+    transform: translateY(-1px);
+    box-shadow: 0 0.35rem 0.9rem rgba(111, 66, 193, 0.2);
+}
+
+.activity-submit-button:disabled {
+    border-color: var(--activity-reg-purple);
+    background-color: var(--activity-reg-purple);
+    color: var(--activity-reg-white);
+    opacity: 0.75;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/*
+ * ==========================
+ * Tablet
+ * ==========================
+ */
+
+@media (max-width: 770px) {
+    .activity-registration-heading h1 {
+        font-size: 1.9rem;
+    }
+
+    .activity-registration-card {
+        padding: 1.4rem;
+    }
+
+    .activity-detail-row {
+        gap: 1rem;
+    }
+
+    .activity-form-row {
+        gap: 1rem;
+    }
+}
+
+/*
+ * ==========================
+ * Mobile
+ * ==========================
+ */
+
+@media (max-width: 575px) {
+    .activity-registration-page .container {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .activity-registration-heading {
+        margin-bottom: 1.5rem;
+    }
+
+    .activity-registration-heading h1 {
+        font-size: 1.7rem;
+    }
+
+    .activity-registration-heading p {
+        font-size: 0.9rem;
+    }
+
+    .activity-registration-card {
+        padding: 1.2rem;
+        border-radius: 0.7rem;
+    }
+
+    .activity-registration-card-header {
+        margin-right: -1.2rem;
+        margin-bottom: 1.25rem;
+        margin-left: -1.2rem;
+        padding-right: 1.2rem;
+        padding-left: 1.2rem;
+    }
+
+    .activity-registration-card-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .activity-detail-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .activity-detail-title {
+        margin-bottom: 1.25rem;
+    }
+
+    .activity-detail-title h3 {
+        font-size: 1.2rem;
+    }
+
+    .activity-form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .activity-registration-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .activity-cancel-button,
+    .activity-submit-button {
+        width: 100%;
+    }
+}
+
+/*
+ * ==========================
+ * User Details Header
+ * ==========================
+ */
+
+.activity-registration-card:not(.activity-selected-card),
+    .activity-registration-card-header {
+    background-color: transparent;
+    color: var(--activity-reg-text);
+}
+
+.activity-registration-card:not(.activity-selected-card),
+    .activity-registration-card-header h2 {
+    color: var(--activity-reg-text);
+}
+
+.activity-registration-card:not(.activity-selected-card),
+    .activity-registration-card-header > i {
+    color: var(--activity-reg-purple);
+}
+
+.activity-registration-card:not(.activity-selected-card),
+    .activity-section-eyebrow {
+    color: var(--activity-reg-muted);
+}

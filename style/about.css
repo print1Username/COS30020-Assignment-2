@@ -1,0 +1,312 @@
+:root {
+    --about-purple: #6f42c1;
+    --about-dark-purple: #59359a;
+    --about-light-purple: #f3effb;
+    --about-border: #dee2e6;
+    --about-text: #212529;
+    --about-muted: #6c757d;
+    --about-white: #ffffff;
+}
+
+.about-page {
+    background-color: #ffffff;
+    color: var(--about-text);
+    min-height: 100vh;
+    padding-bottom: 5rem;
+}
+
+/*
+ * ==========================
+ * Hero Section
+ * ==========================
+ */
+
+.about-hero {
+    background-color: var(--about-purple);
+    color: #ffffff;
+    padding: 3.5rem 0 4rem;
+}
+
+.about-hero-content {
+    max-width: 840px;
+}
+
+.about-eyebrow,
+.about-card-label {
+    color: var(--about-purple);
+    display: inline-block;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.about-hero .about-eyebrow {
+    color: #e9ddff;
+}
+
+.about-hero h1 {
+    color: #ffffff;
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -.03em;
+    line-height: 1.1;
+    margin: .8rem 0 1.25rem;
+}
+
+.about-hero p {
+    color: #f3effb;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 640px;
+}
+
+/*
+ * ==========================
+ * Main Content
+ * ==========================
+ */
+
+.about-content {
+    margin-top: 1rem;
+}
+
+.about-card,
+.about-video-card {
+    background-color: var(--about-white);
+    border: 1px solid var(--about-border);
+    border-radius: .75rem;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .08);
+}
+
+.about-card {
+    padding: 2rem;
+}
+
+.about-card-icon {
+    align-items: center;
+    background-color: var(--about-light-purple);
+    border-radius: .5rem;
+    color: var(--about-purple);
+    display: inline-flex;
+    font-size: 1.25rem;
+    height: 2.75rem;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    width: 2.75rem;
+}
+
+.about-card h2,
+.about-section-heading h2 {
+    color: var(--about-text);
+    font-weight: 700;
+    letter-spacing: -.02em;
+}
+
+.about-card h2 {
+    font-size: 1.5rem;
+    margin: .5rem 0 1rem;
+}
+
+.about-card p,
+.about-section-heading p {
+    color: var(--about-muted);
+    line-height: 1.7;
+}
+
+.about-tech-list,
+.about-progress-list {
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+}
+
+.about-tech-list li,
+.about-progress-list li {
+    align-items: flex-start;
+    display: flex;
+    gap: .7rem;
+    line-height: 1.6;
+    padding: .5rem 0;
+}
+
+.about-tech-list i {
+    color: #198754;
+}
+
+/*
+ * ==========================
+ * Section
+ * ==========================
+ */
+
+.about-section {
+    padding-top: 5rem;
+}
+
+.about-section-heading {
+    margin-bottom: 1.75rem;
+}
+
+.about-section-heading h2 {
+    font-size: clamp(1.9rem, 4vw, 2.5rem);
+    margin: .5rem 0;
+}
+
+.about-section-heading p {
+    margin-bottom: 0;
+}
+
+/*
+ * ==========================
+ * Progress Cards
+ * ==========================
+ */
+
+.about-progress-card h3,
+.about-future-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.about-progress-card h3 i {
+    color: #198754;
+}
+
+.about-progress-list li::before {
+    color: #198754;
+    content: "✓";
+    font-weight: 700;
+}
+
+/*
+ * ==========================
+ * Future / Assignment 2
+ * ==========================
+ */
+
+.about-future-card {
+    background-color: #fff8e1;
+    border-color: #ffe69c;
+}
+
+.about-future-card h3 i {
+    color: #997404;
+}
+
+.about-future-card .about-progress-list li::before {
+    color: #997404;
+    content: "•";
+    font-size: 1.25rem;
+    line-height: 1.15;
+}
+
+.about-note {
+    color: var(--about-muted);
+    font-size: .9rem;
+    margin-top: 1rem;
+}
+
+/*
+ * ==========================
+ * Video Section
+ * ==========================
+ */
+
+.about-video-section {
+    padding-top: 5rem;
+}
+
+.about-video-card {
+    margin: 2rem auto 0;
+    max-width: 900px;
+    overflow: hidden;
+    padding: .75rem;
+}
+
+.about-video-card iframe {
+    border: 0;
+    border-radius: .5rem;
+    display: block;
+}
+
+/*
+ * ==========================
+ * Buttons
+ * ==========================
+ */
+
+.about-video-link,
+.about-home-button {
+    align-items: center;
+    background-color: var(--about-purple);
+    border: 1px solid var(--about-purple);
+    color: #ffffff;
+    display: inline-flex;
+    font-weight: 600;
+    gap: .5rem;
+    justify-content: center;
+    transition: background-color .15s ease,
+    border-color .15s ease,
+    box-shadow .15s ease;
+}
+
+.about-video-link {
+    margin: 1rem .25rem .25rem;
+}
+
+.about-video-link:hover,
+.about-home-button:hover {
+    background-color: var(--about-dark-purple);
+    border-color: var(--about-dark-purple);
+    color: #ffffff;
+}
+
+.about-video-link:focus,
+.about-home-button:focus {
+    box-shadow: 0 0 0 .25rem rgba(111, 66, 193, .25);
+    outline: 0;
+}
+
+.about-home-link {
+    padding-top: 4rem;
+}
+
+.about-home-button {
+    border-radius: .5rem;
+    padding: .75rem 1.25rem;
+}
+
+/*
+ * ==========================
+ * Responsive
+ * ==========================
+ */
+
+@media (max-width: 575.98px) {
+    .about-hero {
+        padding: 4rem 0 5rem;
+    }
+
+    .about-content {
+        margin-top: -2rem;
+    }
+
+    .about-card {
+        padding: 1.5rem;
+    }
+
+    .about-section,
+    .about-video-section {
+        padding-top: 3.5rem;
+    }
+
+    .about-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .about-hero p {
+        font-size: 1rem;
+    }
+}

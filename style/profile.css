@@ -1,0 +1,928 @@
+/*
+ * ==========================================================
+ * Profile Pages
+ * ==========================================================
+ *
+ * Used by:
+ * profile.php
+ * update_profile.php
+ *
+ * Bootstrap-inspired purple + white design
+ */
+
+:root {
+    --profile-purple: #6f42c1;
+    --profile-purple-dark: #59359a;
+    --profile-purple-light: #8b68d1;
+    --profile-border: #dee2e6;
+    --profile-background: #ffffff;
+    --profile-light-background: #f8f9fa;
+    --profile-text: #212529;
+    --profile-muted: #6c757d;
+    --profile-danger: #dc3545;
+}
+
+/*
+ * ==========================================================
+ * Shared Page
+ * ==========================================================
+ */
+
+.profile-page {
+    max-width: 1200px;
+}
+
+/*
+ * ==========================================================
+ * Profile Page Heading
+ * ==========================================================
+ */
+
+.profile-page-heading,
+.profile-heading {
+    margin-bottom: 2rem;
+}
+
+.profile-page-heading h1,
+.profile-heading h1 {
+    margin: 0;
+    color: var(--profile-text);
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.profile-page-heading p,
+.profile-heading p {
+    margin: 0.5rem 0 0;
+    color: var(--profile-muted);
+    font-size: 0.95rem;
+}
+
+/*
+ * ==========================================================
+ * Profile Layout
+ * ==========================================================
+ */
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 3fr 7fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/*
+ * ==========================================================
+ * Shared Profile Card
+ * ==========================================================
+ */
+
+.profile-card {
+    background-color: var(--profile-background);
+    border: 1px solid var(--profile-border);
+    border-radius: 0.75rem;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 0.125rem 0.35rem rgba(0, 0, 0, 0.06);
+}
+
+/*
+ * ==========================================================
+ * Profile Page Left Card
+ * ==========================================================
+ */
+
+.profile-layout .profile-card {
+    text-align: center;
+}
+
+/*
+ * ==========================================================
+ * Profile Picture
+ * ==========================================================
+ */
+
+.profile-picture-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-picture {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-picture-default {
+    background-color: var(--profile-light-background);
+    border: 1px solid var(--profile-border);
+    color: var(--profile-purple);
+}
+
+.profile-picture-default i {
+    font-size: 6rem;
+    line-height: 1;
+}
+
+/*
+ * ==========================================================
+ * Profile Picture Actions
+ * ==========================================================
+ */
+
+.profile-picture-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.profile-upload-button,
+.profile-camera-button {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.profile-upload-button {
+    background-color: var(--profile-purple);
+    border: 1px solid var(--profile-purple);
+    color: #ffffff;
+}
+
+.profile-upload-button:hover,
+.profile-upload-button:focus {
+    background-color: var(--profile-purple-dark);
+    border-color: var(--profile-purple-dark);
+    color: #ffffff;
+}
+
+.profile-camera-button {
+    background-color: #ffffff;
+    border: 1px solid var(--profile-purple);
+    color: var(--profile-purple);
+}
+
+.profile-camera-button:hover,
+.profile-camera-button:focus {
+    background-color: var(--profile-purple);
+    border-color: var(--profile-purple);
+    color: #ffffff;
+}
+
+.profile-upload-button:active,
+.profile-camera-button:active {
+    transform: translateY(1px);
+}
+
+/*
+ * ==========================================================
+ * Profile Information
+ * ==========================================================
+ */
+
+.profile-information {
+    position: relative;
+    min-width: 0;
+}
+
+/*
+ * ==========================================================
+ * Profile Actions
+ * ==========================================================
+ */
+
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.profile-edit-button,
+.profile-save-button,
+.profile-cancel-button,
+.profile-form-actions .btn {
+    padding: 0.55rem 1.25rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.profile-edit-button,
+.profile-save-button,
+.profile-form-actions .btn-primary {
+    background-color: var(--profile-purple);
+    border: 1px solid var(--profile-purple);
+    color: #ffffff;
+}
+
+.profile-edit-button:hover,
+.profile-save-button:hover,
+.profile-form-actions .btn-primary:hover {
+    background-color: var(--profile-purple-dark);
+    border-color: var(--profile-purple-dark);
+    color: #ffffff;
+}
+
+.profile-cancel-button {
+    background-color: #ffffff;
+    border: 1px solid var(--profile-purple);
+    color: var(--profile-purple);
+}
+
+.profile-cancel-button:hover {
+    background-color: var(--profile-purple);
+    border-color: var(--profile-purple);
+    color: #ffffff;
+}
+
+/*
+ * ==========================================================
+ * Fixed Profile Information
+ * ==========================================================
+ */
+
+.profile-fixed-information {
+    display: grid;
+    grid-template-columns: 4fr 6fr;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+}
+
+.profile-fixed-field {
+    min-width: 0;
+}
+
+.profile-fixed-field label,
+.profile-field label,
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--profile-text);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.profile-fixed-value {
+    min-height: 24px;
+    color: var(--profile-text);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/*
+ * ==========================================================
+ * Profile Information Fields
+ * ==========================================================
+ */
+
+.profile-field {
+    margin-bottom: 1.25rem;
+}
+
+.profile-field-value {
+    min-height: 24px;
+    width: 100%;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    color: var(--profile-text);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.profile-hometown-field {
+    margin-bottom: 1.75rem;
+}
+
+.profile-hometown-value {
+    min-height: 120px;
+    white-space: normal;
+}
+
+/*
+ * ==========================================================
+ * Academic Integrity
+ * ==========================================================
+ */
+
+.academic-integrity-section {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--profile-border);
+}
+
+.academic-integrity-section h2 {
+    margin-bottom: 0.75rem;
+    color: var(--profile-text);
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.academic-integrity-box {
+    min-height: 100px;
+    padding: 1rem;
+    background-color: var(--profile-light-background);
+    border: 1px solid var(--profile-border);
+    border-radius: 0.375rem;
+    color: var(--profile-text);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/*
+ * ==========================================================
+ * Update Profile Page
+ * ==========================================================
+ */
+
+.profile-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--profile-purple);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.profile-back-button:hover {
+    color: var(--profile-purple-dark);
+}
+
+.profile-back-button i {
+    font-size: 1rem;
+}
+
+/*
+ * ==========================================================
+ * Update Profile Card
+ * ==========================================================
+ */
+
+.profile-page > .profile-card {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+/*
+ * ==========================================================
+ * Update Profile Image Section
+ * ==========================================================
+ */
+
+.profile-image-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--profile-border);
+}
+
+.profile-image-wrapper {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    border: 1px solid var(--profile-border);
+    border-radius: 50%;
+    background-color: var(--profile-light-background);
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.profile-image-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.profile-image-button {
+    min-width: 150px;
+    padding: 0.6rem 1rem;
+    background-color: #ffffff;
+    border: 1px solid var(--profile-purple);
+    border-radius: 0.375rem;
+    color: var(--profile-purple);
+    font-weight: 500;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.profile-image-button:hover {
+    background-color: var(--profile-purple);
+    border-color: var(--profile-purple);
+    color: #ffffff;
+}
+
+.profile-image-button:active {
+    transform: translateY(1px);
+}
+
+/*
+ * ==========================================================
+ * Update Profile Form
+ * ==========================================================
+ */
+
+.profile-page > .profile-card form {
+    width: 100%;
+}
+
+.profile-page > .profile-card .mb-3 {
+    margin-bottom: 1.25rem !important;
+}
+
+.profile-page > .profile-card .form-control,
+.profile-page > .profile-card .form-select {
+    min-height: 46px;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--profile-border);
+    border-radius: 0.375rem;
+    color: var(--profile-text);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    box-shadow: none;
+}
+
+.profile-page > .profile-card textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.profile-page > .profile-card .form-control:focus,
+.profile-page > .profile-card .form-select:focus {
+    border-color: var(--profile-purple);
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.15);
+}
+
+.profile-page > .profile-card .form-control::placeholder {
+    color: var(--profile-muted);
+}
+
+/*
+ * ==========================================================
+ * Password Input
+ * ==========================================================
+ */
+
+.profile-page > .profile-card .input-group {
+    position: relative;
+}
+
+.profile-page > .profile-card .input-group .form-control {
+    padding-right: 3rem;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    z-index: 5;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--profile-muted);
+    cursor: pointer;
+}
+
+.password-toggle:hover {
+    color: var(--profile-purple);
+}
+
+.password-toggle:focus-visible {
+    outline: 2px solid var(--profile-purple);
+    outline-offset: -2px;
+}
+
+/*
+ * ==========================================================
+ * Update Form Buttons
+ * ==========================================================
+ */
+
+.profile-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--profile-border);
+}
+
+.profile-form-actions .btn-secondary {
+    background-color: #ffffff;
+    border: 1px solid var(--profile-border);
+    color: var(--profile-text);
+}
+
+.profile-form-actions .btn-secondary:hover {
+    background-color: var(--profile-light-background);
+    border-color: #adb5bd;
+    color: var(--profile-text);
+}
+
+/*
+ * ==========================================================
+ * Update Profile Alert
+ * ==========================================================
+ */
+
+.profile-page > .profile-card .alert {
+    margin-bottom: 1.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.9rem;
+}
+
+/*
+ * ==========================================================
+ * Profile Crop Modal
+ * ==========================================================
+ */
+
+.profile-crop-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.profile-crop-modal.active {
+    display: flex;
+}
+
+.profile-crop-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.profile-crop-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    overflow: hidden;
+    background-color: #000000;
+    border-radius: 10px;
+}
+
+#profileCropCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.profile-crop-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.profile-crop-cancel,
+.profile-crop-confirm {
+    position: static;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.profile-crop-cancel {
+    background-color: #ffffff;
+    color: var(--profile-text);
+}
+
+.profile-crop-cancel:hover {
+    background-color: #e9ecef;
+    color: var(--profile-text);
+}
+
+.profile-crop-confirm {
+    background-color: var(--profile-purple);
+    color: #ffffff;
+}
+
+.profile-crop-confirm:hover {
+    background-color: var(--profile-purple-dark);
+    color: #ffffff;
+}
+
+.profile-crop-cancel:active,
+.profile-crop-confirm:active {
+    transform: translateY(1px);
+}
+
+@media (max-width: 575.98px) {
+    .profile-crop-modal {
+        padding: 16px;
+    }
+
+    .profile-crop-container {
+        width: min(400px, 85vw);
+        height: min(400px, 85vw);
+    }
+}
+
+@media (max-width: 375px) {
+    .profile-crop-container {
+        width: 88vw;
+        height: 88vw;
+    }
+}
+
+/*
+ * ==========================================================
+ * Focus States
+ * ==========================================================
+ */
+
+.profile-edit-button:focus-visible,
+.profile-save-button:focus-visible,
+.profile-cancel-button:focus-visible,
+.profile-upload-button:focus-visible,
+.profile-camera-button:focus-visible,
+.profile-image-button:focus-visible,
+.profile-back-button:focus-visible,
+.profile-crop-button:focus-visible,
+.profile-form-actions .btn:focus-visible {
+    outline: 3px solid rgba(111, 66, 193, 0.25);
+    outline-offset: 2px;
+}
+
+/*
+ * ==========================================================
+ * Tablet
+ * ==========================================================
+ */
+
+@media (max-width: 991.98px) {
+    .profile-page {
+        max-width: 960px;
+    }
+
+    .profile-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .profile-layout .profile-card {
+        max-width: 500px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .profile-information {
+        width: 100%;
+    }
+
+    .profile-page > .profile-card {
+        max-width: 700px;
+    }
+}
+
+/*
+ * ==========================================================
+ * Mobile
+ * ==========================================================
+ */
+
+@media (max-width: 575.98px) {
+    .profile-page {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .profile-page-heading,
+    .profile-heading {
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-page-heading h1,
+    .profile-heading h1 {
+        font-size: 1.75rem;
+    }
+
+    .profile-page-heading p,
+    .profile-heading p {
+        font-size: 0.9rem;
+    }
+
+    .profile-layout {
+        gap: 1.5rem;
+    }
+
+    .profile-layout .profile-card {
+        padding: 1.5rem 1rem;
+        border-radius: 0.625rem;
+    }
+
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+    }
+
+    .profile-picture-default i {
+        font-size: 5rem;
+    }
+
+    .profile-actions {
+        justify-content: flex-start;
+        margin-bottom: 1.25rem;
+    }
+
+    .profile-fixed-information {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .profile-field {
+        margin-bottom: 1rem;
+    }
+
+    .profile-hometown-value {
+        min-height: 110px;
+    }
+
+    .academic-integrity-section {
+        margin-top: 2rem;
+    }
+
+    .profile-page > .profile-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .profile-image-wrapper {
+        width: 150px;
+        height: 150px;
+    }
+
+    .profile-image-actions {
+        flex-direction: column;
+    }
+
+    .profile-image-button {
+        width: 100%;
+    }
+
+    .profile-form-actions {
+        justify-content: stretch;
+    }
+
+    .profile-form-actions .btn {
+        flex: 1;
+    }
+
+    .profile-crop-modal {
+        padding: 1rem;
+    }
+
+    .profile-crop-container {
+        width: min(92vw, 600px);
+        height: min(92vw, 600px);
+    }
+}
+
+/*
+ * ==========================================================
+ * Very Small Screens
+ * ==========================================================
+ */
+
+@media (max-width: 375px) {
+    .profile-picture {
+        width: 130px;
+        height: 130px;
+    }
+
+    .profile-picture-default i {
+        font-size: 4.25rem;
+    }
+
+    .profile-image-wrapper {
+        width: 130px;
+        height: 130px;
+    }
+
+    .profile-form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .profile-form-actions .btn {
+        width: 100%;
+    }
+
+    .profile-crop-container {
+        width: 94vw;
+        height: 94vw;
+    }
+}
+
+/*
+ * ==========================
+ * Logout Button
+ * ==========================
+ */
+
+.profile-logout {
+    margin-top: 1rem;
+}
+
+.profile-logout-button {
+    width: 100%;
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+    color: #ffffff;
+    font-weight: 500;
+    padding: 0.7rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.profile-logout-button:hover {
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+    color: #ffffff;
+}
+
+.profile-logout-button:focus {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #ffffff;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.profile-edit-field-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.profile-edit-field {
+    flex: 1;
+    padding-block: 10px;
+}
+
+.profile-edit-field label {
+    display: block;
+    margin-bottom: 6px;
+}

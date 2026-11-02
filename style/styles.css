@@ -1,0 +1,407 @@
+/*
+ * ========================================
+ * Boardgame Hub
+ * Index Page Styles
+ * Bootstrap-inspired Purple Theme
+ * ========================================
+ */
+
+
+/*
+ * ========================================
+ * Root Variables
+ * ========================================
+ */
+
+:root {
+    --index-purple: #6f42c1;
+    --index-purple-dark: #59359a;
+    --index-purple-light: #8b68d1;
+
+    --index-text: #212529;
+    --index-muted: #6c757d;
+    --index-border: #dee2e6;
+    --index-background: #f8f9fa;
+    --index-white: #ffffff;
+}
+
+
+/*
+ * ========================================
+ * Main Hero
+ * ========================================
+ */
+
+.index-hero {
+    padding: 50px 20px 40px;
+}
+
+.index-hero-content {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+
+/*
+ * Hero Badge
+ * ========================================
+ */
+
+.index-badge {
+    background-color: #e9dfff;
+    color: var(--index-purple-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 0.55rem 0.9rem;
+}
+
+
+/*
+ * Hero Heading
+ * ========================================
+ */
+
+.index-hero h1 {
+    color: var(--index-text);
+    margin-bottom: 1rem;
+}
+
+
+/*
+ * Hero Lead Text
+ * ========================================
+ */
+
+.index-hero-text {
+    color: var(--index-purple);
+    font-weight: 500;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/*
+ * Hero Description
+ * ========================================
+ */
+
+.index-description {
+    color: var(--index-muted);
+    max-width: 700px;
+    line-height: 1.7;
+}
+
+
+/*
+ * Hero Buttons
+ * ========================================
+ */
+
+.index-hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+
+/*
+ * ========================================
+ * Random Image
+ * ========================================
+ */
+
+.index-image-section {
+    margin: 20px auto 70px;
+    max-width: 1100px;
+}
+
+.index-image-wrapper {
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: var(--index-background);
+    border: 1px solid var(--index-border);
+}
+
+.index-random-image {
+    display: block;
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+}
+
+
+/*
+ * ========================================
+ * Feature Section
+ * ========================================
+ */
+
+.index-features {
+    padding: 20px 0 70px;
+}
+
+
+/*
+ * Feature Cards
+ * ========================================
+ */
+
+.index-feature-card {
+    border: 1px solid var(--index-border);
+    border-radius: 10px;
+    background-color: var(--index-white);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.index-feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--index-purple-light);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+}
+
+
+/*
+ * Feature Card Body
+ * ========================================
+ */
+
+.index-feature-card .card-body {
+    padding: 2rem 1.5rem;
+}
+
+
+/*
+ * Feature Icons
+ * ========================================
+ */
+
+.index-feature-icon {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 1.25rem;
+
+    border-radius: 50%;
+
+    background-color: #f0eafa;
+    color: var(--index-purple);
+
+    font-size: 1.4rem;
+}
+
+
+/*
+ * Feature Card Heading
+ * ========================================
+ */
+
+.index-feature-card h3 {
+    margin-bottom: 0.75rem;
+}
+
+
+/*
+ * Feature Card Paragraph
+ * ========================================
+ */
+
+.index-feature-card p {
+    line-height: 1.6;
+    min-height: 76px;
+}
+
+
+/*
+ * ========================================
+ * Why Boardgame Hub Section
+ * ========================================
+ */
+
+.index-about-section {
+    padding: 70px 0;
+
+    border-top: 1px solid var(--index-border);
+    border-bottom: 1px solid var(--index-border);
+}
+
+
+/*
+ * Section Label
+ * ========================================
+ */
+
+.index-section-label {
+    color: var(--index-purple);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+
+/*
+ * ========================================
+ * Call To Action
+ * ========================================
+ */
+
+.index-cta {
+    margin: 70px 0 30px;
+
+    padding: 50px 20px;
+
+    background-color: var(--index-purple);
+    color: var(--index-white);
+
+    border-radius: 12px;
+}
+
+
+/*
+ * CTA Text
+ * ========================================
+ */
+
+.index-cta h2 {
+    margin-bottom: 0.75rem;
+}
+
+.index-cta p {
+    opacity: 0.9;
+}
+
+
+/*
+ * ========================================
+ * About Link
+ * ========================================
+ */
+
+.index-about-link {
+    padding: 10px 0 20px;
+}
+
+.index-about-link a {
+    color: var(--index-purple);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.index-about-link a:hover {
+    color: var(--index-purple-dark);
+    text-decoration: underline;
+}
+
+
+/*
+ * ========================================
+ * Bootstrap Primary Button Adjustment
+ * ========================================
+ */
+
+.btn-primary {
+    background-color: var(--index-purple);
+    border-color: var(--index-purple);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--index-purple-dark);
+    border-color: var(--index-purple-dark);
+}
+
+.btn-outline-primary {
+    color: var(--index-purple);
+    border-color: var(--index-purple);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    background-color: var(--index-purple);
+    border-color: var(--index-purple);
+}
+
+
+/*
+ * ========================================
+ * Mobile Layout
+ * ========================================
+ */
+
+@media (max-width: 767.98px) {
+
+    .index-hero {
+        padding: 30px 15px 30px;
+    }
+
+    .index-hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .index-hero-text {
+        font-size: 1.05rem;
+    }
+
+    .index-description {
+        font-size: 0.95rem;
+    }
+
+    .index-image-section {
+        margin-bottom: 50px;
+    }
+
+    .index-random-image {
+        height: 280px;
+    }
+
+    .index-features {
+        padding-bottom: 50px;
+    }
+
+    .index-about-section {
+        padding: 50px 0;
+    }
+
+    .index-cta {
+        margin-top: 50px;
+        padding: 40px 20px;
+    }
+
+}
+
+/*
+ * ========================================
+ * CTA Login Link
+ * ========================================
+ */
+
+.index-login-link {
+    display: inline-block;
+
+    color: var(--index-white);
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+
+    transition:
+        opacity 0.2s ease,
+        text-decoration-thickness 0.2s ease;
+}
+
+.index-login-link:hover {
+    color: var(--index-white);
+    opacity: 0.8;
+    text-decoration-thickness: 3px;
+}

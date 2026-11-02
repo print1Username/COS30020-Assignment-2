@@ -1,0 +1,565 @@
+
+/* ==========================
+   Community Theme
+========================== */
+
+:root {
+    --community-purple: #6f42c1;
+    --community-purple-dark: #59359a;
+    --community-purple-light: #8b68d1;
+    --community-purple-soft: #f3edfc;
+    --community-border: #e5e0ed;
+    --community-text: #212529;
+    --community-muted: #6c757d;
+    --community-background: #ffffff;
+    --community-card-shadow: 0 3px 12px rgba(45, 25, 80, 0.06);
+    --community-card-shadow-hover: 0 8px 22px rgba(45, 25, 80, 0.12);
+}
+
+/* ==========================
+   Main Container
+========================== */
+
+.community-container {
+    width: min(100% - 48px, 1200px);
+    margin: 0 auto;
+    padding: 48px 0 64px;
+    color: var(--community-text);
+}
+
+/* ==========================
+   Page Header
+========================== */
+
+.community-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 36px;
+}
+
+.community-heading h1 {
+    margin: 0 0 10px;
+    color: var(--community-text);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.community-heading p {
+    max-width: 600px;
+    margin: 0;
+    color: var(--community-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ==========================
+   Create Community Button
+========================== */
+
+.community-create-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    flex-shrink: 0;
+    padding: 11px 18px;
+    border: 1px solid var(--community-purple);
+    border-radius: 8px;
+    background-color: var(--community-purple);
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.community-create-btn:hover {
+    border-color: var(--community-purple-dark);
+    background-color: var(--community-purple-dark);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(111, 66, 193, 0.2);
+}
+
+.community-create-btn:focus-visible {
+    outline: 3px solid rgba(111, 66, 193, 0.3);
+    outline-offset: 3px;
+}
+
+.community-create-btn i {
+    font-size: 1.05rem;
+}
+
+/* ==========================
+   Sorting Toolbar
+========================== */
+
+.community-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.community-sort-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* ==========================
+   Sorting Dropdown
+========================== */
+
+.community-sort-dropdown {
+    position: relative;
+    width: fit-content;
+    min-width: 0;
+    z-index: 2;
+}
+
+.community-sort-dropdown[open] {
+    z-index: 10;
+}
+
+.community-sort-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 9px;
+    width: fit-content;
+    min-height: 40px;
+    padding: 9px 12px;
+    border: 1px solid var(--community-border);
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: var(--community-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.community-sort-trigger::-webkit-details-marker {
+    display: none;
+}
+
+.community-sort-trigger::marker {
+    content: "";
+}
+
+.community-sort-trigger:hover {
+    border-color: var(--community-purple-light);
+    background-color: var(--community-purple-soft);
+}
+
+.community-sort-dropdown[open] .community-sort-trigger {
+    border-color: var(--community-purple);
+    background-color: var(--community-purple-soft);
+    color: var(--community-purple-dark);
+    box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.08);
+}
+
+.community-sort-trigger > i:first-child {
+    color: var(--community-purple);
+    font-size: 1rem;
+}
+
+.community-sort-chevron {
+    margin-left: 2px;
+    color: var(--community-muted);
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+}
+
+.community-sort-dropdown[open] .community-sort-chevron {
+    transform: rotate(180deg);
+}
+
+.community-sort-trigger:focus-visible {
+    outline: 3px solid rgba(111, 66, 193, 0.25);
+    outline-offset: 2px;
+}
+
+/* ==========================
+   Sorting Options Panel
+========================== */
+
+.community-sort-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 20;
+    width: max-content;
+    min-width: 100%;
+    padding: 8px;
+    border: 1px solid var(--community-border);
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 24px rgba(35, 20, 60, 0.12);
+    animation: community-dropdown-in 0.16s ease-out;
+}
+
+.community-sort-options form {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 0;
+}
+
+.community-sort-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 7px;
+    color: var(--community-text);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.community-sort-option:hover {
+    background-color: var(--community-purple-soft);
+    color: var(--community-purple-dark);
+}
+
+.community-sort-option input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: var(--community-purple);
+    cursor: pointer;
+}
+
+.community-sort-option input[type="radio"]:checked + span {
+    color: var(--community-purple-dark);
+    font-weight: 600;
+}
+
+/* ==========================
+   Dropdown Animation
+========================== */
+
+@keyframes community-dropdown-in {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================
+   Community Result Count
+========================== */
+
+.community-result-count {
+    flex-shrink: 0;
+    color: var(--community-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* ==========================
+   Community Grid
+========================== */
+
+.community-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+/* ==========================
+   Community Card
+========================== */
+
+.community-card {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 210px;
+    overflow: hidden;
+    border: 1px solid var(--community-border);
+    border-radius: 12px;
+    background-color: var(--community-background);
+    box-shadow: var(--community-card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.community-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(111, 66, 193, 0.35);
+    box-shadow: var(--community-card-shadow-hover);
+}
+
+.community-card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+}
+
+.community-card-link:focus-visible {
+    outline: 3px solid var(--community-purple);
+    outline-offset: -4px;
+}
+
+.community-card-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    padding: 22px;
+}
+
+.community-card-title {
+    margin: 0 0 12px;
+    color: var(--community-text);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.community-card-description {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0 0 22px;
+    color: var(--community-muted);
+    font-size: 0.875rem;
+    line-height: 1.65;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+/* ==========================
+   Card Footer
+========================== */
+
+.community-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.community-member-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    color: var(--community-muted);
+    font-size: 0.825rem;
+    font-weight: 500;
+}
+
+.community-member-count i {
+    color: var(--community-purple);
+    font-size: 1rem;
+}
+
+.community-member-count span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==========================
+   Join Button
+========================== */
+
+.community-join-btn {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    min-width: 76px;
+    padding: 7px 16px;
+    border: 1px solid var(--community-purple);
+    border-radius: 7px;
+    background-color: var(--community-purple);
+    color: #ffffff;
+    font-size: 0.825rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.community-join-btn:hover,
+.community-join-btn:focus {
+    border-color: var(--community-purple-dark);
+    background-color: var(--community-purple-dark);
+    color: #ffffff;
+}
+
+.community-join-btn:focus-visible {
+    outline: 3px solid rgba(111, 66, 193, 0.3);
+    outline-offset: 3px;
+}
+
+/* ==========================
+   Empty State
+========================== */
+
+.community-empty {
+    grid-column: 1 / -1;
+    padding: 64px 20px;
+    border: 1px dashed var(--community-border);
+    border-radius: 12px;
+    background-color: #ffffff;
+    text-align: center;
+}
+
+.community-empty > i {
+    display: block;
+    margin-bottom: 16px;
+    color: var(--community-purple);
+    font-size: 3rem;
+}
+
+.community-empty h3 {
+    margin-bottom: 8px;
+    color: var(--community-text);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.community-empty p {
+    margin: 0;
+    color: var(--community-muted);
+    font-size: 0.9rem;
+}
+
+/* ==========================
+   Tablet
+========================== */
+
+@media (max-width: 768px) {
+    .community-container {
+        width: min(100% - 32px, 1200px);
+        padding: 36px 0 48px;
+    }
+
+    .community-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .community-heading h1 {
+        font-size: 1.75rem;
+    }
+
+    .community-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .community-grid {
+        gap: 16px;
+    }
+
+    .community-card-content {
+        padding: 18px;
+    }
+}
+
+/* ==========================
+   Mobile
+========================== */
+
+@media (max-width: 576px) {
+    .community-container {
+        width: calc(100% - 28px);
+        padding: 28px 0 40px;
+    }
+
+    .community-heading h1 {
+        font-size: 1.55rem;
+    }
+
+    .community-heading p {
+        font-size: 0.875rem;
+    }
+
+    .community-create-btn {
+        width: 100%;
+    }
+
+    .community-sort-group {
+        width: 100%;
+        gap: 8px;
+    }
+
+    .community-sort-trigger {
+        min-height: 38px;
+        gap: 6px;
+        padding: 8px 9px;
+        font-size: 0.8rem;
+    }
+
+    .community-sort-options {
+        padding: 6px;
+    }
+
+    .community-sort-option {
+        padding: 10px;
+        font-size: 0.825rem;
+    }
+
+    .community-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .community-card {
+        min-height: 190px;
+    }
+
+    .community-card-content {
+        padding: 18px;
+    }
+
+    .community-card-title {
+        font-size: 1rem;
+    }
+
+    .community-card-description {
+        font-size: 0.825rem;
+    }
+
+    .community-result-count {
+        font-size: 0.8rem;
+    }
+}
+
+/* ==========================
+   Reduced Motion
+========================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .community-container *,
+    .community-container *::before,
+    .community-container *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}

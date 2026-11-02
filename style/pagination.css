@@ -1,0 +1,125 @@
+/*
+ * ==========================
+ * Pagination
+ * ==========================
+ */
+
+:root {
+    --pagination-purple: #6f42c1;
+    --pagination-border: #dee2e6;
+}
+
+
+/*
+ * ==========================
+ * Pagination Container
+ * ==========================
+ */
+
+.pagination-container {
+    margin-top: 48px;
+    padding-bottom: 16px;
+}
+
+
+/*
+ * ==========================
+ * Pagination Link
+ * ==========================
+ */
+
+.pagination-container .page-link {
+    color: var(--pagination-purple);
+    border-color: var(--pagination-border);
+    background-color: #fff;
+    min-width: 42px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+
+/*
+ * ==========================
+ * Hover
+ * ==========================
+ */
+
+.pagination-container .page-link:hover {
+    color: #fff;
+    background-color: var(--pagination-purple);
+    border-color: var(--pagination-purple);
+}
+
+
+/*
+ * ==========================
+ * Active Page
+ * ==========================
+ */
+
+.pagination-container .page-item.active .page-link {
+    color: #fff;
+    background-color: var(--pagination-purple);
+    border-color: var(--pagination-purple);
+}
+
+
+/*
+ * ==========================
+ * Disabled
+ * ==========================
+ */
+
+.pagination-container .page-item.disabled .page-link {
+    color: #adb5bd;
+    background-color: #f8f9fa;
+    border-color: var(--pagination-border);
+}
+
+
+/*
+ * ==========================
+ * Focus
+ * ==========================
+ */
+
+.pagination-container .page-link:focus {
+    color: var(--pagination-purple);
+    background-color: #fff;
+    border-color: var(--pagination-purple);
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.15);
+}
+
+
+/*
+ * ==========================
+ * Active Focus
+ * ==========================
+ */
+
+.pagination-container .page-item.active .page-link:focus {
+    color: #fff;
+    background-color: var(--pagination-purple);
+    border-color: var(--pagination-purple);
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.2);
+}
+
+
+/*
+ * ==========================
+ * Mobile
+ * ==========================
+ */
+
+@media (max-width: 576px) {
+    .pagination-container {
+        margin-top: 36px;
+        padding-bottom: 12px;
+    }
+
+    .pagination-container .page-link {
+        min-width: 38px;
+        padding: 6px 10px;
+        font-size: 0.875rem;
+    }
+}

@@ -1,0 +1,137 @@
+[
+    {
+        "id": 1,
+        "name": "Catan",
+        "categories": ["Strategy", "Family Games"],
+        "description": "Trade resources, build settlements, and compete to become the dominant force on the island of Catan.",
+        "players": "3–4 Players",
+        "duration": "60–90 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 2,
+        "name": "Ticket to Ride",
+        "categories": ["Strategy", "Family Games"],
+        "description": "Collect train cards and build railway routes across the map to connect cities and complete destination tickets.",
+        "players": "2–5 Players",
+        "duration": "30–60 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 3,
+        "name": "Carcassonne",
+        "categories": ["Strategy", "Family Games"],
+        "description": "Build a medieval landscape by placing tiles and strategically claiming cities, roads, monasteries, and fields.",
+        "players": "2–5 Players",
+        "duration": "30–45 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 4,
+        "name": "7 Wonders",
+        "categories": ["Strategy", "Card Games"],
+        "description": "Develop an ancient civilization through card drafting, scientific discoveries, military strength, and architectural achievements.",
+        "players": "3–7 Players",
+        "duration": "30 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 5,
+        "name": "Azul",
+        "categories": ["Strategy", "Family Games"],
+        "description": "Collect colourful tiles and arrange them into beautiful patterns while carefully planning your moves.",
+        "players": "2–4 Players",
+        "duration": "30–45 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 6,
+        "name": "Kingdomino",
+        "categories": ["Strategy", "Family Games"],
+        "description": "Build your own kingdom by connecting landscape dominoes and selecting valuable territories.",
+        "players": "2–4 Players",
+        "duration": "15–25 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 7,
+        "name": "Pandemic",
+        "categories": ["Strategy", "Cooperative"],
+        "description": "Work together as a team of specialists to contain global outbreaks and discover cures before time runs out.",
+        "players": "2–4 Players",
+        "duration": "45 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 8,
+        "name": "Dixit",
+        "categories": ["Party Games", "Family Games", "Card Games"],
+        "description": "Use imaginative storytelling and beautifully illustrated cards to inspire clues and guess other players' choices.",
+        "players": "3–8 Players",
+        "duration": "30 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 9,
+        "name": "Codenames",
+        "categories": ["Party Games", "Cooperative"],
+        "description": "Give clever one-word clues to help your team identify secret agents while avoiding dangerous selections. Cooperative play is available through Codenames Duet.",
+        "players": "2–8+ Players",
+        "duration": "15–30 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 10,
+        "name": "Just One",
+        "categories": ["Party Games", "Cooperative"],
+        "description": "Work together to help one player guess a mystery word using creative one-word clues.",
+        "players": "3–7 Players",
+        "duration": "20 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 11,
+        "name": "Sushi Go!",
+        "categories": ["Party Games", "Family Games", "Card Games"],
+        "description": "Pass cards around the table and collect delicious sushi combinations to score the most points.",
+        "players": "2–5 Players",
+        "duration": "15 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 12,
+        "name": "UNO",
+        "categories": ["Party Games", "Family Games", "Card Games"],
+        "description": "Match colours and numbers, play action cards, and race to empty your hand before everyone else.",
+        "players": "2–10 Players",
+        "duration": "15–30 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 13,
+        "name": "The Crew: The Quest for Planet Nine",
+        "categories": ["Strategy", "Card Games", "Cooperative"],
+        "description": "Complete challenging missions together through trick-taking gameplay and limited communication.",
+        "players": "3–5 Players",
+        "duration": "20 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 14,
+        "name": "Forbidden Island",
+        "categories": ["Family Games", "Cooperative"],
+        "description": "Explore a sinking island, collect hidden treasures, and escape together before the island disappears.",
+        "players": "2–4 Players",
+        "duration": "30 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    },
+    {
+        "id": 15,
+        "name": "Hanabi",
+        "categories": ["Card Games", "Cooperative"],
+        "description": "Work together to create a spectacular fireworks display by sharing clues about cards your teammates cannot see.",
+        "players": "2–5 Players",
+        "duration": "25 Minutes",
+        "image": "img/boardgames/placeholder.svg"
+    }
+]

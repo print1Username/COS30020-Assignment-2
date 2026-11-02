@@ -1,0 +1,155 @@
+
+[
+    {
+        "id": 1,
+        "title": "Boardgame Enthusiasts",
+        "description": "A community for boardgame lovers to connect, discover new games, and share their gaming experiences.",
+        "member_count": 32,
+        "created_at": "2026-09-01",
+        "contributions": [
+            {
+                "id": 101,
+                "title": "Friday Boardgame Night",
+                "description": "Our members gathered for an evening of strategy games, friendly competition, and social interaction.",
+                "contributor": "Alex Johnson",
+                "activity": "Friday Boardgame Night",
+                "media_type": "image",
+                "media": "img/boardgames/boardgame-1.jpg",
+                "created_at": "2026-09-05"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Strategy Game Club",
+        "description": "Explore challenging strategy games, exchange tactics, and improve your strategic thinking with fellow players.",
+        "member_count": 24,
+        "created_at": "2026-09-03",
+        "contributions": [
+            {
+                "id": 102,
+                "title": "Strategy Game Tournament",
+                "description": "Members participated in a friendly tournament featuring several competitive strategy boardgames.",
+                "contributor": "Emily Tan",
+                "activity": "Strategy Game Tournament",
+                "media_type": "image",
+                "media": "img/boardgames/boardgame-2.jpg",
+                "created_at": "2026-09-07"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Casual Game Nights",
+        "description": "A relaxed community for casual players who enjoy fun, laughter, and easy-to-learn boardgames.",
+        "member_count": 18,
+        "created_at": "2026-09-05",
+        "contributions": [
+            {
+                "id": 103,
+                "title": "Casual Gaming Meetup",
+                "description": "A relaxed gaming session where newcomers and experienced players enjoyed games together.",
+                "contributor": "Daniel Lee",
+                "activity": "Casual Gaming Meetup",
+                "media_type": "image",
+                "media": "img/boardgames/boardgame-3.jpg",
+                "created_at": "2026-09-09"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "title": "Family Boardgames",
+        "description": "Discover family-friendly boardgames and create memorable gaming experiences with friends and family.",
+        "member_count": 27,
+        "created_at": "2026-09-07",
+        "contributions": [
+            {
+                "id": 104,
+                "title": "Family Boardgame Gathering",
+                "description": "Families came together to enjoy accessible boardgames suitable for different age groups.",
+                "contributor": "Sarah Wong",
+                "activity": "Family Boardgame Gathering",
+                "media_type": "image",
+                "media": "img/boardgames/boardgame-4.jpg",
+                "created_at": "2026-09-11"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "title": "Card Game Community",
+        "description": "Connect with card game enthusiasts, learn new games, and share your favourite card game strategies.",
+        "member_count": 21,
+        "created_at": "2026-09-09",
+        "contributions": [
+            {
+                "id": 105,
+                "title": "Card Game Afternoon",
+                "description": "Community members introduced their favourite card games and shared gameplay tips.",
+                "contributor": "Michael Chen",
+                "activity": "Card Game Afternoon",
+                "media_type": "image",
+                "media": "img/boardgames/boardgame-5.jpg",
+                "created_at": "2026-09-13"
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "title": "New Players Corner",
+        "description": "A welcoming space for beginners to learn boardgame rules, meet other players, and build confidence.",
+        "member_count": 15,
+        "created_at": "2026-09-11",
+        "contributions": [
+            {
+                "id": 106,
+                "title": "Beginner Boardgame Workshop",
+                "description": "New players learned the basics of several popular boardgames with guidance from experienced members.",
+                "contributor": "Jessica Lim",
+                "activity": "Beginner Boardgame Workshop",
+                "media_type": "image",
+                "media": "img/boardgames/boardgame-6.jpg",
+                "created_at": "2026-09-15"
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "title": "Competitive Boardgamers",
+        "description": "For players who enjoy competitive matches, tournaments, and challenging boardgame experiences.",
+        "member_count": 29,
+        "created_at": "2026-09-13",
+        "contributions": [
+            {
+                "id": 107,
+                "title": "Competitive Gaming Session",
+                "description": "Players competed in a series of strategic matches and discussed their approaches afterwards.",
+                "contributor": "Ryan Tan",
+                "activity": "Competitive Gaming Session",
+                "media_type": "image",
+                "media": "img/boardgames/boardgame-7.jpg",
+                "created_at": "2026-09-17"
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "title": "Boardgame Collectors",
+        "description": "Share your boardgame collection, discover new releases, and discuss your favourite games.",
+        "member_count": 19,
+        "created_at": "2026-09-15",
+        "contributions": [
+            {
+                "id": 108,
+                "title": "Boardgame Collection Showcase",
+                "description": "Members presented their favourite boardgames and discussed memorable gaming experiences.",
+                "contributor": "Olivia Wong",
+                "activity": "Boardgame Collection Showcase",
+                "media_type": "image",
+                "media": "img/boardgames/boardgame-8.jpg",
+                "created_at": "2026-09-19"
+            }
+        ]
+    }
+]

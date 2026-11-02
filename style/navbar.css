@@ -1,0 +1,243 @@
+:root {
+    /*
+     * Bootstrap-inspired purple
+     */
+    --navbar-purple: #6f42c1;
+    --navbar-purple-dark: #59359a;
+    --navbar-purple-light: #8b68d1;
+}
+
+
+/*
+ * ==========================
+ * Main Navbar
+ * ==========================
+ */
+
+.custom-navbar {
+    background-color: var(--navbar-purple);
+}
+
+
+/*
+ * ==========================
+ * Brand
+ * ==========================
+ */
+
+.custom-navbar .navbar-brand {
+    color: #ffffff;
+}
+
+.custom-navbar .navbar-brand:hover {
+    color: #ffffff;
+}
+
+
+/*
+ * ==========================
+ * Navigation Links
+ * ==========================
+ */
+
+.custom-navbar .nav-link {
+    position: relative;
+    display: inline-block;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    font-weight: 600;
+
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+/*
+ * Hover effect
+ */
+
+.custom-navbar .nav-link:hover {
+    color: #ffffff;
+}
+
+
+/*
+ * Underline animation
+ */
+
+.custom-navbar .nav-link::after {
+    content: "";
+
+    position: absolute;
+
+    left: 1rem;
+    right: 1rem;
+    bottom: 0.1rem;
+
+    height: 2px;
+
+    background-color: #ffffff;
+
+    transform: scaleX(0);
+    transform-origin: center;
+
+    transition: transform 0.25s ease;
+}
+
+
+/*
+ * Hover underline
+ */
+
+.custom-navbar .nav-link:hover::after {
+    transform: scaleX(1);
+}
+
+
+/*
+ * ==========================
+ * Active Page
+ * ==========================
+ */
+
+.custom-navbar .nav-link.active {
+    color: #ffffff;
+    font-weight: 550;
+}
+
+
+/*
+ * Active page underline
+ */
+
+.custom-navbar .nav-link.active::after {
+    transform: scaleX(1);
+}
+
+
+/*
+ * ==========================
+ * Login Button
+ * ==========================
+ */
+
+.custom-login-button {
+    background-color: var(--navbar-purple) !important;
+    border: var(--navbar-purple) !important;
+    color: #ffffff !important;
+    font-weight: 500;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/*
+ * Login hover
+ */
+
+.custom-login-button:hover {
+    background-color: var(--navbar-purple-dark) !important;
+    border-color: var(--navbar-purple-dark) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
+
+/*
+ * ==========================
+ * Sign Up Button
+ * ==========================
+ */
+
+.custom-navbar .btn-light {
+    font-weight: 500;
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+.custom-navbar .btn-light:hover {
+    transform: translateY(-1px);
+}
+
+
+/*
+ * ==========================
+ * Mobile Navbar
+ * ==========================
+ */
+
+.custom-navbar .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+
+.custom-navbar .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+
+/*
+ * ==========================
+ * Authentication Buttons
+ * ==========================
+ */
+
+.navbar-auth-button {
+    font-size: 1.1rem;
+}
+
+/*
+ * ==========================
+ * Mobile Navbar
+ * ==========================
+ */
+
+@media (max-width: 991.98px) {
+
+    .custom-navbar .navbar-nav {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    /*
+     * Make the nav link width follow
+     * the text content.
+     */
+    .custom-navbar .nav-link {
+        position: relative;
+
+        display: inline-block;
+
+        padding-top: 0.65rem;
+        padding-bottom: 0.65rem;
+
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /*
+     * Underline follows the width
+     * of each navigation link.
+     */
+    .custom-navbar .nav-link::after {
+        left: 1rem;
+        right: 1rem;
+
+        width: auto;
+
+        bottom: 0.35rem;
+    }
+
+    .custom-navbar .d-flex {
+        padding-bottom: 1rem;
+    }
+}
