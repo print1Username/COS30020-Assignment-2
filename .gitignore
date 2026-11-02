@@ -63,3 +63,8 @@ Thumbs.db
 # ==========================================
 /uploads/
 /public/uploads/
+
+# File
+*.pdf
+*.docx
+*.doc
