@@ -206,135 +206,35 @@ if (!empty($errors)) {
 }
 
 
-/*
-|--------------------------------------------------------------------------
-| User data directory
-|--------------------------------------------------------------------------
-*/
+require_once __DIR__."/db_setup.php";
+require_once __DIR__."/db_connect.php";
 
-$userDirectory = "data/User";
-$userFile = $userDirectory."/user.txt";
-
-if (!is_dir($userDirectory)) {
-
-	if (!mkdir($userDirectory, 0777, true)) {
-
-		$_SESSION["registration_errors"] = [
-			"Unable to create the user data directory."
-		];
-
+try {
+	$check = $pdo->prepare("SELECT email FROM user_table WHERE email = ?");
+	$check->execute([$email]);
+	if ($check->fetch()) {
+		$_SESSION["registration_errors"] = ["This email address is already registered."];
 		header("Location: registration.php");
 		exit;
 	}
-}
 
-
-/*
-|--------------------------------------------------------------------------
-| Check existing email
-|--------------------------------------------------------------------------
-*/
-
-if (file_exists($userFile)) {
-
-	$users = file(
-		$userFile,
-		FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
-	);
-
-	foreach ($users as $user) {
-
-		$fields = explode("|", $user);
-
-		foreach ($fields as $field) {
-
-			$parts = explode(":", $field, 2);
-
-			if (count($parts) !== 2) {
-				continue;
-			}
-
-			$fieldName = trim($parts[0]);
-			$fieldValue = trim($parts[1]);
-
-			if (
-				$fieldName === "Email" &&
-				strcasecmp($fieldValue, $email) === 0
-			) {
-
-				$errors[] = "This email address is already registered.";
-
-				break 2;
-			}
-		}
+	$pdo->beginTransaction();
+	$user = $pdo->prepare("INSERT INTO user_table (email, first_name, last_name, dob, gender, hometown) VALUES (?, ?, ?, ?, ?, ?)");
+	$user->execute([$email, $firstName, $lastName, $dob, $gender, $hometown]);
+	$account = $pdo->prepare("INSERT INTO account_table (email, password, type) VALUES (?, ?, 'user')");
+	$account->execute([$email, password_hash($password, PASSWORD_DEFAULT)]);
+	$pdo->commit();
+} catch (PDOException $e) {
+	if ($pdo->inTransaction()) {
+		$pdo->rollBack();
 	}
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Stop if email already exists
-|--------------------------------------------------------------------------
-*/
-
-if (!empty($errors)) {
-
-	$_SESSION["registration_errors"] = $errors;
-
+	error_log($e->getMessage());
+	$_SESSION["registration_errors"] = [$e->getCode() === "23000"
+		? "This email address is already registered."
+		: "Unable to save your registration. Please try again."];
 	header("Location: registration.php");
 	exit;
 }
-
-
-/*
-|--------------------------------------------------------------------------
-| Convert DOB
-| HTML date: YYYY-MM-DD
-| Assignment format: DD-MM-YYYY
-|--------------------------------------------------------------------------
-*/
-
-$dateObject = DateTime::createFromFormat("Y-m-d", $dob);
-$formattedDob = $dateObject -> format("d-m-Y");
-
-
-/*
-|--------------------------------------------------------------------------
-| Create user record
-|--------------------------------------------------------------------------
-*/
-
-$userRecord =
-	"First Name: ".$firstName.
-	"|LastName: ".$lastName.
-	"|DOB:".$formattedDob.
-	"|Gender: ".$gender.
-	"|Email: ".$email.
-	"|Hometown:".$hometown.
-	"|Password:".$password;
-
-
-/*
-|--------------------------------------------------------------------------
-| Save user
-|--------------------------------------------------------------------------
-*/
-
-$fileHandle = fopen($userFile, "a");
-
-if ($fileHandle === false) {
-
-	$_SESSION["registration_errors"] = [
-		"Unable to save your registration. Please try again."
-	];
-
-	header("Location: registration.php");
-	exit;
-}
-
-fwrite($fileHandle, $userRecord.PHP_EOL);
-
-fclose($fileHandle);
 
 
 /*
@@ -353,7 +253,7 @@ unset($_SESSION["registration_errors"]);
 |--------------------------------------------------------------------------
 */
 
-header("Location: main_menu.php");
+header("Location: login.php");
 exit;
 
 ?>

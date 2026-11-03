@@ -1,0 +1,2 @@
+English: Supporting documents uploaded from the profile update page. Store validated PDF files here and save their relative paths in user_table.
+中文：存放用户在资料更新页面上传的辅助文件；仅保存验证后的 PDF，并在 user_table 中记录相对路径。

@@ -18,61 +18,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		$error = "Please enter a valid email address.";
 
 	} else {
-		$userFile = "data/User/user.txt";
-		$loginSuccess = false;
-		$userEmail = "";
-
-		// Check whether user.txt exists
-		if (file_exists($userFile)) {
-
-			$users = file(
-				$userFile,
-				FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
-			);
-
-			foreach ($users as $user) {
-
-				$fields = explode("|", $user);
-
-				$storedEmail = "";
-				$storedPassword = "";
-
-				foreach ($fields as $field) {
-
-					$parts = explode(":", $field, 2);
-
-					if (count($parts) !== 2) {
-						continue;
-					}
-
-					$key = trim($parts[0]);
-					$value = trim($parts[1]);
-
-					if ($key === "Email") {
-						$storedEmail = $value;
-					}
-
-					if ($key === "Password") {
-						$storedPassword = $value;
-					}
-				}
-
-				// Check email and password
-				if (
-					strtolower($storedEmail) === strtolower($email)
-					&& $storedPassword === $password
-				) {
-					$loginSuccess = true;
-					$userEmail = $storedEmail;
-					break;
-				}
-			}
-		}
+		require_once __DIR__."/db_setup.php";
+		require_once __DIR__."/db_connect.php";
+		$statement = $pdo->prepare("SELECT email, password, type FROM account_table WHERE email = ?");
+		$statement->execute([$email]);
+		$account = $statement->fetch();
 
 		// Login successful
-		if ($loginSuccess) {
+		if ($account && password_verify($password, $account["password"])) {
+			session_regenerate_id(true);
 			$_SESSION["logged_in"] = true;
-			$_SESSION["email"] = $userEmail;
+			$_SESSION["email"] = $account["email"];
+			$_SESSION["type"] = $account["type"];
 
 			header("Location: main_menu.php");
 			exit;

@@ -1,0 +1,2 @@
+English: Static images used by the website, such as board game photos and page graphics. Store image assets here, not PHP or JavaScript code.
+中文：存放网站使用的静态图片，例如桌游照片和页面图像；此处保存图片素材，不存放 PHP 或 JavaScript 代码。
