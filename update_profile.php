@@ -1,248 +1,5 @@
 <?php
-session_start();
-
-if (
-	!isset($_SESSION["logged_in"]) ||
-	$_SESSION["logged_in"] !== true ||
-	!isset($_SESSION["email"])
-) {
-	header("Location: login.php");
-	exit;
-}
-
-$currentEmail = $_SESSION["email"];
-$userFile = "data/User/user.txt";
-
-$userData = [
-	"First Name" => "",
-	"LastName" => "",
-	"DOB" => "",
-	"Gender" => "",
-	"Email" => "",
-	"Hometown" => "",
-	"Password" => "",
-	"Profile Image" => ""
-];
-
-$error = "";
-$success = "";
-$profileImage = "";
-
-if (file_exists($userFile)) {
-	$users = file(
-		$userFile,
-		FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
-	);
-
-	foreach ($users as $user) {
-		$fields = explode("|", $user);
-		$tempUser = [];
-
-		foreach ($fields as $field) {
-			$parts = explode(":", $field, 2);
-
-			if (count($parts) !== 2) {
-				continue;
-			}
-
-			$key = trim($parts[0]);
-			$value = trim($parts[1]);
-			$tempUser[$key] = $value;
-		}
-
-		if (
-			isset($tempUser["Email"]) &&
-			strtolower($tempUser["Email"]) === strtolower($currentEmail)
-		) {
-			foreach ($userData as $key => $value) {
-				if (isset($tempUser[$key])) {
-					$userData[$key] = $tempUser[$key];
-				}
-			}
-
-			$profileImage = $tempUser["Profile Image"] ?? "";
-			break;
-		}
-	}
-}
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-	$firstName = trim($_POST["first_name"] ?? "");
-	$lastName = trim($_POST["last_name"] ?? "");
-	$dob = trim($_POST["dob"] ?? "");
-	$gender = trim($_POST["gender"] ?? "");
-	$hometown = trim($_POST["hometown"] ?? "");
-
-	if (
-		$firstName === "" ||
-		$lastName === "" ||
-		$dob === "" ||
-		$gender === "" ||
-		$hometown === ""
-	) {
-		$error = "Please complete all required fields.";
-	} elseif (
-		!preg_match("/^[A-Za-z ]+$/", $firstName) ||
-		!preg_match("/^[A-Za-z ]+$/", $lastName)
-	) {
-		$error = "First name and last name can only contain letters and spaces.";
-	} elseif (
-		$gender !== "Male" &&
-		$gender !== "Female"
-	) {
-		$error = "Please select a valid gender.";
-	} else {
-		$dobDate = DateTime::createFromFormat("Y-m-d", $dob);
-
-		if ($dobDate === false) {
-			$error = "Please enter a valid date of birth.";
-		} else {
-			$storedDob = $dobDate -> format("d-m-Y");
-
-			$newProfileImage = $profileImage;
-
-			if (isset($_FILES["profile_image"]) && $_FILES["profile_image"]["error"] !== UPLOAD_ERR_NO_FILE) {
-				if ($_FILES["profile_image"]["error"] !== UPLOAD_ERR_OK) {
-					$error = "There was a problem uploading the profile picture.";
-				} else {
-					$allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-					$imageInfo = getimagesize($_FILES["profile_image"]["tmp_name"]);
-
-					if ($imageInfo === false) {
-						$error = "Please upload a valid image.";
-					} else {
-						$fileType = $imageInfo["mime"];
-
-						if (!in_array($fileType, $allowedTypes, true)) {
-							$error = "Please upload a JPG, PNG, or WEBP image.";
-						} else {
-							$profileDirectory = "profile_images";
-
-							if (!is_dir($profileDirectory)) {
-								mkdir($profileDirectory, 0777, true);
-							}
-
-							$imageFileName = "profile_".sha1(strtolower($currentEmail)).".jpg";
-							$imagePath = $profileDirectory."/".$imageFileName;
-
-							if (move_uploaded_file($_FILES["profile_image"]["tmp_name"], $imagePath)) {
-								$newProfileImage = $imageFileName;
-							} else {
-								$error = "The profile picture could not be saved.";
-							}
-						}
-					}
-				}
-			}
-
-			if ($error === "") {
-				$updatedRecord =
-					"First Name: ".$firstName.
-					"|LastName: ".$lastName.
-					"|DOB:".$storedDob.
-					"|Gender: ".$gender.
-					"|Email: ".$userData["Email"].
-					"|Hometown:".$hometown.
-					"|Password:".$userData["Password"];
-
-				if ($newProfileImage !== "") {
-					$updatedRecord .=
-						"|Profile Image: ".$newProfileImage;
-				}
-
-				$updatedUsers = [];
-
-				foreach ($users as $user) {
-					$fields = explode("|", $user);
-					$tempEmail = "";
-
-					foreach ($fields as $field) {
-						$parts = explode(":", $field, 2);
-
-						if (count($parts) !== 2) {
-							continue;
-						}
-
-						$key = trim($parts[0]);
-						$value = trim($parts[1]);
-
-						if ($key === "Email") {
-							$tempEmail = $value;
-						}
-					}
-
-					if (
-						$tempEmail !== "" &&
-						strtolower($tempEmail) === strtolower($currentEmail)
-					) {
-						$updatedUsers[] = $updatedRecord;
-					} else {
-						$updatedUsers[] = $user;
-					}
-				}
-
-				if (
-					file_put_contents(
-						$userFile,
-						implode(PHP_EOL, $updatedUsers).PHP_EOL,
-						LOCK_EX
-					) !== false
-				) {
-					$_SESSION["email"] = $userData["Email"];
-
-					header("Location: profile.php");
-					exit;
-				} else {
-					$error = "The profile could not be updated. Please try again.";
-				}
-			}
-		}
-	}
-
-	$userData["First Name"] = $firstName;
-	$userData["LastName"] = $lastName;
-	$userData["DOB"] = "";
-
-	if ($dob !== "") {
-		$submittedDob = DateTime::createFromFormat("Y-m-d", $dob);
-
-		if ($submittedDob !== false) {
-			$userData["DOB"] = $submittedDob -> format("d-m-Y");
-		}
-	}
-
-	$userData["Gender"] = $gender;
-	$userData["Hometown"] = $hometown;
-}
-
-$fullName = trim(
-	$userData["First Name"]." ".$userData["LastName"]
-);
-
-$dobInputValue = "";
-
-if ($userData["DOB"] !== "") {
-	$dobDate = DateTime::createFromFormat(
-		"d-m-Y",
-		$userData["DOB"]
-	);
-
-	if ($dobDate !== false) {
-		$dobInputValue = $dobDate -> format("Y-m-d");
-	}
-}
-
-$profileImagePath = "";
-
-if ($profileImage !== "") {
-	$possibleImagePath =
-		"profile_images/".
-		basename($profileImage);
-
-	if (file_exists($possibleImagePath)) {
-		$profileImagePath = $possibleImagePath;
-	}
-}
+require_once __DIR__."/update_profile_db.php";
 ?>
 
 <!DOCTYPE html>
@@ -333,7 +90,7 @@ if ($profileImage !== "") {
 							type="file"
 							id="profileImageInput"
 							name="profile_image"
-							accept="image/jpeg,image/png,image/webp"
+							accept="image/jpeg,image/png"
 							hidden
 						>
 					</div>
@@ -369,7 +126,8 @@ if ($profileImage !== "") {
 						<div class="profile-fixed-field">
 							<label>Student Email</label>
 							<div class="profile-fixed-value">
-								<?php echo htmlspecialchars($userData["Email"]); ?>
+								<input type="email" name="email" class="form-control"
+									value="<?php echo htmlspecialchars($userData["Email"]); ?>" required>
 							</div>
 						</div>
 					</div>
@@ -444,6 +202,11 @@ if ($profileImage !== "") {
 							rows="3"
 							required
 						><?php echo htmlspecialchars($userData["Hometown"]); ?></textarea>
+					</div>
+
+					<div class="profile-edit-field">
+						<label for="resume_file">Supporting document (PDF, max 7MB)</label>
+						<input type="file" id="resume_file" name="resume_file" class="form-control" accept="application/pdf">
 					</div>
 				</section>
 			</div>

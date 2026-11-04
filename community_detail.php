@@ -1,28 +1,6 @@
 <?php
-session_start();
-
-$dataFile = "data/community.json";
-$communityId = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
-$community = null;
-
-if ($communityId !== false && $communityId !== null && file_exists($dataFile)) {
-	$communities = json_decode(file_get_contents($dataFile), true);
-
-	if (is_array($communities)) {
-		foreach ($communities as $item) {
-			if ((int)($item["id"] ?? 0) === $communityId) {
-				$community = $item;
-				break;
-			}
-		}
-	}
-}
-
-function communityDetailEscape($value)
-{
-	return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
-}
-
+$communityDbPage = "detail";
+require_once __DIR__."/community_db.php";
 ?>
 
 <!DOCTYPE html>

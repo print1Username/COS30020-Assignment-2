@@ -1,20 +1,5 @@
 <?php
-session_start();
-
-$activitiesFile = "data/activities.json";
-$activities = [];
-
-if (file_exists($activitiesFile)) {
-	$jsonData = file_get_contents($activitiesFile);
-	$activities = json_decode($jsonData, true);
-
-	if (!is_array($activities)) {
-		$activities = [];
-	}
-}
-
-$isLoggedIn = isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true;
-$registerLink = $isLoggedIn ? "activity_reg.php" : "login.php?message=login_required";
+require_once __DIR__."/activities_db.php";
 ?>
 
 <!DOCTYPE html>
@@ -104,11 +89,7 @@ $registerLink = $isLoggedIn ? "activity_reg.php" : "login.php?message=login_requ
 						<?php
 						$activityId = isset($activity["id"]) ? (int)$activity["id"] : 0;
 
-						if ($isLoggedIn) {
-							$activityRegisterLink = "activity_reg.php?id=".$activityId;
-						} else {
-							$activityRegisterLink = "login.php?message=login_required";
-						}
+						$activityRegisterLink = "activity_reg.php?id=".$activityId;
 						?>
 
 						<a

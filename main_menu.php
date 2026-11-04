@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+if (($_SESSION["logged_in"] ?? false) !== true ||
+	($_SESSION["type"] ?? null) !== "user" ||
+	!isset($_SESSION["email"])) {
+	header("Location: login.php");
+	exit;
+}
+
 $isLoggedIn = isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true;
 $loginTarget = $isLoggedIn ? "profile.php" : "login.php";
 ?>
@@ -121,6 +128,9 @@ $loginTarget = $isLoggedIn ? "profile.php" : "login.php";
 							>
 								View Community
 								<i class="bi bi-arrow-right"></i>
+							</a>
+							<a href="smart_feature_add.php" class="btn main-menu-card-button">
+								Contribute a Board Game
 							</a>
 						</div>
 					</article>

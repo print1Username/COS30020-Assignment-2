@@ -33,7 +33,8 @@ try {
             dob DATE NULL,
             gender VARCHAR(6) NOT NULL,
             hometown VARCHAR(50) NOT NULL,
-            profile_image VARCHAR(100) NULL
+            profile_image VARCHAR(100) NULL,
+            resume_file VARCHAR(100) NULL
         ) ENGINE=InnoDB
     ");
 
@@ -72,9 +73,58 @@ try {
             date DATE NULL,
             time TIME NULL,
             contact_number VARCHAR(15) NULL,
-            status VARCHAR(10) NOT NULL
+            status VARCHAR(10) NOT NULL,
+            record_type VARCHAR(12) NOT NULL DEFAULT 'registration',
+            source_id INT NULL UNIQUE,
+            activity_id INT NULL,
+            title VARCHAR(100) NULL,
+            activity_type VARCHAR(50) NULL,
+            description TEXT NULL,
+            end_time TIME NULL,
+            price DECIMAL(8, 2) NULL,
+            venue VARCHAR(100) NULL,
+            table_name VARCHAR(50) NULL,
+            image VARCHAR(100) NULL
         ) ENGINE=InnoDB
     ");
+
+    // Add Part 3 columns to databases created by the earlier version.
+    $requiredColumns = [
+        "user_table" => ["resume_file" => "VARCHAR(100) NULL"],
+        "activity_table" => [
+            "record_type" => "VARCHAR(12) NOT NULL DEFAULT 'registration'",
+            "source_id" => "INT NULL UNIQUE",
+            "activity_id" => "INT NULL",
+            "title" => "VARCHAR(100) NULL",
+            "activity_type" => "VARCHAR(50) NULL",
+            "description" => "TEXT NULL",
+            "end_time" => "TIME NULL",
+            "price" => "DECIMAL(8, 2) NULL",
+            "venue" => "VARCHAR(100) NULL",
+            "table_name" => "VARCHAR(50) NULL",
+            "image" => "VARCHAR(100) NULL"
+        ]
+    ];
+    $columnCheck = $pdo->prepare("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?");
+    foreach ($requiredColumns as $table => $columns) {
+        foreach ($columns as $column => $definition) {
+            $columnCheck->execute([$dbName, $table, $column]);
+            if (!$columnCheck->fetchColumn()) {
+                $pdo->exec("ALTER TABLE `$table` ADD COLUMN `$column` $definition");
+            }
+        }
+    }
+
+    $activities = json_decode(file_get_contents(__DIR__."/data/activities.json"), true);
+    $insertActivity = $pdo->prepare("INSERT IGNORE INTO activity_table (email, first_name, last_name, date, time, status, record_type, source_id, title, activity_type, description, end_time, price, venue, table_name, image) VALUES ('', '', '', ?, ?, 'approved', 'event', ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    foreach ($activities as $seedActivity) {
+        $insertActivity->execute([
+            $seedActivity["date"], $seedActivity["start_time"], $seedActivity["id"],
+            $seedActivity["title"], $seedActivity["type"], $seedActivity["description"],
+            $seedActivity["end_time"], $seedActivity["price"], $seedActivity["venue"],
+            $seedActivity["table"], $seedActivity["image"]
+        ]);
+    }
 
     // 5. Community table
     $pdo->exec("
@@ -84,9 +134,49 @@ try {
             last_name VARCHAR(50) NOT NULL,
             contribution_image VARCHAR(100) NULL,
             related_activity VARCHAR(50) NOT NULL,
-            status VARCHAR(10) NOT NULL
+            status VARCHAR(10) NOT NULL,
+            source_id INT NULL UNIQUE,
+            title VARCHAR(100) NULL,
+            description TEXT NULL,
+            member_count INT NULL,
+            created_at DATE NULL,
+            contribution_title VARCHAR(100) NULL,
+            contribution_description TEXT NULL,
+            contribution_date DATE NULL
         ) ENGINE=InnoDB
     ");
+
+    $communityColumns = [
+        "source_id" => "INT NULL UNIQUE",
+        "title" => "VARCHAR(100) NULL",
+        "description" => "TEXT NULL",
+        "member_count" => "INT NULL",
+        "created_at" => "DATE NULL",
+        "contribution_title" => "VARCHAR(100) NULL",
+        "contribution_description" => "TEXT NULL",
+        "contribution_date" => "DATE NULL"
+    ];
+    foreach ($communityColumns as $column => $definition) {
+        $columnCheck->execute([$dbName, "community_table", $column]);
+        if (!$columnCheck->fetchColumn()) {
+            $pdo->exec("ALTER TABLE `community_table` ADD COLUMN `$column` $definition");
+        }
+    }
+
+    $communities = json_decode(file_get_contents(__DIR__."/data/community.json"), true);
+    $insertCommunity = $pdo->prepare("INSERT IGNORE INTO community_table (first_name, last_name, contribution_image, related_activity, status, source_id, title, description, member_count, created_at, contribution_title, contribution_description, contribution_date) VALUES (?, ?, ?, ?, 'approved', ?, ?, ?, ?, ?, ?, ?, ?)");
+    foreach ($communities as $seedCommunity) {
+        $contribution = $seedCommunity["contributions"][0] ?? [];
+        $name = explode(" ", $contribution["contributor"] ?? "", 2);
+        $insertCommunity->execute([
+            $name[0] ?? "", $name[1] ?? "", $contribution["media"] ?? null,
+            $contribution["activity"] ?? "", $seedCommunity["id"],
+            $seedCommunity["title"], $seedCommunity["description"],
+            $seedCommunity["member_count"], $seedCommunity["created_at"],
+            $contribution["title"] ?? null, $contribution["description"] ?? null,
+            $contribution["created_at"] ?? null
+        ]);
+    }
 
 } catch (PDOException $e) {
     error_log($e->getMessage());
