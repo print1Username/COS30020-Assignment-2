@@ -15,9 +15,9 @@ if (($communityDbPage ?? "list") === "detail") {
 	if ($communityId !== false && $communityId !== null) {
 		require_once __DIR__."/db_setup.php";
 		require_once __DIR__."/db_connect.php";
-		$statement = $pdo->prepare("SELECT * FROM community_table WHERE id = ? AND status = 'approved'");
-		$statement->execute([$communityId]);
-		$row = $statement->fetch();
+		$statement = $pdo -> prepare("SELECT * FROM community_table WHERE id = ? AND status = 'approved'");
+		$statement -> execute([$communityId]);
+		$row = $statement -> fetch();
 		if ($row) {
 			$community = [
 				"title" => $row["title"] ?: ($row["contribution_title"] ?: $row["related_activity"]),
@@ -50,7 +50,7 @@ if (($communityDbPage ?? "list") === "detail") {
 
 	require_once __DIR__."/db_setup.php";
 	require_once __DIR__."/db_connect.php";
-	$communities = $pdo->query("SELECT id, COALESCE(title, contribution_title, related_activity) AS title, COALESCE(description, contribution_description, '') AS description, COALESCE(member_count, 0) AS member_count, created_at FROM community_table WHERE status = 'approved'")->fetchAll();
+	$communities = $pdo -> query("SELECT id, COALESCE(title, contribution_title, related_activity) AS title, COALESCE(description, contribution_description, '') AS description, COALESCE(member_count, 0) AS member_count, created_at FROM community_table WHERE status = 'approved'") -> fetchAll();
 
 	/*
 	 * ==========================

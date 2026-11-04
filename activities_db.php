@@ -20,9 +20,9 @@ if (($activityDbPage ?? "list") === "registration") {
 	$activityId = isset($_GET["id"])
 		? (int)$_GET["id"]
 		: (int)($_POST["activity_id"] ?? 0);
-	$statement = $pdo->prepare("SELECT id, title, date, time, end_time, price, venue, table_name, image FROM activity_table WHERE id = ? AND record_type = 'event' AND status = 'approved'");
-	$statement->execute([$activityId]);
-	$selectedActivity = $statement->fetch();
+	$statement = $pdo -> prepare("SELECT id, title, date, time, end_time, price, venue, table_name, image FROM activity_table WHERE id = ? AND record_type = 'event' AND status = 'approved'");
+	$statement -> execute([$activityId]);
+	$selectedActivity = $statement -> fetch();
 	$activityTitle = $selectedActivity["title"] ?? "";
 	$activityDate = $selectedActivity["date"] ?? "";
 	$activityStartTime = $selectedActivity["time"] ?? "";
@@ -37,9 +37,9 @@ if (($activityDbPage ?? "list") === "registration") {
 		$selectedActivity = null;
 	}
 
-	$userStatement = $pdo->prepare("SELECT first_name, last_name FROM user_table WHERE email = ?");
-	$userStatement->execute([$_SESSION["email"]]);
-	$currentUser = $userStatement->fetch();
+	$userStatement = $pdo -> prepare("SELECT first_name, last_name FROM user_table WHERE email = ?");
+	$userStatement -> execute([$_SESSION["email"]]);
+	$currentUser = $userStatement -> fetch();
 	if ($currentUser) {
 		$firstName = $currentUser["first_name"];
 		$lastName = $currentUser["last_name"];
@@ -63,24 +63,24 @@ if (($activityDbPage ?? "list") === "registration") {
 			$error = "Please enter a valid contact number (maximum 15 characters).";
 		} else {
 			try {
-				$check = $pdo->prepare("SELECT id FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ?");
-				$check->execute([$activityId, $email]);
-				if ($check->fetch()) {
+				$check = $pdo -> prepare("SELECT id FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ?");
+				$check -> execute([$activityId, $email]);
+				if ($check -> fetch()) {
 					$error = "You have already registered for this activity.";
 				} else {
-					$insert = $pdo->prepare("INSERT INTO activity_table (email, first_name, last_name, date, time, contact_number, status, record_type, activity_id) VALUES (?, ?, ?, ?, ?, ?, 'pending', 'registration', ?)");
-					$insert->execute([$email, $firstName, $lastName, $activityDate, $activityStartTime, $contactNumber, $activityId]);
+					$insert = $pdo -> prepare("INSERT INTO activity_table (email, first_name, last_name, date, time, contact_number, status, record_type, activity_id) VALUES (?, ?, ?, ?, ?, ?, 'pending', 'registration', ?)");
+					$insert -> execute([$email, $firstName, $lastName, $activityDate, $activityStartTime, $contactNumber, $activityId]);
 					$_SESSION["activity_registration_success"] = "You have successfully registered for ".$activityTitle.".";
 					header("Location: activities.php");
 					exit;
 				}
 			} catch (PDOException $e) {
-				error_log($e->getMessage());
+				error_log($e -> getMessage());
 				$error = "Unable to save your registration. Please try again.";
 			}
 		}
 	}
 } else {
-	$activities = $pdo->query("SELECT id, title, activity_type AS type, description, date, time AS start_time, end_time, price, venue, table_name AS `table`, image FROM activity_table WHERE record_type = 'event' AND status = 'approved' ORDER BY date, time")->fetchAll();
+	$activities = $pdo -> query("SELECT id, title, activity_type AS type, description, date, time AS start_time, end_time, price, venue, table_name AS `table`, image FROM activity_table WHERE record_type = 'event' AND status = 'approved' ORDER BY date, time") -> fetchAll();
 }
 ?>

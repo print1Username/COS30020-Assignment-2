@@ -13,9 +13,9 @@ require_once __DIR__."/db_connect.php";
 require_once __DIR__."/upload_helpers.php";
 
 $currentEmail = $_SESSION["email"];
-$statement = $pdo->prepare("SELECT * FROM user_table WHERE email = ?");
-$statement->execute([$currentEmail]);
-$user = $statement->fetch();
+$statement = $pdo -> prepare("SELECT * FROM user_table WHERE email = ?");
+$statement -> execute([$currentEmail]);
+$user = $statement -> fetch();
 if (!$user) {
 	header("Location: login.php");
 	exit;
@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		$error = "Please enter a valid email address (maximum 50 characters).";
 	} elseif (!in_array($gender, ["Male", "Female"], true)) {
 		$error = "Please select a valid gender.";
-	} elseif (!$dobDate || $dobDate->format("Y-m-d") !== $dob) {
+	} elseif (!$dobDate || $dobDate -> format("Y-m-d") !== $dob) {
 		$error = "Please enter a valid date of birth.";
 	} elseif (strlen($hometown) > 50) {
 		$error = "Hometown must be 50 characters or fewer.";
@@ -70,9 +70,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		$newFiles = [];
 		try {
 			if (strcasecmp($email, $currentEmail) !== 0) {
-				$check = $pdo->prepare("SELECT email FROM user_table WHERE email = ?");
-				$check->execute([$email]);
-				if ($check->fetch()) {
+				$check = $pdo -> prepare("SELECT email FROM user_table WHERE email = ?");
+				$check -> execute([$email]);
+				if ($check -> fetch()) {
 					throw new RuntimeException("This email address is already registered.");
 				}
 			}
@@ -95,23 +95,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 				);
 				$newFiles[] = $newResume;
 			}
-			$pdo->beginTransaction();
-			$update = $pdo->prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, profile_image = ?, resume_file = ? WHERE email = ?");
-			$update->execute([$email, $firstName, $lastName, $dob, $gender, $hometown, $newImage, $newResume, $currentEmail]);
-			$pdo->commit();
+			$pdo -> beginTransaction();
+			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, profile_image = ?, resume_file = ? WHERE email = ?");
+			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, $newImage, $newResume, $currentEmail]);
+			$pdo -> commit();
 			$_SESSION["email"] = $email;
 			header("Location: profile.php");
 			exit;
-		} catch (RuntimeException | PDOException $e) {
-			if ($pdo->inTransaction()) {
-				$pdo->rollBack();
+		} catch (RuntimeException|PDOException $e) {
+			if ($pdo -> inTransaction()) {
+				$pdo -> rollBack();
 			}
 			foreach ($newFiles as $path) {
 				unlink(__DIR__."/".$path);
 			}
 			$error = $e instanceof PDOException
 				? "The profile could not be updated. Please try again."
-				: $e->getMessage();
+				: $e -> getMessage();
 		}
 	}
 }
