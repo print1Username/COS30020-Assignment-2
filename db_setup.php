@@ -50,6 +50,19 @@ try {
         ) ENGINE=InnoDB
     ");
 
+	$accounts = json_decode(file_get_contents(__DIR__."/data/accounts.json"), true);
+	$insertDefaultUser = $pdo -> prepare("INSERT IGNORE INTO user_table (email, first_name, last_name, dob, gender, hometown) VALUES (?, ?, ?, ?, ?, ?)");
+	$insertDefaultAccount = $pdo -> prepare("INSERT IGNORE INTO account_table (email, password, type) VALUES (?, ?, ?)");
+	foreach ($accounts as $account) {
+		$insertDefaultUser -> execute([
+			$account["email"], $account["first_name"], $account["last_name"],
+			$account["dob"], $account["gender"], $account["hometown"]
+		]);
+		$insertDefaultAccount -> execute([
+			$account["email"], password_hash($account["password"], PASSWORD_DEFAULT), $account["type"]
+		]);
+	}
+
 	// 3. Smart feature table
 	$pdo -> exec("
         CREATE TABLE IF NOT EXISTS smart_feature_table (

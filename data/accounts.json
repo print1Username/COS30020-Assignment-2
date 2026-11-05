@@ -1,0 +1,32 @@
+[
+    {
+        "first_name": "Admin",
+        "last_name": "User",
+        "dob": "2000-01-01",
+        "gender": "Male",
+        "hometown": "Melbourne",
+        "email": "admin@swin.edu.my",
+        "password": "admin",
+        "type": "admin"
+    },
+    {
+        "first_name": "Alex",
+        "last_name": "Tan",
+        "dob": "2001-05-12",
+        "gender": "Male",
+        "hometown": "Melbourne",
+        "email": "user1@swin.edu.my",
+        "password": "user1",
+        "type": "user"
+    },
+    {
+        "first_name": "Sam",
+        "last_name": "Lee",
+        "dob": "2002-09-21",
+        "gender": "Female",
+        "hometown": "Sydney",
+        "email": "user2@swin.edu.my",
+        "password": "user2",
+        "type": "user"
+    }
+]
