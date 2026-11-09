@@ -132,14 +132,27 @@ body {
 }
 
 /* Bootstrap-style controls use the admin palette on these pages only. */
-main > h1,
-main > p > a {
+main > h1 {
     color: var(--admin-purple-dark);
 }
 
 main > h1 {
     margin-bottom: 12px;
     font-weight: 700;
+}
+
+.admin-back-button,
+.admin-back-button:hover,
+.admin-back-button:focus-visible {
+    color: var(--admin-purple-dark);
+    background: transparent;
+    border: 1px solid var(--admin-purple-dark);
+}
+
+.admin-back-button:hover,
+.admin-back-button:focus-visible {
+    color: var(--admin-purple);
+    border-color: var(--admin-purple);
 }
 
 .btn-primary {
