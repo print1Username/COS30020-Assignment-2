@@ -57,6 +57,11 @@ body {
     transform: scaleX(1);
 }
 
+.admin-navbar .btn-danger {
+    font-size: 1.2rem;
+    padding: 0.45rem 0.9rem;
+}
+
 /* Main menu retains the spacing and card structure of the user menu. */
 .admin-hero {
     padding: 72px 0 64px;
