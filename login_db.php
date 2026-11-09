@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			$_SESSION["email"] = $account["email"];
 			$_SESSION["type"] = $account["type"];
 
-			header("Location: main_menu.php");
+			header("Location: ".($account["type"] === "admin" ? "main_menu_admin.php" : "main_menu.php"));
 			exit;
 
 		} else {

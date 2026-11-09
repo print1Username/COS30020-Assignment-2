@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const gameCount = document.getElementById("catalog-game-count");
 
     const pagination = createPagination({
-        itemsPerPage: 8,
+        itemsPerPage: 6,
         paginationId: "catalog-pagination"
     });
 

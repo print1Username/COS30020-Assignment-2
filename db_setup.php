@@ -53,7 +53,8 @@ try {
 	$accounts = json_decode(file_get_contents(__DIR__."/data/accounts.json"), true);
 	$insertDefaultUser = $pdo -> prepare("INSERT IGNORE INTO user_table (email, first_name, last_name, dob, gender, hometown) VALUES (?, ?, ?, ?, ?, ?)");
 	$insertDefaultAccount = $pdo -> prepare("INSERT IGNORE INTO account_table (email, password, type) VALUES (?, ?, ?)");
-	foreach ($accounts as $account) {
+	$seedAccounts = (int)$pdo->query("SELECT COUNT(*) FROM account_table")->fetchColumn() === 0;
+	foreach ($seedAccounts ? $accounts : [] as $account) {
 		$insertDefaultUser -> execute([
 			$account["email"], $account["first_name"], $account["last_name"],
 			$account["dob"], $account["gender"], $account["hometown"]
@@ -129,7 +130,8 @@ try {
 
 	$activities = json_decode(file_get_contents(__DIR__."/data/activities.json"), true);
 	$insertActivity = $pdo -> prepare("INSERT IGNORE INTO activity_table (email, first_name, last_name, date, time, status, record_type, source_id, title, activity_type, description, end_time, price, venue, table_name, image) VALUES ('', '', '', ?, ?, 'approved', 'event', ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-	foreach ($activities as $seedActivity) {
+	$seedActivities = (int)$pdo->query("SELECT COUNT(*) FROM activity_table")->fetchColumn() === 0;
+	foreach ($seedActivities ? $activities : [] as $seedActivity) {
 		$insertActivity -> execute([
 			$seedActivity["date"], $seedActivity["start_time"], $seedActivity["id"],
 			$seedActivity["title"], $seedActivity["type"], $seedActivity["description"],
@@ -177,7 +179,8 @@ try {
 
 	$communities = json_decode(file_get_contents(__DIR__."/data/community.json"), true);
 	$insertCommunity = $pdo -> prepare("INSERT IGNORE INTO community_table (first_name, last_name, contribution_image, related_activity, status, source_id, title, description, member_count, created_at, contribution_title, contribution_description, contribution_date) VALUES (?, ?, ?, ?, 'approved', ?, ?, ?, ?, ?, ?, ?, ?)");
-	foreach ($communities as $seedCommunity) {
+	$seedCommunities = (int)$pdo->query("SELECT COUNT(*) FROM community_table")->fetchColumn() === 0;
+	foreach ($seedCommunities ? $communities : [] as $seedCommunity) {
 		$contribution = $seedCommunity["contributions"][0] ?? [];
 		$name = explode(" ", $contribution["contributor"] ?? "", 2);
 		$insertCommunity -> execute([

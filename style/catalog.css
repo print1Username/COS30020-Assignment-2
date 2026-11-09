@@ -365,6 +365,44 @@
     color: var(--catalog-muted);
 }
 
+.catalog-pagination {
+    margin-top: 2rem;
+}
+
+.catalog-pagination .pagination {
+    gap: 0.25rem;
+}
+
+.catalog-pagination .page-link {
+    min-width: 40px;
+    height: 40px;
+    border: 1px solid var(--catalog-border);
+    border-radius: 0.4rem !important;
+    color: var(--catalog-purple);
+    background-color: #fff;
+    text-align: center;
+    line-height: 1.4;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.catalog-pagination .page-link:hover {
+    border-color: var(--catalog-purple);
+    background-color: var(--catalog-purple-light);
+    color: var(--catalog-purple-dark);
+}
+
+.catalog-pagination .page-item.active .page-link {
+    border-color: var(--catalog-purple);
+    background-color: var(--catalog-purple);
+    color: #fff;
+}
+
+.catalog-pagination .page-item.disabled .page-link {
+    border-color: var(--catalog-border);
+    background-color: #f8f9fa;
+    color: #adb5bd;
+}
+
 /* ========================================
    Responsive Design
 ======================================== */
