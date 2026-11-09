@@ -10,7 +10,7 @@
 				<a class="nav-link" href="manage_community.php">Community</a>
 				<a class="nav-link" href="manage_activities.php">Activities</a>
 			</div>
-			<a class="btn btn-outline-light" href="main_menu_admin.php?logout=1">Logout</a>
+			<a class="btn btn-danger" href="main_menu_admin.php?logout=1">Logout</a>
 		</div>
 	</div>
 </nav>

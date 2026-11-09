@@ -1,0 +1,206 @@
+/* Admin pages use their own theme. The user-facing stylesheets are not loaded. */
+:root {
+    --admin-purple: #442873;
+    --admin-purple-dark: #322052;
+    --admin-purple-light: #654394;
+    --admin-background: #f8f7fc;
+    --admin-border: #e4deed;
+    --admin-text: #212529;
+    --admin-muted: #6c757d;
+    --admin-white: #ffffff;
+}
+
+body {
+    background: var(--admin-background);
+    color: var(--admin-text);
+}
+
+/* Navigation follows the existing site layout, with a darker admin colour. */
+.admin-navbar {
+    background: var(--admin-purple-dark);
+    box-shadow: 0 2px 10px rgba(36, 20, 58, 0.15);
+}
+
+.admin-navbar .navbar-brand,
+.admin-navbar .nav-link {
+    color: var(--admin-white);
+}
+
+.admin-navbar .nav-link {
+    position: relative;
+    font-weight: 600;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    opacity: 0.82;
+    transition: opacity 0.2s ease;
+}
+
+.admin-navbar .nav-link:hover,
+.admin-navbar .nav-link:focus-visible {
+    opacity: 1;
+}
+
+.admin-navbar .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 0.25rem;
+    height: 2px;
+    background: var(--admin-white);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+}
+
+.admin-navbar .nav-link:hover::after,
+.admin-navbar .nav-link:focus-visible::after {
+    transform: scaleX(1);
+}
+
+/* Main menu retains the spacing and card structure of the user menu. */
+.admin-hero {
+    padding: 72px 0 64px;
+    background: var(--admin-white);
+    border-bottom: 1px solid var(--admin-border);
+    text-align: center;
+}
+
+.admin-hero h1 {
+    margin-bottom: 16px;
+    color: var(--admin-text);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 700;
+}
+
+.admin-hero p:first-child {
+    color: var(--admin-purple) !important;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+}
+
+.admin-hero p:last-child {
+    max-width: 650px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.admin-card,
+.admin-panel {
+    background: var(--admin-white);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(33, 37, 41, 0.04);
+}
+
+.admin-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 260px;
+    height: 100%;
+    padding: 28px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--admin-purple-light);
+    box-shadow: 0 8px 22px rgba(33, 37, 41, 0.08);
+}
+
+.admin-card h2 {
+    font-size: 1.35rem;
+    font-weight: 600;
+}
+
+.admin-card p {
+    color: var(--admin-muted);
+    line-height: 1.65;
+}
+
+.admin-card .btn {
+    align-self: flex-start;
+    margin-top: auto;
+}
+
+.admin-panel {
+    padding: 28px;
+}
+
+.admin-panel h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Bootstrap-style controls use the admin palette on these pages only. */
+main > h1,
+main > p > a {
+    color: var(--admin-purple-dark);
+}
+
+main > h1 {
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.btn-primary {
+    background: var(--admin-purple);
+    border-color: var(--admin-purple);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+    background: var(--admin-purple-dark);
+    border-color: var(--admin-purple-dark);
+}
+
+.admin-action,
+.btn-outline-primary {
+    color: var(--admin-purple);
+    border-color: var(--admin-purple);
+}
+
+.admin-action:hover,
+.admin-action:focus-visible,
+.btn-outline-primary:hover,
+.btn-outline-primary:focus-visible {
+    color: var(--admin-white);
+    background: var(--admin-purple);
+    border-color: var(--admin-purple);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--admin-purple-light);
+    box-shadow: 0 0 0 0.25rem rgba(68, 40, 115, 0.16);
+}
+
+.admin-panel .form-label {
+    font-weight: 500;
+}
+
+.admin-panel .table {
+    --bs-table-striped-bg: #f7f4fb;
+    margin-bottom: 0;
+}
+
+.admin-panel th {
+    color: var(--admin-purple-dark);
+    white-space: nowrap;
+}
+
+.admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.admin-actions .btn:disabled {
+    opacity: 0.45;
+}
+
+@media (max-width: 767.98px) {
+    .admin-hero { padding: 52px 0 44px; }
+    .admin-card { min-height: 0; padding: 24px; }
+    .admin-panel { padding: 20px; }
+    .admin-navbar .nav-link { padding-top: 0.65rem; padding-bottom: 0.65rem; }
+}
