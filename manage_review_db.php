@@ -65,6 +65,11 @@ if (isset($_GET["edit"])) {
 	$statement->execute([$_GET["edit"]]);
 	$edit = $statement->fetch() ?: null;
 }
-$rows = $pdo->query("SELECT * FROM $table".($community ? "" : " WHERE record_type='registration'")." ORDER BY id DESC")->fetchAll();
+if ($community) {
+	$rows = $pdo->query("SELECT * FROM community_table ORDER BY id DESC")->fetchAll();
+} else {
+	$events = $pdo->query("SELECT id, title, activity_type, description, date, time, end_time, venue, table_name, status FROM activity_table WHERE record_type='event' ORDER BY date, time")->fetchAll();
+	$rows = $pdo->query("SELECT registration.*, event.title AS activity_title FROM activity_table AS registration LEFT JOIN activity_table AS event ON event.id=registration.activity_id AND event.record_type='event' WHERE registration.record_type='registration' ORDER BY registration.id DESC")->fetchAll();
+}
 $notice = $_SESSION["admin_notice"] ?? "";
 unset($_SESSION["admin_notice"]);
