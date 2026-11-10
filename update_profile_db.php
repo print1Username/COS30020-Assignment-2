@@ -13,7 +13,7 @@ require_once __DIR__."/db_connect.php";
 require_once __DIR__."/upload_helpers.php";
 
 $currentEmail = $_SESSION["email"];
-$statement = $pdo -> prepare("SELECT * FROM user_table WHERE email = ?");
+$statement = $pdo -> prepare("SELECT email, first_name, last_name, dob, gender, hometown, profile_image, resume_file, OCTET_LENGTH(profile_image_data) AS profile_image_size FROM user_table WHERE email = ?");
 $statement -> execute([$currentEmail]);
 $user = $statement -> fetch();
 if (!$user) {
@@ -30,7 +30,7 @@ $userData = [
 	"Hometown" => $user["hometown"]
 ];
 $error = "";
-$profileImage = $user["profile_image_data"] ?? null;
+$profileImage = $user["profile_image_size"] ?? null;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	$firstName = trim($_POST["first_name"] ?? "");
@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 					throw new RuntimeException("This email address is already registered.");
 				}
 			}
-			$newImageData = null;
+			$newImagePath = null;
 			$newImageMime = null;
 			$newResume = $user["resume_file"];
 			if (isset($_FILES["profile_image"]) &&
@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 					getimagesize($imageFile["tmp_name"]) === false) {
 					throw new RuntimeException("Please upload a valid JPG, JPEG, or PNG image.");
 				}
-				$newImageData = file_get_contents($imageFile["tmp_name"]);
+				$newImagePath = $imageFile["tmp_name"];
 			}
 			if (isset($_FILES["resume_file"]) &&
 				$_FILES["resume_file"]["error"] !== UPLOAD_ERR_NO_FILE) {
@@ -105,8 +105,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 				$newFiles[] = $newResume;
 			}
 			$pdo -> beginTransaction();
-			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, profile_image = ?, profile_image_data = COALESCE(?, profile_image_data), profile_image_mime = COALESCE(?, profile_image_mime), resume_file = ? WHERE email = ?");
-			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, null, $newImageData, $newImageMime, $newResume, $currentEmail]);
+			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, resume_file = ? WHERE email = ?");
+			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, $newResume, $currentEmail]);
+			if ($newImagePath !== null) {
+				storeProfileImage($pdo, $email, $newImageMime, $newImagePath);
+			}
 			$pdo -> commit();
 			$_SESSION["email"] = $email;
 			header("Location: profile.php");

@@ -22,6 +22,7 @@ try {
 
 	// Select database
 	$pdo -> exec("USE `$dbName`");
+	require_once __DIR__."/upload_helpers.php";
 
 	// Homepage slideshow images
 	$pdo -> exec("CREATE TABLE IF NOT EXISTS homepage_image_table (
@@ -32,10 +33,10 @@ try {
 	) ENGINE=InnoDB");
 	$insertHomepageImage = $pdo -> prepare("INSERT IGNORE INTO homepage_image_table (filename, mime_type, image_data) VALUES (?, ?, ?)");
 	for ($imageNumber = 1; $imageNumber <= 5; $imageNumber++) {
-		$imagePath = __DIR__ . "/img/boardgame-" . $imageNumber . ".jpg";
+		$imagePath = __DIR__."/img/boardgame-".$imageNumber.".jpg";
 		if (is_file($imagePath)) {
 			$insertHomepageImage -> execute([
-				"boardgame-" . $imageNumber . ".jpg",
+				"boardgame-".$imageNumber.".jpg",
 				"image/jpeg",
 				file_get_contents($imagePath)
 			]);
@@ -72,7 +73,7 @@ try {
 	$accounts = json_decode(file_get_contents(__DIR__."/data/accounts.json"), true);
 	$insertDefaultUser = $pdo -> prepare("INSERT IGNORE INTO user_table (email, first_name, last_name, dob, gender, hometown) VALUES (?, ?, ?, ?, ?, ?)");
 	$insertDefaultAccount = $pdo -> prepare("INSERT IGNORE INTO account_table (email, password, type) VALUES (?, ?, ?)");
-	$seedAccounts = (int)$pdo->query("SELECT COUNT(*) FROM account_table")->fetchColumn() === 0;
+	$seedAccounts = (int)$pdo -> query("SELECT COUNT(*) FROM account_table") -> fetchColumn() === 0;
 	foreach ($seedAccounts ? $accounts : [] as $account) {
 		$insertDefaultUser -> execute([
 			$account["email"], $account["first_name"], $account["last_name"],
@@ -151,9 +152,34 @@ try {
 		}
 	}
 
+	$defaultProfileImages = [
+		"admin@swin.edu.my" => "admin.png",
+		"user1@swin.edu.my" => "user1.png",
+		"user2@swin.edu.my" => "user2.png"
+	];
+	$needsDefaultProfileImage = $pdo -> prepare("SELECT COUNT(*) FROM user_table WHERE email = ? AND profile_image_data IS NULL");
+	foreach ($defaultProfileImages as $email => $filename) {
+		$needsDefaultProfileImage -> execute([$email]);
+		if (!$needsDefaultProfileImage -> fetchColumn()) {
+			continue;
+		}
+		$imagePath = __DIR__."/profile_images/".$filename;
+		if (!is_file($imagePath) || (new finfo(FILEINFO_MIME_TYPE)) -> file($imagePath) !== "image/png") {
+			throw new RuntimeException("Default profile image is missing or invalid: ".$filename);
+		}
+		$pdo -> beginTransaction();
+		try {
+			storeProfileImage($pdo, $email, "image/png", $imagePath);
+			$pdo -> commit();
+		} catch (Throwable $e) {
+			$pdo -> rollBack();
+			throw $e;
+		}
+	}
+
 	$activities = json_decode(file_get_contents(__DIR__."/data/activities.json"), true);
 	$insertActivity = $pdo -> prepare("INSERT IGNORE INTO activity_table (email, first_name, last_name, date, time, status, record_type, source_id, title, activity_type, description, end_time, price, venue, table_name, image) VALUES ('', '', '', ?, ?, 'approved', 'event', ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-	$seedActivities = (int)$pdo->query("SELECT COUNT(*) FROM activity_table")->fetchColumn() === 0;
+	$seedActivities = (int)$pdo -> query("SELECT COUNT(*) FROM activity_table") -> fetchColumn() === 0;
 	foreach ($seedActivities ? $activities : [] as $seedActivity) {
 		$insertActivity -> execute([
 			$seedActivity["date"], $seedActivity["start_time"], $seedActivity["id"],
@@ -202,7 +228,7 @@ try {
 
 	$communities = json_decode(file_get_contents(__DIR__."/data/community.json"), true);
 	$insertCommunity = $pdo -> prepare("INSERT IGNORE INTO community_table (first_name, last_name, contribution_image, related_activity, status, source_id, title, description, member_count, created_at, contribution_title, contribution_description, contribution_date) VALUES (?, ?, ?, ?, 'approved', ?, ?, ?, ?, ?, ?, ?, ?)");
-	$seedCommunities = (int)$pdo->query("SELECT COUNT(*) FROM community_table")->fetchColumn() === 0;
+	$seedCommunities = (int)$pdo -> query("SELECT COUNT(*) FROM community_table") -> fetchColumn() === 0;
 	foreach ($seedCommunities ? $communities : [] as $seedCommunity) {
 		$contribution = $seedCommunity["contributions"][0] ?? [];
 		$name = explode(" ", $contribution["contributor"] ?? "", 2);
@@ -216,7 +242,7 @@ try {
 		]);
 	}
 
-} catch (PDOException $e) {
+} catch (PDOException|RuntimeException $e) {
 	error_log($e -> getMessage());
 	http_response_code(500);
 	exit("Database setup failed.");

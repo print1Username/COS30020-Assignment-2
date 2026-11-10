@@ -1,5 +1,33 @@
 <?php
 
+function storeProfileImage(PDO $pdo, string $email, string $mime, string $path): void
+{
+	$packetLimit = (int)$pdo->query("SELECT @@max_allowed_packet")->fetchColumn();
+	if (filesize($path) + 131072 > $packetLimit) {
+		throw new RuntimeException("MySQL max_allowed_packet is too small for this profile image.");
+	}
+	$stream = fopen($path, "rb");
+	if ($stream === false) {
+		throw new RuntimeException("The profile image could not be read.");
+	}
+	try {
+		$reset = $pdo->prepare("UPDATE user_table SET profile_image = NULL, profile_image_data = '', profile_image_mime = ? WHERE email = ?");
+		$reset->execute([$mime, $email]);
+		$append = $pdo->prepare("UPDATE user_table SET profile_image_data = CONCAT(profile_image_data, ?) WHERE email = ?");
+		while (!feof($stream)) {
+			$chunk = fread($stream, 128 * 1024);
+			if ($chunk === false) {
+				throw new RuntimeException("The profile image could not be read.");
+			}
+			if ($chunk !== "") {
+				$append->execute([$chunk, $email]);
+			}
+		}
+	} finally {
+		fclose($stream);
+	}
+}
+
 function saveValidatedUpload(array $file, string $folder, array $allowedMime, int $maxBytes): string
 {
 	if (($file["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
