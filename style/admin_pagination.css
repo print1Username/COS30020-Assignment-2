@@ -1,0 +1,25 @@
+.admin-pagination {
+    margin-top: 20px;
+}
+
+.admin-pagination .pagination {
+    --bs-pagination-color: var(--admin-purple-dark);
+    --bs-pagination-border-color: var(--admin-border);
+    --bs-pagination-hover-color: var(--admin-white);
+    --bs-pagination-hover-bg: var(--admin-purple-dark);
+    --bs-pagination-hover-border-color: var(--admin-purple-dark);
+    --bs-pagination-focus-color: var(--admin-purple-dark);
+    --bs-pagination-focus-bg: #f1eafa;
+    --bs-pagination-focus-box-shadow: 0 0 0 0.2rem rgba(68, 40, 115, 0.2);
+    --bs-pagination-active-color: var(--admin-white);
+    --bs-pagination-active-bg: var(--admin-purple-dark);
+    --bs-pagination-active-border-color: var(--admin-purple-dark);
+    --bs-pagination-disabled-color: var(--admin-muted);
+    --bs-pagination-disabled-bg: var(--admin-background);
+    --bs-pagination-disabled-border-color: var(--admin-border);
+}
+
+.admin-pagination .page-link {
+    min-width: 42px;
+    text-align: center;
+}
