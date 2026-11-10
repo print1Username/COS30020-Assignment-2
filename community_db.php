@@ -1,14 +1,15 @@
 <?php
 session_start();
 
-if (($communityDbPage ?? "list") === "detail") {
-	if (($_SESSION["logged_in"] ?? false) !== true ||
-		($_SESSION["type"] ?? null) !== "user" ||
-		!isset($_SESSION["email"])) {
-		header("Location: login.php");
-		exit;
-	}
+if (($_SESSION["logged_in"] ?? false) !== true ||
+	($_SESSION["type"] ?? null) !== "user" ||
+	!isset($_SESSION["email"])) {
+	header("Location: login.php");
+	exit;
+}
 
+
+if (($communityDbPage ?? "list") === "detail") {
 	$communityId = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
 	$community = null;
 

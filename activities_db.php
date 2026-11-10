@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 if (($_SESSION["logged_in"] ?? false) !== true ||
 	($_SESSION["type"] ?? null) !== "user" ||
 	!isset($_SESSION["email"])) {

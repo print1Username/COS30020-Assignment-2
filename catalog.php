@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+if (($_SESSION["logged_in"] ?? false) !== true ||
+	($_SESSION["type"] ?? null) !== "user" ||
+	!isset($_SESSION["email"])) {
+	header("Location: login.php");
+	exit;
+}
+
 // Load boardgame data from JSON
 $catalogueFile = "data/catalog.json";
 $games = [];
