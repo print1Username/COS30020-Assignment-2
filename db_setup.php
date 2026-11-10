@@ -158,8 +158,8 @@ try {
 		"user2@swin.edu.my" => "user2.png"
 	];
 	$needsDefaultProfileImage = $pdo -> prepare("SELECT COUNT(*) FROM user_table WHERE email = ? AND profile_image_data IS NULL");
-	foreach ($defaultProfileImages as $email => $filename) {
-		$needsDefaultProfileImage -> execute([$email]);
+	foreach ($defaultProfileImages as $seedEmail => $filename) {
+		$needsDefaultProfileImage -> execute([$seedEmail]);
 		if (!$needsDefaultProfileImage -> fetchColumn()) {
 			continue;
 		}
@@ -169,7 +169,7 @@ try {
 		}
 		$pdo -> beginTransaction();
 		try {
-			storeProfileImage($pdo, $email, "image/png", $imagePath);
+			storeProfileImage($pdo, $seedEmail, "image/png", $imagePath);
 			$pdo -> commit();
 		} catch (Throwable $e) {
 			$pdo -> rollBack();
