@@ -1,5 +1,7 @@
 <?php
 session_start();
+require_once "db_setup.php";
+$homepageImages = $pdo->query("SELECT filename, mime_type, image_data FROM homepage_image_table ORDER BY filename")->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -82,7 +84,7 @@ session_start();
 		<section class="index-image-section">
 			<div class="index-image-wrapper">
 				<img
-					src="img/boardgame-1.jpg"
+					src="data:<?php echo htmlspecialchars($homepageImages[0]['mime_type'], ENT_QUOTES, 'UTF-8'); ?>;base64,<?php echo base64_encode($homepageImages[0]['image_data']); ?>"
 					alt="Board game session at Boardgame Hub"
 					class="index-random-image"
 					id="boardgame-slideshow"
@@ -306,18 +308,14 @@ session_start();
 		) ? "true" : "false";
 		?>;
 
-        let currentImage = 1;
-        const totalImages = 5;
+		const homepageImages = <?php echo json_encode(array_map(function ($image) {
+			return "data:" . $image["mime_type"] . ";base64," . base64_encode($image["image_data"]);
+		}, $homepageImages), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+		let currentImage = 0;
 
         setInterval(function () {
-            currentImage++;
-
-            if (currentImage > totalImages) {
-                currentImage = 1;
-            }
-
-            document.getElementById("boardgame-slideshow").src =
-                "img/boardgame-" + currentImage + ".jpg";
+			currentImage = (currentImage + 1) % homepageImages.length;
+			document.getElementById("boardgame-slideshow").src = homepageImages[currentImage];
 
         }, 5000);
 	</script>

@@ -23,6 +23,25 @@ try {
 	// Select database
 	$pdo -> exec("USE `$dbName`");
 
+	// Homepage slideshow images
+	$pdo -> exec("CREATE TABLE IF NOT EXISTS homepage_image_table (
+		id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		filename VARCHAR(100) NOT NULL UNIQUE,
+		mime_type VARCHAR(30) NOT NULL,
+		image_data LONGBLOB NOT NULL
+	) ENGINE=InnoDB");
+	$insertHomepageImage = $pdo -> prepare("INSERT IGNORE INTO homepage_image_table (filename, mime_type, image_data) VALUES (?, ?, ?)");
+	for ($imageNumber = 1; $imageNumber <= 5; $imageNumber++) {
+		$imagePath = __DIR__ . "/img/boardgame-" . $imageNumber . ".jpg";
+		if (is_file($imagePath)) {
+			$insertHomepageImage -> execute([
+				"boardgame-" . $imageNumber . ".jpg",
+				"image/jpeg",
+				file_get_contents($imagePath)
+			]);
+		}
+	}
+
 	// 1. User table
 	$pdo -> exec("
         CREATE TABLE IF NOT EXISTS user_table (
