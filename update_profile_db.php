@@ -30,7 +30,7 @@ $userData = [
 	"Hometown" => $user["hometown"]
 ];
 $error = "";
-$profileImage = $user["profile_image"] ?? "";
+$profileImage = $user["profile_image_data"] ?? null;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	$firstName = trim($_POST["first_name"] ?? "");
@@ -76,16 +76,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 					throw new RuntimeException("This email address is already registered.");
 				}
 			}
-			$newImage = $user["profile_image"];
+			$newImageData = null;
+			$newImageMime = null;
 			$newResume = $user["resume_file"];
 			if (isset($_FILES["profile_image"]) &&
 				$_FILES["profile_image"]["error"] !== UPLOAD_ERR_NO_FILE) {
-				$newImage = saveValidatedUpload(
-					$_FILES["profile_image"], "profile_images",
-					["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"],
-					5 * 1024 * 1024
-				);
-				$newFiles[] = $newImage;
+				$imageFile = $_FILES["profile_image"];
+				if (($imageFile["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK ||
+					($imageFile["size"] ?? 0) > 5 * 1024 * 1024 || ($imageFile["size"] ?? 0) < 1 ||
+					!is_uploaded_file($imageFile["tmp_name"])) {
+					throw new RuntimeException("The image exceeds the allowed size or could not be uploaded.");
+				}
+				$extension = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
+				$newImageMime = (new finfo(FILEINFO_MIME_TYPE))->file($imageFile["tmp_name"]);
+				$allowedImages = ["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"];
+				if (!isset($allowedImages[$extension]) || $allowedImages[$extension] !== $newImageMime ||
+					getimagesize($imageFile["tmp_name"]) === false) {
+					throw new RuntimeException("Please upload a valid JPG, JPEG, or PNG image.");
+				}
+				$newImageData = file_get_contents($imageFile["tmp_name"]);
 			}
 			if (isset($_FILES["resume_file"]) &&
 				$_FILES["resume_file"]["error"] !== UPLOAD_ERR_NO_FILE) {
@@ -96,8 +105,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 				$newFiles[] = $newResume;
 			}
 			$pdo -> beginTransaction();
-			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, profile_image = ?, resume_file = ? WHERE email = ?");
-			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, $newImage, $newResume, $currentEmail]);
+			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, profile_image = ?, profile_image_data = COALESCE(?, profile_image_data), profile_image_mime = COALESCE(?, profile_image_mime), resume_file = ? WHERE email = ?");
+			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, null, $newImageData, $newImageMime, $newResume, $currentEmail]);
 			$pdo -> commit();
 			$_SESSION["email"] = $email;
 			header("Location: profile.php");
@@ -105,9 +114,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		} catch (RuntimeException|PDOException $e) {
 			if ($pdo -> inTransaction()) {
 				$pdo -> rollBack();
-			}
-			foreach ($newFiles as $path) {
-				unlink(__DIR__."/".$path);
 			}
 			$error = $e instanceof PDOException
 				? "The profile could not be updated. Please try again."
@@ -118,10 +124,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 $fullName = trim($userData["First Name"]." ".$userData["LastName"]);
 $dobInputValue = $userData["DOB"];
-$profileImagePath = "";
-if (is_string($profileImage) && $profileImage !== "" &&
-	str_starts_with($profileImage, "profile_images/") &&
-	file_exists(__DIR__."/".$profileImage)) {
-	$profileImagePath = $profileImage;
-}
+$profileImagePath = !empty($profileImage) ? "profile_image.php" : "";
 ?>

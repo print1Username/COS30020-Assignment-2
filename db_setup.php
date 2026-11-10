@@ -122,7 +122,11 @@ try {
 
 	// Add Part 3 columns to databases created by the earlier version.
 	$requiredColumns = [
-		"user_table" => ["resume_file" => "VARCHAR(100) NULL"],
+		"user_table" => [
+			"resume_file" => "VARCHAR(100) NULL",
+			"profile_image_data" => "LONGBLOB NULL",
+			"profile_image_mime" => "VARCHAR(30) NULL"
+		],
 		"activity_table" => [
 			"record_type" => "VARCHAR(12) NOT NULL DEFAULT 'registration'",
 			"source_id" => "INT NULL UNIQUE",
