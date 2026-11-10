@@ -11,6 +11,9 @@ unset($_SESSION["registration_old"]);
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+    <link rel="icon" href="public/logo.ico" sizes="any">
+    <link rel="icon" type="image/png" href="public/logo.png">
+
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 

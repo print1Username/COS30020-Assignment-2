@@ -4,6 +4,9 @@ require_once __DIR__."/smart_feature_add_db.php";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+    <link rel="icon" href="public/logo.ico" sizes="any">
+    <link rel="icon" type="image/png" href="public/logo.png">
+
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Contribute a Board Game | Boardgame Hub</title>
