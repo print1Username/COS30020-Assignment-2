@@ -66,5 +66,9 @@ Thumbs.db
 
 # File
 *.pdf
+!smart_feature_description/sample-catan.pdf
+!smart_feature_description/sample-ticket-to-ride.pdf
+!smart_feature_description/sample-carcassonne.pdf
+!smart_feature_description/sample-7-wonders.pdf
 *.docx
 *.doc

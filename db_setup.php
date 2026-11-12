@@ -96,6 +96,18 @@ try {
             status VARCHAR(10) NOT NULL
         ) ENGINE=InnoDB
     ");
+	$sampleGames = [
+		["Catan", "Strategy", "img/boardgame-1.jpg", "smart_feature_description/sample-catan.pdf"],
+		["Ticket to Ride", "Family Games", "img/boardgame-2.jpg", "smart_feature_description/sample-ticket-to-ride.pdf"],
+		["Carcassonne", "Strategy", "img/boardgame-3.jpg", "smart_feature_description/sample-carcassonne.pdf"],
+		["7 Wonders", "Card Games", "img/boardgame-4.jpg", "smart_feature_description/sample-7-wonders.pdf"]
+	];
+	$insertSampleGame = $pdo -> prepare("INSERT INTO smart_feature_table (item_name, item_category, item_image, description_file, status)
+		SELECT ?, ?, ?, ?, 'approved' WHERE NOT EXISTS
+		(SELECT 1 FROM smart_feature_table WHERE item_name = ?)");
+	foreach ($sampleGames as $game) {
+		$insertSampleGame -> execute([...$game, $game[0]]);
+	}
 
 	// 4. Activity table
 	$pdo -> exec("

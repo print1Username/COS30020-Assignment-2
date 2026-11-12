@@ -42,6 +42,11 @@ const navbar = `
                         Catalogue
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="smart_feature.php">
+                        Search
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="activities.php">

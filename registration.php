@@ -284,7 +284,7 @@ unset($_SESSION["registration_old"]);
 	></script>
 
 	<!-- Navbar JavaScript -->
-	<script src="components/navbar.js"></script>
+	<script src="components/navbar.js?v=<?= filemtime(__DIR__."/components/navbar.js") ?>"></script>
 
 	<script>
         const passwordInput = document.getElementById("password");

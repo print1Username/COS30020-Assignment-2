@@ -195,7 +195,7 @@ require_once __DIR__."/login_db.php";
 
 
 	<!-- Compiled Navbar JavaScript -->
-	<script src="components/navbar.js"></script>
+	<script src="components/navbar.js?v=<?= filemtime(__DIR__."/components/navbar.js") ?>"></script>
 
 
 	<!-- Password Show / Hide -->

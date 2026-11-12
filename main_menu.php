@@ -138,6 +138,21 @@ $loginTarget = $isLoggedIn ? "profile.php" : "login.php";
 						</div>
 					</article>
 
+					<!-- Smart Feature Card -->
+					<article class="main-menu-card">
+						<div class="main-menu-card-icon">
+							<i class="bi bi-search"></i>
+						</div>
+						<div class="main-menu-card-content">
+							<h2>Find a Board Game</h2>
+							<p>Search approved board games by name or category.</p>
+							<a href="smart_feature.php" class="btn main-menu-card-button">
+								Find a Game
+								<i class="bi bi-arrow-right"></i>
+							</a>
+						</div>
+					</article>
+
 					<!-- About Card -->
 					<article class="main-menu-card">
 						<div class="main-menu-card-icon">

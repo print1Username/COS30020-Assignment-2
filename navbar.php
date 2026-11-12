@@ -18,4 +18,4 @@ $isLoggedIn = isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true;
     window.isLoggedIn = <?= $isLoggedIn ? "true" : "false" ?>;
 </script>
 
-<script src="components/navbar.js"></script>
+<script src="components/navbar.js?v=<?= filemtime(__DIR__."/components/navbar.js") ?>"></script>
