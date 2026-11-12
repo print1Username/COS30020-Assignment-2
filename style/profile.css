@@ -337,7 +337,7 @@
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
     padding: 0.75rem 1rem;
     border: 2px solid var(--profile-purple);
     border-radius: 0.75rem;
@@ -376,16 +376,23 @@
     gap: 0.5rem;
 }
 
+.profile-pdf-actions .btn {
+    padding: 0.55rem 0.9rem;
+    font-size: 1.1rem;
+}
+
 .profile-pdf-button {
     flex: none;
+    background-color: var(--profile-purple);
     border: 1px solid var(--profile-purple);
     border-radius: 0.625rem;
-    color: var(--profile-purple);
+    color: #fff;
 }
 
 .profile-pdf-button:hover,
 .profile-pdf-button:focus {
-    background: var(--profile-purple);
+    background-color: var(--profile-purple-dark);
+    border-color: var(--profile-purple-dark);
     color: #fff;
 }
 
