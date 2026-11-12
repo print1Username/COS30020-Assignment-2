@@ -8,8 +8,6 @@ if (($_SESSION["logged_in"] ?? false) !== true ||
 	exit;
 }
 
-$isLoggedIn = isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true;
-$loginTarget = $isLoggedIn ? "profile.php" : "login.php";
 ?>
 
 <!DOCTYPE html>
@@ -153,55 +151,28 @@ $loginTarget = $isLoggedIn ? "profile.php" : "login.php";
 						</div>
 					</article>
 
-					<!-- About Card -->
-					<article class="main-menu-card">
-						<div class="main-menu-card-icon">
-							<i class="bi bi-info-circle-fill"></i>
-						</div>
-						<div class="main-menu-card-content">
+				</div>
+
+				<!-- About Card -->
+				<article class="main-menu-about-card">
+					<div class="main-menu-about-content">
+						<i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+						<div>
 							<h2>About</h2>
 							<p>
 								Learn more about Boardgame Hub, its purpose,
 								features, and project information.
 							</p>
-							<a
-								href="about.php"
-								class="btn main-menu-card-button"
-							>
-								Learn More
-								<i class="bi bi-arrow-right"></i>
-							</a>
-						</div>
-					</article>
-				</div>
-			</div>
-		</section>
-
-		<!-- Login Section -->
-		<section class="main-menu-login-section">
-			<div class="container">
-				<div class="main-menu-login-card">
-					<div class="main-menu-login-content">
-						<i class="bi bi-person-circle"></i>
-						<div>
-							<h2>Ready to get started?</h2>
-							<p>
-								Log in to access your profile and manage
-								your Boardgame Hub activities.
-							</p>
 						</div>
 					</div>
-
-					<a
-						href="<?php echo $loginTarget; ?>"
-						class="btn main-menu-login-button"
-					>
-						<i class="bi bi-box-arrow-in-right"></i>
-						Login
+					<a href="about.php" class="btn main-menu-about-button">
+						Learn More
+						<i class="bi bi-arrow-right" aria-hidden="true"></i>
 					</a>
-				</div>
+				</article>
 			</div>
 		</section>
+
 	</main>
 
 	<!-- Bootstrap JavaScript -->

@@ -60,6 +60,22 @@
     min-width: 0;
 }
 
+.smart-feature-contribute-link {
+    margin: 18px 0 0;
+    color: var(--smart-muted);
+    text-align: center;
+}
+
+.smart-feature-contribute-link a {
+    color: var(--smart-purple);
+    font-weight: 600;
+}
+
+.smart-feature-contribute-link a:hover,
+.smart-feature-contribute-link a:focus-visible {
+    color: var(--smart-purple-dark);
+}
+
 .smart-feature-page .form-label {
     color: var(--smart-text);
     font-weight: 600;

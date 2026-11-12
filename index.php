@@ -257,7 +257,24 @@ $homepageImages = $pdo->query("SELECT filename, mime_type, image_data FROM homep
 		</section>
 
 
-		<!-- Login CTA -->
+		<?php
+		$accountType = ($_SESSION["logged_in"] ?? false) === true && isset($_SESSION["email"])
+			? ($_SESSION["type"] ?? null) : null;
+		if ($accountType === "user") {
+			$ctaSubtitle = "View your profile and manage your Boardgame Hub activities.";
+			$ctaLink = "profile.php";
+			$ctaLabel = "View Profile";
+		} elseif ($accountType === "admin") {
+			$ctaSubtitle = "Manage accounts, communities, and activities from the admin menu.";
+			$ctaLink = "main_menu_admin.php";
+			$ctaLabel = "Admin Menu";
+		} else {
+			$ctaSubtitle = "Log in to manage your bookings and profile.";
+			$ctaLink = "login.php";
+			$ctaLabel = "Log In";
+		}
+		?>
+		<!-- Account CTA -->
 		<section class="index-cta text-center">
 
 			<h2 class="fw-bold">
@@ -265,19 +282,11 @@ $homepageImages = $pdo->query("SELECT filename, mime_type, image_data FROM homep
 			</h2>
 
 			<p class="mb-4">
-				Log in to manage your bookings and profile.
+				<?php echo $ctaSubtitle; ?>
 			</p>
 
-			<?php
-			if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) {
-				$loginLink = "profile.php";
-			} else {
-				$loginLink = "login.php";
-			}
-			?>
-
-			<a href="<?php echo $loginLink; ?>" class="index-login-link">
-				Log In
+			<a href="<?php echo $ctaLink; ?>" class="index-login-link">
+				<?php echo $ctaLabel; ?>
 			</a>
 
 		</section>

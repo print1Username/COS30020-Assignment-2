@@ -6,7 +6,6 @@
 
 :root {
     --main-menu-purple: #6f42c1;
-    --main-menu-purple-dark: #59359a;
     --main-menu-purple-light: #8b68d1;
     --main-menu-background: #f8f7fc;
     --main-menu-border: #e5e1ef;
@@ -79,7 +78,7 @@ body {
  */
 
 .main-menu-section {
-    padding: 56px 0 32px;
+    padding: 56px 0 64px;
 }
 
 .main-menu-grid {
@@ -183,55 +182,46 @@ body {
     transform: translateX(3px);
 }
 
-
-/*
- * ==========================
- * Login Section
- * ==========================
- */
-
-.main-menu-login-section {
-    padding: 24px 0 64px;
-}
-
-.main-menu-login-card {
+/* About card */
+.main-menu-about-card {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
+    margin-top: 24px;
     padding: 28px 32px;
     background-color: var(--main-menu-purple);
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(111, 66, 193, 0.18);
 }
 
-.main-menu-login-content {
+.main-menu-about-content {
     display: flex;
     align-items: center;
     gap: 18px;
 }
 
-.main-menu-login-content > i {
+.main-menu-about-content > i {
     flex-shrink: 0;
     color: var(--main-menu-white);
     font-size: 2.25rem;
 }
 
-.main-menu-login-content h2 {
+.main-menu-about-content h2 {
     margin-bottom: 5px;
     color: var(--main-menu-white);
     font-size: 1.3rem;
     font-weight: 600;
 }
 
-.main-menu-login-content p {
+.main-menu-about-content p {
     margin: 0;
     color: rgba(255, 255, 255, 0.85);
     font-size: 0.9rem;
     line-height: 1.5;
 }
 
-.main-menu-login-button {
+.main-menu-about-button {
     display: inline-flex;
     flex-shrink: 0;
     align-items: center;
@@ -244,15 +234,11 @@ body {
     border: 1px solid var(--main-menu-white);
     border-radius: 6px;
     font-weight: 600;
-    transition:
-        color 0.2s ease,
-        background-color 0.2s ease,
-        border-color 0.2s ease;
 }
 
-.main-menu-login-button:hover,
-.main-menu-login-button:focus {
-    color: var(--main-menu-purple-dark);
+.main-menu-about-button:hover,
+.main-menu-about-button:focus-visible {
+    color: #59359a;
     background-color: #f3f0f8;
     border-color: #f3f0f8;
 }
@@ -278,7 +264,7 @@ body {
     }
 
     .main-menu-section {
-        padding: 40px 0 24px;
+        padding: 40px 0 48px;
     }
 
     .main-menu-grid {
@@ -291,21 +277,13 @@ body {
         padding: 24px;
     }
 
-    .main-menu-login-section {
-        padding: 18px 0 48px;
-    }
-
-    .main-menu-login-card {
+    .main-menu-about-card {
         flex-direction: column;
         align-items: stretch;
         padding: 24px;
     }
 
-    .main-menu-login-content {
-        align-items: flex-start;
-    }
-
-    .main-menu-login-button {
+    .main-menu-about-button {
         width: 100%;
     }
 }
@@ -324,19 +302,12 @@ body {
         font-size: 1.25rem;
     }
 
-    .main-menu-login-content {
+    .main-menu-about-content {
+        align-items: flex-start;
         gap: 14px;
     }
 
-    .main-menu-login-content > i {
+    .main-menu-about-content > i {
         font-size: 1.9rem;
-    }
-
-    .main-menu-login-content h2 {
-        font-size: 1.15rem;
-    }
-
-    .main-menu-login-content p {
-        font-size: 0.85rem;
     }
 }

@@ -29,6 +29,7 @@
 				</div>
 				<button type="submit" class="btn smart-feature-button">Find Game</button>
 			</form>
+			<p class="smart-feature-contribute-link">Want to Contribute a Board Game? <a href="smart_feature_add.php">Click Here</a></p>
 
 			<?php if ($search !== "" && $result === null): ?>
 				<p class="smart-feature-message" role="status">No matching data available.</p>
