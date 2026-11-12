@@ -25,7 +25,37 @@ require_once __DIR__."/db_connect.php";
 require_once __DIR__."/upload_helpers.php";
 $uploadError = "";
 $_SESSION["profile_upload_token"] ??= bin2hex(random_bytes(32));
-if ($_SERVER["REQUEST_METHOD"] === "POST" && (isset($_FILES["resume_file"]) || isset($_POST["remove_pdf"]))) {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profile_image"])) {
+	if (!hash_equals($_SESSION["profile_upload_token"], $_POST["upload_token"] ?? "")) {
+		$uploadError = "Invalid upload request. Please try again.";
+	} else {
+		try {
+			$imageFile = $_FILES["profile_image"];
+			if (($imageFile["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK ||
+				($imageFile["size"] ?? 0) > 5 * 1024 * 1024 || ($imageFile["size"] ?? 0) < 1 ||
+				!is_uploaded_file($imageFile["tmp_name"])) {
+				throw new RuntimeException("The image exceeds 5MB or could not be uploaded.");
+			}
+			$extension = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
+			$mime = (new finfo(FILEINFO_MIME_TYPE))->file($imageFile["tmp_name"]);
+			$allowedImages = ["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"];
+			if (!isset($allowedImages[$extension]) || $allowedImages[$extension] !== $mime ||
+				getimagesize($imageFile["tmp_name"]) === false) {
+				throw new RuntimeException("Please upload a valid JPG, JPEG, or PNG image.");
+			}
+			$pdo -> beginTransaction();
+			storeProfileImage($pdo, $currentEmail, $mime, $imageFile["tmp_name"]);
+			$pdo -> commit();
+			header("Location: profile.php");
+			exit;
+		} catch (RuntimeException|PDOException $e) {
+			if ($pdo -> inTransaction()) {
+				$pdo -> rollBack();
+			}
+			$uploadError = $e instanceof PDOException ? "The profile photo could not be saved. Please try again." : $e -> getMessage();
+		}
+	}
+} elseif ($_SERVER["REQUEST_METHOD"] === "POST" && (isset($_FILES["resume_file"]) || isset($_POST["remove_pdf"]))) {
 	if (!hash_equals($_SESSION["profile_upload_token"] ?? "", $_POST["upload_token"] ?? "")) {
 		$uploadError = "Invalid upload request. Please try again.";
 	} elseif (isset($_POST["remove_pdf"])) {

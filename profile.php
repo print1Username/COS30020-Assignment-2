@@ -63,21 +63,16 @@ require_once __DIR__."/profile_db.php";
 					</div>
 
 					<div class="profile-picture-actions">
-						<a
-							href="update_profile.php"
-							class="btn profile-upload-button"
-						>
-							<i class="bi bi-upload me-2"></i>
-							Upload Profile
-						</a>
-
-						<a
-							href="update_profile.php"
-							class="btn profile-camera-button"
-						>
-							<i class="bi bi-camera me-2"></i>
-							Take from Camera
-						</a>
+						<form action="profile.php" method="POST" enctype="multipart/form-data">
+							<input type="hidden" name="upload_token" value="<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>">
+							<input type="file" id="profilePhotoInput" name="profile_image" accept="image/jpeg,image/png" hidden>
+							<button type="button" id="profilePhotoButton" class="btn profile-upload-button"><i class="bi bi-upload me-2"></i>Upload Profile</button>
+						</form>
+						<form action="profile.php" method="POST" enctype="multipart/form-data">
+							<input type="hidden" name="upload_token" value="<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>">
+							<input type="file" id="profileCameraInput" name="profile_image" accept="image/jpeg,image/png" capture="user" hidden>
+							<button type="button" id="profileCameraButton" class="btn profile-camera-button"><i class="bi bi-camera me-2"></i>Take from Camera</button>
+						</form>
 					</div>
 				</section>
 
@@ -181,6 +176,14 @@ require_once __DIR__."/profile_db.php";
 		</div>
 	</main>
 	<script>
+		for (const [buttonId, inputId] of [["profilePhotoButton", "profilePhotoInput"], ["profileCameraButton", "profileCameraInput"]]) {
+			const button = document.getElementById(buttonId);
+			const input = document.getElementById(inputId);
+			button.addEventListener("click", () => input.click());
+			input.addEventListener("change", () => {
+				if (input.files.length) input.form.requestSubmit();
+			});
+		}
 		const uploadButton = document.getElementById("profilePdfButton");
 		const pdfInput = document.getElementById("profilePdfInput");
 		uploadButton.addEventListener("click", () => pdfInput.click());
