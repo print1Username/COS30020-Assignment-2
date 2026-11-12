@@ -322,9 +322,95 @@
 
 /*
  * ==========================================================
- * Academic Integrity
+ * Profile PDF and Academic Integrity
  * ==========================================================
  */
+
+.profile-pdf-heading {
+    margin-bottom: 0.75rem;
+    color: var(--profile-text);
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.profile-pdf-box {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--profile-purple);
+    border-radius: 0.75rem;
+}
+
+.profile-pdf-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.profile-pdf-info .bi {
+    color: var(--profile-purple);
+    font-size: 1.5rem;
+}
+
+.profile-pdf-text {
+    min-width: 0;
+}
+
+.profile-pdf-name {
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.profile-pdf-requirements {
+    display: block;
+    color: var(--profile-muted);
+    margin-top: 0.25rem;
+}
+
+.profile-pdf-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.profile-pdf-button {
+    flex: none;
+    border: 1px solid var(--profile-purple);
+    border-radius: 0.625rem;
+    color: var(--profile-purple);
+}
+
+.profile-pdf-button:hover,
+.profile-pdf-button:focus {
+    background: var(--profile-purple);
+    color: #fff;
+}
+
+.profile-pdf-remove-button {
+    flex: none;
+    border: 1px solid var(--profile-danger);
+    border-radius: 0.625rem;
+    color: var(--profile-danger);
+}
+
+.profile-pdf-remove-button:hover,
+.profile-pdf-remove-button:focus {
+    background: var(--profile-danger);
+    color: #fff;
+}
+
+@media (max-width: 575.98px) {
+    .profile-pdf-box {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-pdf-actions {
+        justify-content: flex-start;
+    }
+}
 
 .academic-integrity-section {
     margin-top: 2.5rem;

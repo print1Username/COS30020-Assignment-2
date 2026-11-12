@@ -53,7 +53,8 @@ try {
             gender VARCHAR(6) NOT NULL,
             hometown VARCHAR(50) NOT NULL,
             profile_image VARCHAR(100) NULL,
-            resume_file VARCHAR(100) NULL
+            resume_file VARCHAR(100) NULL,
+            resume_filename VARCHAR(255) NULL
         ) ENGINE=InnoDB
     ");
 
@@ -125,6 +126,7 @@ try {
 	$requiredColumns = [
 		"user_table" => [
 			"resume_file" => "VARCHAR(100) NULL",
+			"resume_filename" => "VARCHAR(255) NULL",
 			"profile_image_data" => "LONGBLOB NULL",
 			"profile_image_mime" => "VARCHAR(30) NULL"
 		],

@@ -13,7 +13,7 @@ require_once __DIR__."/db_connect.php";
 require_once __DIR__."/upload_helpers.php";
 
 $currentEmail = $_SESSION["email"];
-$statement = $pdo -> prepare("SELECT email, first_name, last_name, dob, gender, hometown, profile_image, resume_file, OCTET_LENGTH(profile_image_data) AS profile_image_size FROM user_table WHERE email = ?");
+$statement = $pdo -> prepare("SELECT email, first_name, last_name, dob, gender, hometown, profile_image, resume_file, resume_filename, OCTET_LENGTH(profile_image_data) AS profile_image_size FROM user_table WHERE email = ?");
 $statement -> execute([$currentEmail]);
 $user = $statement -> fetch();
 if (!$user) {
@@ -79,6 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			$newImagePath = null;
 			$newImageMime = null;
 			$newResume = $user["resume_file"];
+			$newResumeFilename = $user["resume_filename"];
 			if (isset($_FILES["profile_image"]) &&
 				$_FILES["profile_image"]["error"] !== UPLOAD_ERR_NO_FILE) {
 				$imageFile = $_FILES["profile_image"];
@@ -98,6 +99,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			}
 			if (isset($_FILES["resume_file"]) &&
 				$_FILES["resume_file"]["error"] !== UPLOAD_ERR_NO_FILE) {
+				$newResumeFilename = basename(str_replace("\\", "/", $_FILES["resume_file"]["name"]));
+				if (strlen($newResumeFilename) > 255) {
+					throw new RuntimeException("The PDF filename is too long.");
+				}
 				$newResume = saveValidatedUpload(
 					$_FILES["resume_file"], "resume",
 					["pdf" => "application/pdf"], 7 * 1024 * 1024
@@ -105,8 +110,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 				$newFiles[] = $newResume;
 			}
 			$pdo -> beginTransaction();
-			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, resume_file = ? WHERE email = ?");
-			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, $newResume, $currentEmail]);
+			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, resume_file = ?, resume_filename = ? WHERE email = ?");
+			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, $newResume, $newResumeFilename, $currentEmail]);
 			if ($newImagePath !== null) {
 				storeProfileImage($pdo, $email, $newImageMime, $newImagePath);
 			}

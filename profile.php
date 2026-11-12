@@ -25,7 +25,7 @@ require_once __DIR__."/profile_db.php";
 		>
 
 		<link rel="stylesheet" href="style/navbar.css">
-		<link rel="stylesheet" href="style/profile.css">
+		<link rel="stylesheet" href="style/profile.css?v=<?php echo filemtime(__DIR__."/style/profile.css"); ?>">
 	</head>
 
 	<body>
@@ -38,6 +38,9 @@ require_once __DIR__."/profile_db.php";
 			<h1>Profile</h1>
 			<p>View and manage your personal information.</p>
 		</div>
+		<?php if ($uploadError !== ""): ?>
+			<div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($uploadError); ?></div>
+		<?php endif; ?>
 
 		<div class="profile-layout">
 			<div class="profile-left-column">
@@ -91,13 +94,13 @@ require_once __DIR__."/profile_db.php";
 
 			<section class="profile-information">
 				<div class="profile-actions">
-					<a
-						href="update_profile.php"
-						class="btn profile-edit-button"
+						<a
+							href="update_profile.php"
+							class="btn profile-edit-button"
 					>
 						<i class="bi bi-pencil me-2"></i>
 						Edit
-					</a>
+						</a>
 				</div>
 
 				<div class="profile-fixed-information">
@@ -144,6 +147,29 @@ require_once __DIR__."/profile_db.php";
 					</div>
 				</div>
 
+				<h2 class="profile-pdf-heading">Supporting Document</h2>
+				<form class="profile-pdf-box" action="profile.php" method="POST" enctype="multipart/form-data">
+					<div class="profile-pdf-info">
+						<i class="bi bi-file-earmark-pdf" aria-hidden="true"></i>
+						<div class="profile-pdf-text">
+							<?php if ($resumeAvailable): ?>
+								<a href="<?php echo htmlspecialchars($resumePath, ENT_QUOTES); ?>" target="_blank" rel="noopener" class="profile-pdf-name"><?php echo htmlspecialchars($resumeName); ?></a>
+							<?php else: ?>
+								<span class="profile-pdf-name">Upload PDF</span>
+							<?php endif; ?>
+							<small class="profile-pdf-requirements">PDF only, maximum 7MB</small>
+						</div>
+					</div>
+					<input type="hidden" name="upload_token" value="<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>">
+					<input type="file" id="profilePdfInput" name="resume_file" accept="application/pdf,.pdf" hidden>
+					<div class="profile-pdf-actions">
+						<button type="button" id="profilePdfButton" class="btn profile-pdf-button"><i class="bi bi-upload" aria-hidden="true"></i> Upload</button>
+						<?php if ($resumeAvailable): ?>
+							<button type="submit" name="remove_pdf" value="1" class="btn profile-pdf-remove-button"><i class="bi bi-trash" aria-hidden="true"></i> Remove</button>
+						<?php endif; ?>
+					</div>
+				</form>
+
 				<section class="academic-integrity-section">
 					<h2>Academic Integrity Declaration</h2>
 
@@ -154,5 +180,13 @@ require_once __DIR__."/profile_db.php";
 			</section>
 		</div>
 	</main>
+	<script>
+		const uploadButton = document.getElementById("profilePdfButton");
+		const pdfInput = document.getElementById("profilePdfInput");
+		uploadButton.addEventListener("click", () => pdfInput.click());
+		pdfInput.addEventListener("change", () => {
+			if (pdfInput.files.length) pdfInput.form.requestSubmit();
+		});
+	</script>
 	</body>
 </html>
