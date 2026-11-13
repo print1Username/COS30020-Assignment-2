@@ -4,7 +4,7 @@
 <head>
     <link rel="icon" href="public/logo.ico" sizes="any">
     <link rel="icon" type="image/png" href="public/logo.png">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Admin Menu | Boardgame Hub</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" href="style/admin_theme.css"></head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Admin Menu | Boardgame Hub</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"></head>
 <body>
 <?php include __DIR__."/admin_nav.php"; ?>
 <header class="admin-hero"><div class="container"><p class="text-uppercase text-secondary fw-bold">Boardgame Hub</p><h1>Admin Main Menu</h1><p class="text-secondary">Manage accounts, community contributions and activity registrations.</p></div></header>

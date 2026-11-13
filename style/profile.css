@@ -22,6 +22,29 @@
     --profile-danger: #dc3545;
 }
 
+body.admin-profile {
+    --profile-purple: var(--admin-purple-dark);
+    --profile-purple-dark: var(--admin-purple-dark);
+    --profile-purple-light: var(--admin-purple-dark);
+}
+
+body.admin-profile .profile-page > .profile-card .form-control:focus,
+body.admin-profile .profile-page > .profile-card .form-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(50, 32, 82, 0.15);
+}
+
+body.admin-profile .profile-edit-button:focus-visible,
+body.admin-profile .profile-save-button:focus-visible,
+body.admin-profile .profile-cancel-button:focus-visible,
+body.admin-profile .profile-upload-button:focus-visible,
+body.admin-profile .profile-camera-button:focus-visible,
+body.admin-profile .profile-image-button:focus-visible,
+body.admin-profile .profile-back-button:focus-visible,
+body.admin-profile .profile-crop-button:focus-visible,
+body.admin-profile .profile-form-actions .btn:focus-visible {
+    outline-color: rgba(50, 32, 82, 0.25);
+}
+
 /*
  * ==========================================================
  * Shared Page

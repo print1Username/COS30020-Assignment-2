@@ -25,13 +25,16 @@ require_once __DIR__."/profile_db.php";
 		>
 
 		<link rel="stylesheet" href="style/navbar.css">
+		<?php if ($_SESSION["type"] === "admin"): ?><link rel="stylesheet" href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
 		<link rel="stylesheet" href="style/profile.css?v=<?php echo filemtime(__DIR__."/style/profile.css"); ?>">
 	</head>
 
-	<body>
-	<div id="navbar-container"></div>
-
-	<?php include "navbar.php"; ?>
+	<body<?php if ($_SESSION["type"] === "admin") echo ' class="admin-profile"'; ?>>
+	<?php if ($_SESSION["type"] === "admin"): ?>
+		<?php include __DIR__."/admin_nav.php"; ?>
+	<?php else: ?>
+		<?php include "navbar.php"; ?>
+	<?php endif; ?>
 
 	<main class="profile-page container py-5">
 		<div class="profile-page-heading">
@@ -191,5 +194,6 @@ require_once __DIR__."/profile_db.php";
 			if (pdfInput.files.length) pdfInput.form.requestSubmit();
 		});
 	</script>
+	<?php if ($_SESSION["type"] === "admin"): ?><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script><?php endif; ?>
 	</body>
 </html>

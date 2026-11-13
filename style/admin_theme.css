@@ -62,6 +62,21 @@ body {
     padding: 0.45rem 0.9rem;
 }
 
+.admin-navbar .admin-account-button {
+    font-size: 1.2rem;
+    padding: 0.45rem 0.9rem;
+    color: var(--admin-white);
+    background: transparent;
+    border: 1px solid var(--admin-white);
+}
+
+.admin-navbar .admin-account-button:hover,
+.admin-navbar .admin-account-button:focus-visible {
+    color: var(--admin-white);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--admin-white);
+}
+
 /* Main menu retains the spacing and card structure of the user menu. */
 .admin-hero {
     padding: 72px 0 64px;

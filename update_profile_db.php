@@ -2,7 +2,7 @@
 session_start();
 
 if (($_SESSION["logged_in"] ?? false) !== true ||
-	($_SESSION["type"] ?? null) !== "user" ||
+	!in_array($_SESSION["type"] ?? null, ["user", "admin"], true) ||
 	!isset($_SESSION["email"])) {
 	header("Location: login.php");
 	exit;
