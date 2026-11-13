@@ -271,6 +271,17 @@ main > h1 {
     white-space: nowrap;
 }
 
+.admin-registration-divider {
+    border-top: 2px solid #dee2e6;
+    opacity: 1;
+    margin: 1.5rem 0;
+}
+
+.admin-registration-empty {
+    margin-top: 12px;
+    margin-left: 40px;
+}
+
 .admin-actions {
     display: flex;
     flex-wrap: wrap;

@@ -19,8 +19,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			adminRedirect($page, "Entry deleted.");
 		}
 		if (in_array($action, ["approved", "rejected"], true) && $id) {
-			$statement = $pdo->prepare("UPDATE $table SET status=? WHERE id=?".$registrationOnly);
+			$pendingOnly = $community ? "" : " AND status='pending'";
+			$statement = $pdo->prepare("UPDATE $table SET status=? WHERE id=?".$registrationOnly.$pendingOnly);
 			$statement->execute([$action, $id]);
+			if (!$community && $statement->rowCount() === 0) throw new RuntimeException("Only pending registrations can be approved or rejected. Use Edit to change a reviewed registration.");
 			adminRedirect($page, "Status updated.");
 		}
 		if (!in_array($action, ["add", "edit"], true) || ($action === "edit" && !$id)) throw new RuntimeException("Invalid action.");

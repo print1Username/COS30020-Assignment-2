@@ -1,6 +1,6 @@
 document.querySelectorAll("[data-admin-pagination]").forEach(function (tableBody) {
     const pagination = createPagination({
-        itemsPerPage: 6,
+        itemsPerPage: Number(tableBody.dataset.adminPageSize) || 6,
         paginationId: tableBody.dataset.adminPagination
     });
 
