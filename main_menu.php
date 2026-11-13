@@ -154,7 +154,7 @@ if (($_SESSION["logged_in"] ?? false) !== true ||
 				</div>
 
 				<!-- About Card -->
-				<article class="main-menu-about-card">
+				<a href="about.php" class="main-menu-about-card">
 					<div class="main-menu-about-content">
 						<i class="bi bi-info-circle-fill" aria-hidden="true"></i>
 						<div>
@@ -165,11 +165,11 @@ if (($_SESSION["logged_in"] ?? false) !== true ||
 							</p>
 						</div>
 					</div>
-					<a href="about.php" class="btn main-menu-about-button">
+					<span class="btn main-menu-about-button">
 						Learn More
 						<i class="bi bi-arrow-right" aria-hidden="true"></i>
-					</a>
-				</article>
+					</span>
+				</a>
 			</div>
 		</section>
 

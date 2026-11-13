@@ -193,6 +193,7 @@ body {
     background-color: var(--main-menu-purple);
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(111, 66, 193, 0.18);
+    text-decoration: none;
 }
 
 .main-menu-about-content {
@@ -237,7 +238,7 @@ body {
 }
 
 .main-menu-about-button:hover,
-.main-menu-about-button:focus-visible {
+.main-menu-about-card:focus-visible .main-menu-about-button {
     color: #59359a;
     background-color: #f3f0f8;
     border-color: #f3f0f8;
