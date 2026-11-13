@@ -58,15 +58,6 @@ require_once __DIR__."/activities_db.php";
 				</p>
 			</div>
 
-			<div class="activities-header-action">
-				<a
-					href="#"
-					class="btn activities-register-btn"
-				>
-					<i class="bi bi-calendar-plus me-2"></i>
-					Register for Activity
-				</a>
-			</div>
 		</div>
 
 		<?php if (empty($activities)): ?>
