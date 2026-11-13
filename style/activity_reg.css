@@ -168,13 +168,13 @@
 
 .activity-selected-card {
     border-color: var(--activity-reg-purple);
-    background-color: var(--activity-reg-purple);
-    color: var(--activity-reg-white);
+    background-color: transparent;
+    color: var(--activity-reg-purple);
     box-shadow: 0 0.3rem 1rem rgba(111, 66, 193, 0.18);
 }
 
 .activity-selected-card .activity-registration-card-header {
-    background-color: transparent;
+    background-color: var(--activity-reg-purple);
     color: var(--activity-reg-white);
 }
 
@@ -245,15 +245,16 @@
  */
 
 .activity-selected-card .activity-detail-title h3 {
-    color: var(--activity-reg-white);
+    color: var(--activity-reg-text);
 }
 
 .activity-selected-card .activity-detail-label {
-    color: rgba(255, 255, 255, 0.72);
+    color: var(--activity-reg-muted);
+    font-weight: 700;
 }
 
 .activity-selected-card .activity-detail-value {
-    color: var(--activity-reg-white);
+    color: var(--activity-reg-text);
 }
 
 /*
@@ -265,7 +266,7 @@
 .activity-fee-block {
     margin-top: 0.25rem;
     padding-top: 1.25rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-top: 1px solid var(--activity-reg-border);
 }
 
 .activity-fee-value {
@@ -277,7 +278,7 @@
 }
 
 .activity-selected-card .activity-fee-value {
-    color: var(--activity-reg-white);
+    color: var(--activity-reg-purple);
 }
 
 /*
@@ -494,23 +495,19 @@
  * ==========================
  */
 
-.activity-registration-card:not(.activity-selected-card),
-    .activity-registration-card-header {
+.activity-registration-card:not(.activity-selected-card) .activity-registration-card-header {
     background-color: transparent;
     color: var(--activity-reg-text);
 }
 
-.activity-registration-card:not(.activity-selected-card),
-    .activity-registration-card-header h2 {
+.activity-registration-card:not(.activity-selected-card) .activity-registration-card-header h2 {
     color: var(--activity-reg-text);
 }
 
-.activity-registration-card:not(.activity-selected-card),
-    .activity-registration-card-header > i {
+.activity-registration-card:not(.activity-selected-card) .activity-registration-card-header > i {
     color: var(--activity-reg-purple);
 }
 
-.activity-registration-card:not(.activity-selected-card),
-    .activity-section-eyebrow {
+.activity-registration-card:not(.activity-selected-card) .activity-section-eyebrow {
     color: var(--activity-reg-muted);
 }

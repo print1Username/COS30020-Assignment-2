@@ -40,7 +40,7 @@ require_once __DIR__."/activities_db.php";
 		<!-- Activity Registration CSS -->
 		<link
 			rel="stylesheet"
-			href="style/activity_reg.css"
+			href="style/activity_reg.css?v=5"
 		>
 	</head>
 
