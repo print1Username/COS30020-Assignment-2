@@ -320,17 +320,11 @@ $homepageImages = $pdo->query("SELECT filename, mime_type, image_data FROM homep
 		) ? "true" : "false";
 		?>;
 
-		const homepageImages = <?php echo json_encode(array_map(function ($image) {
+		window.homepageImages = <?php echo json_encode(array_map(function ($image) {
 			return "data:" . $image["mime_type"] . ";base64," . base64_encode($image["image_data"]);
 		}, $homepageImages), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-		let currentImage = 0;
-
-        setInterval(function () {
-			currentImage = (currentImage + 1) % homepageImages.length;
-			document.getElementById("boardgame-slideshow").src = homepageImages[currentImage];
-
-        }, 5000);
 	</script>
+	<script src="components/homepage.js?v=<?= filemtime(__DIR__."/components/homepage.js") ?>"></script>
 	</body>
 
 </html>

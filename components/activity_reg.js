@@ -7,23 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    /*
-     * ==========================
-     * Contact Number Input
-     * ==========================
-     */
-
     if (contactInput) {
         contactInput.addEventListener("input", function () {
             this.value = this.value.replace(/[^0-9+\-\s]/g, "");
         });
     }
-
-    /*
-     * ==========================
-     * Prevent Double Submission
-     * ==========================
-     */
 
     form.addEventListener("submit", function () {
         if (!submitButton) {
@@ -31,11 +19,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         submitButton.disabled = true;
-
         submitButton.innerHTML =
             '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>' +
             "Registering...";
-
         submitButton.classList.add("disabled");
     });
 });

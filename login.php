@@ -146,6 +146,7 @@ require_once __DIR__."/login_db.php";
 							type="button"
 							class="password-toggle"
 							id="passwordToggle"
+							data-password-targets="password"
 							aria-label="Show password"
 						>
 							<i
@@ -198,65 +199,7 @@ require_once __DIR__."/login_db.php";
 	<script src="components/navbar.js?v=<?= filemtime(__DIR__."/components/navbar.js") ?>"></script>
 
 
-	<!-- Password Show / Hide -->
-	<script>
-
-        const passwordInput =
-            document.getElementById("password");
-
-        const passwordToggle =
-            document.getElementById("passwordToggle");
-
-        const passwordIcon =
-            document.getElementById("passwordIcon");
-
-
-        // Mouse button pressed
-        passwordToggle.addEventListener(
-            "mousedown",
-            function () {
-
-                passwordInput.type = "text";
-
-                passwordIcon.classList.remove("bi-eye");
-
-                passwordIcon.classList.add("bi-eye-slash");
-
-            }
-        );
-
-
-        // Mouse button released
-        passwordToggle.addEventListener(
-            "mouseup",
-            function () {
-
-                passwordInput.type = "password";
-
-                passwordIcon.classList.remove("bi-eye-slash");
-
-                passwordIcon.classList.add("bi-eye");
-
-            }
-        );
-
-
-        // Prevent password from remaining visible
-        // if the mouse leaves the eye button
-        passwordToggle.addEventListener(
-            "mouseleave",
-            function () {
-
-                passwordInput.type = "password";
-
-                passwordIcon.classList.remove("bi-eye-slash");
-
-                passwordIcon.classList.add("bi-eye");
-
-            }
-        );
-
-	</script>
+	<script src="components/password_toggle.js?v=<?= filemtime(__DIR__."/components/password_toggle.js") ?>"></script>
 
 	</body>
 </html>

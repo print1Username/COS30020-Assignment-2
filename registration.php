@@ -218,6 +218,7 @@ unset($_SESSION["registration_old"]);
 								type="button"
 								class="password-toggle"
 								id="passwordToggle"
+								data-password-targets="password confirmPassword"
 							>
 								<i class="bi bi-eye" id="passwordIcon"></i>
 							</button>
@@ -244,6 +245,7 @@ unset($_SESSION["registration_old"]);
 								type="button"
 								class="password-toggle"
 								id="confirmPasswordToggle"
+								data-password-targets="password confirmPassword"
 							>
 								<i
 									class="bi bi-eye"
@@ -286,46 +288,7 @@ unset($_SESSION["registration_old"]);
 	<!-- Navbar JavaScript -->
 	<script src="components/navbar.js?v=<?= filemtime(__DIR__."/components/navbar.js") ?>"></script>
 
-	<script>
-        const passwordInput = document.getElementById("password");
-        const confirmPasswordInput = document.getElementById("confirmPassword");
-
-        const passwordToggle = document.getElementById("passwordToggle");
-        const confirmPasswordToggle = document.getElementById("confirmPasswordToggle");
-
-        const passwordIcon = document.getElementById("passwordIcon");
-        const confirmPasswordIcon = document.getElementById("confirmPasswordIcon");
-
-        function showPasswords() {
-            passwordInput.type = "text";
-            confirmPasswordInput.type = "text";
-
-            passwordIcon.classList.remove("bi-eye");
-            passwordIcon.classList.add("bi-eye-slash");
-
-            confirmPasswordIcon.classList.remove("bi-eye");
-            confirmPasswordIcon.classList.add("bi-eye-slash");
-        }
-
-        function hidePasswords() {
-            passwordInput.type = "password";
-            confirmPasswordInput.type = "password";
-
-            passwordIcon.classList.remove("bi-eye-slash");
-            passwordIcon.classList.add("bi-eye");
-
-            confirmPasswordIcon.classList.remove("bi-eye-slash");
-            confirmPasswordIcon.classList.add("bi-eye");
-        }
-
-        passwordToggle.addEventListener("mousedown", showPasswords);
-        passwordToggle.addEventListener("mouseup", hidePasswords);
-        passwordToggle.addEventListener("mouseleave", hidePasswords);
-
-        confirmPasswordToggle.addEventListener("mousedown", showPasswords);
-        confirmPasswordToggle.addEventListener("mouseup", hidePasswords);
-        confirmPasswordToggle.addEventListener("mouseleave", hidePasswords);
-	</script>
+	<script src="components/password_toggle.js?v=<?= filemtime(__DIR__."/components/password_toggle.js") ?>"></script>
 
 	</body>
 </html>

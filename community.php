@@ -280,47 +280,8 @@ require_once __DIR__."/community_db.php";
 	<!-- Community Pagination -->
 	<script src="components/pagination.js"></script>
 
-	<script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const communityPagination = createPagination({
-                itemsPerPage: 8,
-                paginationId: "community-pagination"
-            });
-
-            communityPagination.setItems(
-                document.querySelectorAll(".community-card")
-            );
-        });
-	</script>
-
-	<!-- Sorting Dropdown Behavior -->
-	<script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const dropdowns = document.querySelectorAll(
-                ".community-sort-dropdown"
-            );
-
-            dropdowns.forEach(function (dropdown) {
-                dropdown.addEventListener("toggle", function () {
-                    if (dropdown.open) {
-                        dropdowns.forEach(function (otherDropdown) {
-                            if (otherDropdown !== dropdown) {
-                                otherDropdown.removeAttribute("open");
-                            }
-                        });
-                    }
-                });
-            });
-
-            document.addEventListener("click", function (event) {
-                dropdowns.forEach(function (dropdown) {
-                    if (!dropdown.contains(event.target)) {
-                        dropdown.removeAttribute("open");
-                    }
-                });
-            });
-        });
-	</script>
+	<!-- Community Behavior -->
+	<script src="components/community.js?v=<?= filemtime(__DIR__."/components/community.js") ?>"></script>
 
 	</body>
 </html>

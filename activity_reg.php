@@ -322,6 +322,6 @@ require_once __DIR__."/activities_db.php";
 	></script>
 
 	<!-- Activity Registration JavaScript -->
-	<script src="components/activity_reg.js"></script>
+	<script src="components/activity_reg.js?v=<?= filemtime(__DIR__."/components/activity_reg.js") ?>"></script>
 	</body>
 </html>
