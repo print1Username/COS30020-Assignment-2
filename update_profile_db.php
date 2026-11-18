@@ -68,6 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 	if ($error === "") {
 		$newFiles = [];
+		$localProfileImage = null;
 		try {
 			if (strcasecmp($email, $currentEmail) !== 0) {
 				$check = $pdo -> prepare("SELECT email FROM user_table WHERE email = ?");
@@ -89,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 					throw new RuntimeException("The image exceeds the allowed size or could not be uploaded.");
 				}
 				$extension = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
-				$newImageMime = (new finfo(FILEINFO_MIME_TYPE))->file($imageFile["tmp_name"]);
+				$newImageMime = (new finfo(FILEINFO_MIME_TYPE)) -> file($imageFile["tmp_name"]);
 				$allowedImages = ["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"];
 				if (!isset($allowedImages[$extension]) || $allowedImages[$extension] !== $newImageMime ||
 					getimagesize($imageFile["tmp_name"]) === false) {
@@ -113,13 +114,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, resume_file = ?, resume_filename = ? WHERE email = ?");
 			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, $newResume, $newResumeFilename, $currentEmail]);
 			if ($newImagePath !== null) {
-				storeProfileImage($pdo, $email, $newImageMime, $newImagePath);
+				$localProfileImage = storeProfileImage($pdo, $email, $newImageMime, $newImagePath, true);
 			}
 			$pdo -> commit();
 			$_SESSION["email"] = $email;
 			header("Location: profile.php");
 			exit;
 		} catch (RuntimeException|PDOException $e) {
+			if ($localProfileImage !== null && is_file($localProfileImage)) {
+				unlink($localProfileImage);
+			}
 			if ($pdo -> inTransaction()) {
 				$pdo -> rollBack();
 			}

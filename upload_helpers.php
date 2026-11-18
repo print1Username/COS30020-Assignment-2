@@ -1,8 +1,8 @@
 <?php
 
-function storeProfileImage(PDO $pdo, string $email, string $mime, string $path): void
+function storeProfileImage(PDO $pdo, string $email, string $mime, string $path, bool $saveLocal = false): ?string
 {
-	$packetLimit = (int)$pdo->query("SELECT @@max_allowed_packet")->fetchColumn();
+	$packetLimit = (int)$pdo -> query("SELECT @@max_allowed_packet") -> fetchColumn();
 	if (filesize($path) + 131072 > $packetLimit) {
 		throw new RuntimeException("MySQL max_allowed_packet is too small for this profile image.");
 	}
@@ -11,21 +11,44 @@ function storeProfileImage(PDO $pdo, string $email, string $mime, string $path):
 		throw new RuntimeException("The profile image could not be read.");
 	}
 	try {
-		$reset = $pdo->prepare("UPDATE user_table SET profile_image = NULL, profile_image_data = '', profile_image_mime = ? WHERE email = ?");
-		$reset->execute([$mime, $email]);
-		$append = $pdo->prepare("UPDATE user_table SET profile_image_data = CONCAT(profile_image_data, ?) WHERE email = ?");
+		$reset = $pdo -> prepare("UPDATE user_table SET profile_image = NULL, profile_image_data = '', profile_image_mime = ? WHERE email = ?");
+		$reset -> execute([$mime, $email]);
+		$append = $pdo -> prepare("UPDATE user_table SET profile_image_data = CONCAT(profile_image_data, ?) WHERE email = ?");
 		while (!feof($stream)) {
 			$chunk = fread($stream, 128 * 1024);
 			if ($chunk === false) {
 				throw new RuntimeException("The profile image could not be read.");
 			}
 			if ($chunk !== "") {
-				$append->execute([$chunk, $email]);
+				$append -> execute([$chunk, $email]);
 			}
 		}
 	} finally {
 		fclose($stream);
 	}
+	if (!$saveLocal) {
+		return null;
+	}
+	// Keep the full email as the folder name, but reject unsafe filesystem characters.
+	if (!filter_var($email, FILTER_VALIDATE_EMAIL) || preg_match('~[<>:"/\\\\|?*\x00-\x1f]~', $email)) {
+		throw new RuntimeException("This email address cannot be used as a profile image folder name.");
+	}
+	$extension = ["image/jpeg" => "jpg", "image/png" => "png"][$mime] ?? null;
+	if ($extension === null) {
+		throw new RuntimeException("Please upload a valid JPG, JPEG, or PNG image.");
+	}
+	$directory = __DIR__."/profile_images/".$email;
+	if (!is_dir($directory) && !mkdir($directory, 0755, true)) {
+		throw new RuntimeException("The profile image folder could not be created.");
+	}
+	$localPath = $directory."/".bin2hex(random_bytes(16)).".".$extension;
+	if (!copy($path, $localPath)) {
+		if (is_file($localPath)) {
+			unlink($localPath);
+		}
+		throw new RuntimeException("The local profile image could not be saved.");
+	}
+	return $localPath;
 }
 
 function saveValidatedUpload(array $file, string $folder, array $allowedMime, int $maxBytes): string
@@ -40,7 +63,7 @@ function saveValidatedUpload(array $file, string $folder, array $allowedMime, in
 		throw new RuntimeException("Invalid upload.");
 	}
 	$extension = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
-	$mime = (new finfo(FILEINFO_MIME_TYPE))->file($file["tmp_name"]);
+	$mime = (new finfo(FILEINFO_MIME_TYPE)) -> file($file["tmp_name"]);
 	if (!isset($allowedMime[$extension]) || $allowedMime[$extension] !== $mime) {
 		throw new RuntimeException("Please upload a file in the required format.");
 	}

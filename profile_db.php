@@ -29,6 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profile_image"])) {
 	if (!hash_equals($_SESSION["profile_upload_token"], $_POST["upload_token"] ?? "")) {
 		$uploadError = "Invalid upload request. Please try again.";
 	} else {
+		$localProfileImage = null;
 		try {
 			$imageFile = $_FILES["profile_image"];
 			if (($imageFile["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK ||
@@ -37,18 +38,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profile_image"])) {
 				throw new RuntimeException("The image exceeds 5MB or could not be uploaded.");
 			}
 			$extension = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
-			$mime = (new finfo(FILEINFO_MIME_TYPE))->file($imageFile["tmp_name"]);
+			$mime = (new finfo(FILEINFO_MIME_TYPE)) -> file($imageFile["tmp_name"]);
 			$allowedImages = ["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"];
 			if (!isset($allowedImages[$extension]) || $allowedImages[$extension] !== $mime ||
 				getimagesize($imageFile["tmp_name"]) === false) {
 				throw new RuntimeException("Please upload a valid JPG, JPEG, or PNG image.");
 			}
 			$pdo -> beginTransaction();
-			storeProfileImage($pdo, $currentEmail, $mime, $imageFile["tmp_name"]);
+			$localProfileImage = storeProfileImage($pdo, $currentEmail, $mime, $imageFile["tmp_name"], true);
 			$pdo -> commit();
 			header("Location: profile.php");
 			exit;
 		} catch (RuntimeException|PDOException $e) {
+			if ($localProfileImage !== null && is_file($localProfileImage)) {
+				unlink($localProfileImage);
+			}
 			if ($pdo -> inTransaction()) {
 				$pdo -> rollBack();
 			}
