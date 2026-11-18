@@ -40,7 +40,7 @@ require_once __DIR__."/activities_db.php";
 		<!-- Activity Registration CSS -->
 		<link
 			rel="stylesheet"
-			href="style/activity_reg.css?v=7"
+			href="style/activity_reg.css?v=9"
 		>
 	</head>
 
@@ -281,20 +281,22 @@ require_once __DIR__."/activities_db.php";
 						<?php endif; ?>
 
 						<?php if ($registrationStatus === "pending"): ?>
-							<span class="alert alert-warning activity-registration-status mb-0" role="status">
-								<i class="bi bi-hourglass-split me-2"></i>
-								Your registration is pending approval.
-							</span>
-							<button
-								type="submit"
-								name="action"
-								value="cancel_registration"
-								formnovalidate
-								class="btn activity-cancel-registration-button"
-							>
-								<i class="bi bi-x-circle me-2"></i>
-								Cancel Registration
-							</button>
+							<div class="alert alert-warning activity-registration-status mb-0" role="status">
+								<span>
+									<i class="bi bi-hourglass-split me-2"></i>
+									Your registration is pending approval.
+								</span>
+								<button
+									type="submit"
+									name="action"
+									value="cancel_registration"
+									formnovalidate
+									class="btn activity-cancel-registration-button"
+								>
+									<i class="bi bi-x-circle me-2"></i>
+									Cancel Registration
+								</button>
+							</div>
 						<?php elseif ($registrationStatus === "approved"): ?>
 							<span class="alert alert-success mb-0" role="status">
 								<i class="bi bi-check-circle-fill me-2"></i>
