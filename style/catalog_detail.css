@@ -1,0 +1,26 @@
+body { background: var(--catalog-background); }
+.catalog-detail-container { max-width: 1160px; margin: 0 auto; padding: 44px 24px 80px; }
+.catalog-back-link { display: inline-flex; gap: 10px; align-items: center; color: var(--catalog-purple); text-decoration: none; font-weight: 600; margin-bottom: 28px; }
+.catalog-back-link:hover { color: var(--catalog-purple-dark); text-decoration: underline; }
+.catalog-detail-header { padding: 32px; border: 1px solid var(--catalog-border); border-radius: 20px; background: var(--catalog-purple-light); margin-bottom: 28px; }
+.catalog-detail-eyebrow { color: var(--catalog-purple); font-size: .78rem; font-weight: 700; letter-spacing: 1.5px; }
+.catalog-detail-header h1 { margin: 12px 0 18px; font-size: clamp(2rem, 5vw, 3rem); font-weight: 750; color: var(--catalog-text); }
+.catalog-detail-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 28px; align-items: start; }
+.catalog-detail-panel { background: white; border: 1px solid var(--catalog-border); border-radius: 20px; overflow: hidden; box-shadow: 0 8px 24px rgba(45, 25, 80, .04); }
+.catalog-detail-image { display: block; width: 100%; height: 360px; object-fit: contain; padding: 24px; background: var(--catalog-purple-light); }
+.catalog-detail-description, .catalog-reservation { padding: 30px; }
+.catalog-detail-panel h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 18px; }
+.catalog-detail-description p { color: var(--catalog-muted); line-height: 1.8; margin: 0; }
+.catalog-reservation h2 { margin-top: 12px; }
+.catalog-reservation dt { color: var(--catalog-muted); font-weight: 500; font-size: .9rem; }
+.catalog-reservation dt i { color: var(--catalog-purple); margin-right: 8px; }
+.catalog-reservation dd { margin: 8px 0 22px; font-weight: 600; }
+.catalog-reservation .catalog-reserve-btn { width: 100%; }
+.catalog-reservation .catalog-reserve-btn:disabled { cursor: not-allowed; opacity: .65; }
+.catalog-reservation-note { color: var(--catalog-muted); font-size: .85rem; text-align: center; margin: 14px 0 0; }
+@media (max-width: 767px) {
+    .catalog-detail-layout { grid-template-columns: 1fr; }
+    .catalog-detail-container { padding: 28px 16px 48px; }
+    .catalog-detail-header, .catalog-detail-description, .catalog-reservation { padding: 24px; }
+    .catalog-detail-image { height: 260px; }
+}

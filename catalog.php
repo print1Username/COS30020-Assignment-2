@@ -165,7 +165,7 @@ $categories = [
 							class="col-12 col-sm-6 col-lg-4 col-xl-3 catalog-game-item"
 							data-categories="<?php echo escapeHTML($categoryAttributes); ?>"
 						>
-							<article class="catalog-game-card">
+							<article class="catalog-game-card position-relative">
 
 								<!-- Game Image -->
 								<div class="catalog-game-image-wrapper">
@@ -221,12 +221,12 @@ $categories = [
 
 									<!-- Reservation Button -->
 									<a
-										href="#"
-										class="catalog-reserve-btn"
-										aria-label="Reserve <?php echo escapeHTML($game["name"] ?? "boardgame"); ?>"
+										href="catalog_detail.php?id=<?php echo (int)$game["id"]; ?>"
+										class="catalog-reserve-btn stretched-link"
+										aria-label="View <?php echo escapeHTML($game["name"] ?? "boardgame"); ?> details"
 									>
 										<i class="bi bi-calendar-check"></i>
-										Reserve Now
+										View Details
 									</a>
 
 								</div>
