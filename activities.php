@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__."/activities_db.php";
 $activityRegistrationSuccess = $_SESSION["activity_registration_success"] ?? "";
+$activityRegistrationNotice = $_SESSION["activity_registration_notice"] ?? "";
 unset($_SESSION["activity_registration_success"]);
+unset($_SESSION["activity_registration_notice"]);
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +39,7 @@ unset($_SESSION["activity_registration_success"]);
 		<!-- Activities CSS -->
 		<link
 			rel="stylesheet"
-			href="style/activities.css"
+			href="style/activities.css?v=4"
 		>
 
 		<!-- Pagination CSS -->
@@ -52,10 +54,12 @@ unset($_SESSION["activity_registration_success"]);
 
 	<main class="container py-5">
 		<?php if ($activityRegistrationSuccess !== ""): ?>
-			<div class="alert alert-success alert-dismissible fade show" role="alert">
-				<i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>
+			<div class="alert <?php echo $activityRegistrationNotice === "pending" ? "alert-warning" : "alert-success"; ?> alert-dismissible fade show" role="alert">
+				<i class="bi <?php echo $activityRegistrationNotice === "pending" ? "bi-hourglass-split" : "bi-check-circle-fill"; ?> me-2" aria-hidden="true"></i>
 				<?php echo htmlspecialchars($activityRegistrationSuccess, ENT_QUOTES, "UTF-8"); ?>
-				Your registration is pending approval.
+				<?php if ($activityRegistrationNotice === "pending"): ?>
+					Your registration is pending admin approval.
+				<?php endif; ?>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 			</div>
 		<?php endif; ?>
@@ -94,6 +98,7 @@ unset($_SESSION["activity_registration_success"]);
 						$activityId = isset($activity["id"]) ? (int)$activity["id"] : 0;
 
 						$activityRegisterLink = "activity_reg.php?id=".$activityId;
+						$registrationStatus = $activity["registration_status"] ?? null;
 						?>
 
 						<a
@@ -210,13 +215,33 @@ unset($_SESSION["activity_registration_success"]);
                                     <i class="bi bi-people-fill me-1"></i>
                                     Join the Boardgame Hub community
                                 </span>
-							<a
-								href="<?php echo htmlspecialchars($activityRegisterLink); ?>"
-								class="btn activity-register-card-btn"
-							>
-								<i class="bi bi-calendar-check me-2"></i>
-								Register
-							</a>
+							<?php if ($registrationStatus === "pending"): ?>
+								<a
+									href="<?php echo htmlspecialchars($activityRegisterLink); ?>"
+									class="btn activity-register-card-btn activity-registration-status-icon activity-registration-pending-icon"
+									aria-label="Registration pending approval"
+									title="Registration pending approval"
+								>
+									<i class="bi bi-hourglass-split"></i>
+								</a>
+							<?php elseif ($registrationStatus === "approved"): ?>
+								<a
+									href="<?php echo htmlspecialchars($activityRegisterLink); ?>"
+									class="btn activity-register-card-btn activity-registration-status-icon activity-registration-approved-icon"
+									aria-label="Registration approved"
+									title="Registration approved"
+								>
+									<i class="bi bi-check-circle"></i>
+								</a>
+							<?php else: ?>
+								<a
+									href="<?php echo htmlspecialchars($activityRegisterLink); ?>"
+									class="btn activity-register-card-btn"
+								>
+									<i class="bi bi-calendar-check me-2"></i>
+									Register
+								</a>
+							<?php endif; ?>
 						</div>
 					</article>
 				<?php endforeach; ?>

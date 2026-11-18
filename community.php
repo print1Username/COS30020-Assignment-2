@@ -24,7 +24,7 @@ require_once __DIR__."/community_db.php";
 		<link rel="stylesheet" href="style/navbar.css">
 
 		<!-- Community CSS -->
-		<link rel="stylesheet" href="style/community.css">
+		<link rel="stylesheet" href="style/community.css?v=3">
 
 		<link rel="stylesheet" href="style/pagination.css">
 

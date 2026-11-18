@@ -66,6 +66,7 @@ if (($activityDbPage ?? "list") === "registration") {
 					$cancelRegistration -> execute([$activityId, $_SESSION["email"]]);
 					if ($cancelRegistration -> rowCount() > 0) {
 						$_SESSION["activity_registration_success"] = "Your registration for ".$activityTitle." has been cancelled.";
+						$_SESSION["activity_registration_notice"] = "cancelled";
 						header("Location: activities.php");
 						exit;
 					}
@@ -100,6 +101,7 @@ if (($activityDbPage ?? "list") === "registration") {
 						$insert = $pdo -> prepare("INSERT INTO activity_table (email, first_name, last_name, date, time, contact_number, status, record_type, activity_id) VALUES (?, ?, ?, ?, ?, ?, 'pending', 'registration', ?)");
 						$insert -> execute([$_SESSION["email"], $firstName, $lastName, $activityDate, $activityStartTime, $contactNumber, $activityId]);
 						$_SESSION["activity_registration_success"] = "You have successfully registered for ".$activityTitle.".";
+						$_SESSION["activity_registration_notice"] = "pending";
 						header("Location: activities.php");
 						exit;
 					}
@@ -111,7 +113,8 @@ if (($activityDbPage ?? "list") === "registration") {
 		}
 	}
 } else {
-	$activities = $pdo -> query("SELECT id, title, activity_type AS type, description, date, time AS start_time, end_time, price, venue, table_name AS `table`, image FROM activity_table WHERE record_type = 'event' AND status = 'approved' ORDER BY date, time")
-		-> fetchAll();
+	$activitiesStatement = $pdo -> prepare("SELECT event.id, event.title, event.activity_type AS type, event.description, event.date, event.time AS start_time, event.end_time, event.price, event.venue, event.table_name AS `table`, event.image, (SELECT registration.status FROM activity_table AS registration WHERE registration.record_type = 'registration' AND registration.activity_id = event.id AND registration.email = ? ORDER BY registration.id DESC LIMIT 1) AS registration_status FROM activity_table AS event WHERE event.record_type = 'event' AND event.status = 'approved' ORDER BY event.date, event.time");
+	$activitiesStatement -> execute([$_SESSION["email"]]);
+	$activities = $activitiesStatement -> fetchAll();
 }
 ?>
