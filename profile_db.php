@@ -31,6 +31,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profile_image"])) {
 	} else {
 		$newProfileImage = null;
 		try {
+			$oldImageLookup = $pdo -> prepare("SELECT profile_image FROM user_table WHERE email = ?");
+			$oldImageLookup -> execute([$currentEmail]);
+			$oldProfileImage = $oldImageLookup -> fetchColumn();
 			$imageFile = $_FILES["profile_image"];
 			if (($imageFile["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK ||
 				($imageFile["size"] ?? 0) > 5 * 1024 * 1024 || ($imageFile["size"] ?? 0) < 1 ||
@@ -44,13 +47,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profile_image"])) {
 				getimagesize($imageFile["tmp_name"]) === false) {
 				throw new RuntimeException("Please upload a valid JPG, JPEG, or PNG image.");
 			}
-			$newProfileImage = storeProfileImage($currentEmail, $mime, $imageFile["tmp_name"]);
-			$oldProfileImage = $pdo -> prepare("SELECT profile_image FROM user_table WHERE email = ?");
-			$oldProfileImage -> execute([$currentEmail]);
-			$oldProfileImage = $oldProfileImage -> fetchColumn();
 			$pdo -> beginTransaction();
-			$updateImage = $pdo -> prepare("UPDATE user_table SET profile_image = ? WHERE email = ?");
-			$updateImage -> execute([$newProfileImage, $currentEmail]);
+			$newProfileImage = storeProfileImage($pdo, $currentEmail, $mime, $imageFile["tmp_name"]);
 			$pdo -> commit();
 			if (is_string($oldProfileImage) && preg_match('~^profile_images/[^/]+/[a-f0-9]{32}\.(?:jpg|png)$~', $oldProfileImage) && is_file(__DIR__."/".$oldProfileImage)) {
 				unlink(__DIR__."/".$oldProfileImage);
@@ -113,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profile_image"])) {
 		}
 	}
 }
-$statement = $pdo -> prepare("SELECT email, first_name, last_name, dob, gender, hometown, profile_image, resume_file, resume_filename FROM user_table WHERE email = ?");
+$statement = $pdo -> prepare("SELECT email, first_name, last_name, dob, gender, hometown, profile_image, profile_image_data IS NOT NULL AND OCTET_LENGTH(profile_image_data) > 0 AS has_profile_image, profile_image_mime, resume_file, resume_filename FROM user_table WHERE email = ?");
 $statement -> execute([$currentEmail]);
 $user = $statement -> fetch();
 if (!$user) {
@@ -153,16 +151,12 @@ if ($userData["DOB"] !== "") {
 	}
 }
 
-$profileImagePath = "";
+$profileImagePath = !empty($user["has_profile_image"]) &&
+in_array($user["profile_image_mime"], ["image/jpeg", "image/png"], true)
+	? "profile_image.php"
+	: "";
 $resumePath = $user["resume_file"] ?? "";
 $resumeAvailable = is_string($resumePath) && preg_match('~^resume/[a-f0-9]{32}\.pdf$~', $resumePath) && is_file(__DIR__."/".$resumePath);
 $resumeName = $resumeAvailable ? ($user["resume_filename"] ?: basename($resumePath)) : "";
 
-if ($profileImagePath === "" && is_string($profileImage) && $profileImage !== "") {
-	$possibleImagePath = $profileImage;
-
-	if (profileImageExists($currentEmail, $possibleImagePath)) {
-		$profileImagePath = $possibleImagePath;
-	}
-}
 ?>

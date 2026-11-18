@@ -16,7 +16,7 @@ function profileImageExists(string $email, mixed $path): bool
 	return ($defaultImage || $userImage) && is_file(__DIR__."/".$path);
 }
 
-function storeProfileImage(string $email, string $mime, string $path): string
+function storeProfileImage(PDO $pdo, string $email, string $mime, string $path, ?string $databaseEmail = null): string
 {
 	// Keep the full email as the folder name, but reject unsafe filesystem characters.
 	if (!filter_var($email, FILTER_VALIDATE_EMAIL) || preg_match('~[<>:"/\\\\|?*\x00-\x1f]~', $email)) {
@@ -37,6 +37,17 @@ function storeProfileImage(string $email, string $mime, string $path): string
 			unlink($absolutePath);
 		}
 		throw new RuntimeException("The local profile image could not be saved.");
+	}
+	$imageData = file_get_contents($path);
+	if ($imageData === false) {
+		unlink($absolutePath);
+		throw new RuntimeException("The profile image could not be read.");
+	}
+	$update = $pdo -> prepare("UPDATE user_table SET profile_image = ?, profile_image_data = ?, profile_image_mime = ? WHERE email = ?");
+	$update -> execute([$relativePath, $imageData, $mime, $databaseEmail ?? $email]);
+	if ($update -> rowCount() !== 1) {
+		unlink($absolutePath);
+		throw new RuntimeException("The profile image could not be linked to this account.");
 	}
 	return $relativePath;
 }

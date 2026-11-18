@@ -13,7 +13,7 @@ require_once __DIR__."/db_connect.php";
 require_once __DIR__."/upload_helpers.php";
 
 $currentEmail = $_SESSION["email"];
-$statement = $pdo -> prepare("SELECT email, first_name, last_name, dob, gender, hometown, profile_image, resume_file, resume_filename FROM user_table WHERE email = ?");
+$statement = $pdo -> prepare("SELECT email, first_name, last_name, dob, gender, hometown, profile_image, profile_image_data IS NOT NULL AND OCTET_LENGTH(profile_image_data) > 0 AS has_profile_image, profile_image_mime, resume_file, resume_filename FROM user_table WHERE email = ?");
 $statement -> execute([$currentEmail]);
 $user = $statement -> fetch();
 if (!$user) {
@@ -110,16 +110,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 				);
 				$newFiles[] = $newResume;
 			}
+			$pdo -> beginTransaction();
 			if ($newImagePath !== null) {
-				$newProfileImage = storeProfileImage($email, $newImageMime, $newImagePath);
+				$newProfileImage = storeProfileImage($pdo, $email, $newImageMime, $newImagePath, $currentEmail);
 			} elseif (strcasecmp($email, $currentEmail) !== 0 &&
 				is_string($user["profile_image"]) &&
 				preg_match('~^profile_images/[^/]+/[a-f0-9]{32}\.(?:jpg|png)$~', $user["profile_image"]) &&
 				is_file(__DIR__."/".$user["profile_image"])) {
 				$existingMime = (new finfo(FILEINFO_MIME_TYPE)) -> file(__DIR__."/".$user["profile_image"]);
-				$newProfileImage = storeProfileImage($email, $existingMime, __DIR__."/".$user["profile_image"]);
+				$newProfileImage = storeProfileImage($pdo, $email, $existingMime, __DIR__."/".$user["profile_image"], $currentEmail);
 			}
-			$pdo -> beginTransaction();
 			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, resume_file = ?, resume_filename = ? WHERE email = ?");
 			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, $newResume, $newResumeFilename, $currentEmail]);
 			if ($newProfileImage !== null) {
@@ -150,7 +150,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 $fullName = trim($userData["First Name"]." ".$userData["LastName"]);
 $dobInputValue = $userData["DOB"];
-$profileImagePath = profileImageExists($userData["Email"], $profileImage)
-	? $profileImage
+$profileImagePath = !empty($user["has_profile_image"]) &&
+in_array($user["profile_image_mime"], ["image/jpeg", "image/png"], true)
+	? "profile_image.php"
 	: "";
 ?>

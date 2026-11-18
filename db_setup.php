@@ -84,7 +84,9 @@ try {
 		"user_table" => [
 			"resume_file" => "VARCHAR(100) NULL",
 			"resume_filename" => "VARCHAR(255) NULL",
-			"profile_image" => "VARCHAR(255) NULL"
+			"profile_image" => "VARCHAR(255) NULL",
+			"profile_image_data" => "LONGBLOB NULL",
+			"profile_image_mime" => "VARCHAR(30) NULL"
 		],
 		"activity_table" => [
 			"record_type" => "VARCHAR(12) NOT NULL DEFAULT 'registration'",
@@ -117,13 +119,21 @@ try {
 		"user2@swin.edu.my" => "user2.png"
 	];
 	$setDefaultProfileImage = $pdo -> prepare("UPDATE user_table SET profile_image = ? WHERE email = ? AND (profile_image IS NULL OR profile_image = '' OR profile_image = ?)");
+	$defaultImageExists = $pdo -> prepare("SELECT COUNT(*) FROM user_table WHERE email = ? AND profile_image_data IS NOT NULL AND OCTET_LENGTH(profile_image_data) > 0");
+	$setDefaultImageData = $pdo -> prepare("UPDATE user_table SET profile_image_data = ?, profile_image_mime = 'image/png' WHERE email = ? AND (profile_image_data IS NULL OR OCTET_LENGTH(profile_image_data) = 0)");
 	foreach ($defaultProfileImages as $seedEmail => $filename) {
 		$relativeImagePath = "profile_images/".$seedEmail."/".$filename;
+		$setDefaultProfileImage -> execute([$relativeImagePath, $seedEmail, "profile_images/".$filename]);
+		$defaultImageExists -> execute([$seedEmail]);
+		if ($defaultImageExists -> fetchColumn()) {
+			continue;
+		}
 		$imagePath = __DIR__."/".$relativeImagePath;
 		if (!is_file($imagePath) || (new finfo(FILEINFO_MIME_TYPE)) -> file($imagePath) !== "image/png") {
 			throw new RuntimeException("Default profile image is missing or invalid: ".$filename);
 		}
-		$setDefaultProfileImage -> execute([$relativeImagePath, $seedEmail, "profile_images/".$filename]);
+		$defaultImage = file_get_contents($imagePath);
+		$setDefaultImageData -> execute([$defaultImage, $seedEmail]);
 	}
 
 	$activities = json_decode(file_get_contents(__DIR__."/data/activities.json"), true);
