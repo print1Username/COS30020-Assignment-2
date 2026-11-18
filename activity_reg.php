@@ -264,7 +264,7 @@ require_once __DIR__."/activities_db.php";
 									value="<?php echo htmlspecialchars($contactNumber); ?>"
 									placeholder="Enter your contact number"
 									required
-									<?php echo $registrationStatus === "pending" ? "readonly aria-readonly=\"true\"" : ""; ?>
+									<?php echo in_array($registrationStatus, ["pending", "approved"], true) ? "readonly aria-readonly=\"true\"" : ""; ?>
 								>
 							</div>
 						</div>
@@ -272,7 +272,7 @@ require_once __DIR__."/activities_db.php";
 
 					<!-- Form Actions -->
 					<div class="activity-registration-actions">
-						<?php if ($registrationStatus !== "pending"): ?>
+						<?php if (!in_array($registrationStatus, ["pending", "approved"], true)): ?>
 							<a
 								href="activities.php"
 								class="btn activity-cancel-button"
@@ -281,11 +281,11 @@ require_once __DIR__."/activities_db.php";
 							</a>
 						<?php endif; ?>
 
-						<?php if ($registrationStatus === "pending"): ?>
-							<div class="alert alert-warning activity-registration-status mb-0" role="status">
+						<?php if (in_array($registrationStatus, ["pending", "approved"], true)): ?>
+							<div class="alert <?php echo $registrationStatus === "pending" ? "alert-warning" : "alert-success"; ?> activity-registration-status mb-0" role="status">
 								<span>
-									<i class="bi bi-hourglass-split me-2"></i>
-									Your registration is pending approval.
+									<i class="bi <?php echo $registrationStatus === "pending" ? "bi-hourglass-split" : "bi-check-circle-fill"; ?> me-2"></i>
+									<?php echo $registrationStatus === "pending" ? "Your registration is pending approval." : "You have already joined this activity."; ?>
 								</span>
 								<button
 									type="submit"
@@ -298,11 +298,6 @@ require_once __DIR__."/activities_db.php";
 									Cancel Registration
 								</button>
 							</div>
-						<?php elseif ($registrationStatus === "approved"): ?>
-							<span class="alert alert-success mb-0" role="status">
-								<i class="bi bi-check-circle-fill me-2"></i>
-								You have already joined this activity.
-							</span>
 						<?php else: ?>
 							<button
 								type="submit"

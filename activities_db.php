@@ -58,11 +58,11 @@ if (($activityDbPage ?? "list") === "registration") {
 	if ($_SERVER["REQUEST_METHOD"] === "POST" && $selectedActivity) {
 		$action = $_POST["action"] ?? "register";
 		if ($action === "cancel_registration") {
-			if ($registrationStatus !== "pending") {
-				$error = "Only pending registrations can be cancelled.";
+			if (!in_array($registrationStatus, ["pending", "approved"], true)) {
+				$error = "Only pending or approved registrations can be cancelled.";
 			} else {
 				try {
-					$cancelRegistration = $pdo -> prepare("DELETE FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ? AND status = 'pending'");
+					$cancelRegistration = $pdo -> prepare("DELETE FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ? AND status IN ('pending', 'approved')");
 					$cancelRegistration -> execute([$activityId, $_SESSION["email"]]);
 					if ($cancelRegistration -> rowCount() > 0) {
 						$_SESSION["activity_registration_success"] = "Your registration for ".$activityTitle." has been cancelled.";
