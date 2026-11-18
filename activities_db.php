@@ -46,42 +46,72 @@ if (($activityDbPage ?? "list") === "registration") {
 		$lastName = $currentUser["last_name"];
 	}
 
+	$registrationStatus = null;
+	$registrationStatement = $pdo -> prepare("SELECT status, contact_number FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ?");
+	$registrationStatement -> execute([$activityId, $_SESSION["email"]]);
+	$currentRegistration = $registrationStatement -> fetch();
+	if ($currentRegistration) {
+		$registrationStatus = $currentRegistration["status"];
+		$contactNumber = $currentRegistration["contact_number"];
+	}
+
 	if ($_SERVER["REQUEST_METHOD"] === "POST" && $selectedActivity) {
-		$firstName = trim($_POST["first_name"] ?? "");
-		$lastName = trim($_POST["last_name"] ?? "");
-		$contactNumber = trim($_POST["contact_number"] ?? "");
-		$email = trim($_POST["email"] ?? "");
-		if ($firstName === "" || $lastName === "" || $contactNumber === "" || $email === "") {
-			$error = "Please complete all required fields.";
-		} elseif (!preg_match("/^[a-zA-Z ]+$/", $firstName) ||
-			!preg_match("/^[a-zA-Z ]+$/", $lastName) ||
-			strlen($firstName) > 50 || strlen($lastName) > 50) {
-			$error = "Names must contain only letters and spaces (maximum 50 characters).";
-		} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 50) {
-			$error = "Please enter a valid email address.";
-		} elseif (!preg_match("/^[0-9+\\-\\s]+$/", $contactNumber) ||
-			strlen($contactNumber) > 15) {
-			$error = "Please enter a valid contact number (maximum 15 characters).";
-		} else {
-			try {
-				$check = $pdo -> prepare("SELECT id FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ?");
-				$check -> execute([$activityId, $email]);
-				if ($check -> fetch()) {
-					$error = "You have already registered for this activity.";
-				} else {
-					$insert = $pdo -> prepare("INSERT INTO activity_table (email, first_name, last_name, date, time, contact_number, status, record_type, activity_id) VALUES (?, ?, ?, ?, ?, ?, 'pending', 'registration', ?)");
-					$insert -> execute([$email, $firstName, $lastName, $activityDate, $activityStartTime, $contactNumber, $activityId]);
-					$_SESSION["activity_registration_success"] = "You have successfully registered for ".$activityTitle.".";
-					header("Location: activities.php");
-					exit;
+		$action = $_POST["action"] ?? "register";
+		if ($action === "cancel_registration") {
+			if ($registrationStatus !== "pending") {
+				$error = "Only pending registrations can be cancelled.";
+			} else {
+				try {
+					$cancelRegistration = $pdo -> prepare("DELETE FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ? AND status = 'pending'");
+					$cancelRegistration -> execute([$activityId, $_SESSION["email"]]);
+					if ($cancelRegistration -> rowCount() > 0) {
+						$_SESSION["activity_registration_success"] = "Your registration for ".$activityTitle." has been cancelled.";
+						header("Location: activities.php");
+						exit;
+					}
+					$error = "The registration could not be cancelled. Please try again.";
+				} catch (PDOException $e) {
+					error_log($e -> getMessage());
+					$error = "Unable to cancel your registration. Please try again.";
 				}
-			} catch (PDOException $e) {
-				error_log($e -> getMessage());
-				$error = "Unable to save your registration. Please try again.";
+			}
+		} else {
+			$contactNumber = trim($_POST["contact_number"] ?? "");
+			if (in_array($registrationStatus, ["pending", "approved"], true)) {
+				$error = $registrationStatus === "pending"
+					? "Your registration is pending approval."
+					: "You have already joined this activity.";
+			} elseif ($firstName === "" || $lastName === "" || $contactNumber === "") {
+				$error = "Please complete all required fields.";
+			} elseif (!preg_match("/^[a-zA-Z ]+$/", $firstName) ||
+				!preg_match("/^[a-zA-Z ]+$/", $lastName) ||
+				strlen($firstName) > 50 || strlen($lastName) > 50) {
+				$error = "Names must contain only letters and spaces (maximum 50 characters).";
+			} elseif (!preg_match("/^[0-9+\\-\\s]+$/", $contactNumber) ||
+				strlen($contactNumber) > 15) {
+				$error = "Please enter a valid contact number (maximum 15 characters).";
+			} else {
+				try {
+					$check = $pdo -> prepare("SELECT id FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ?");
+					$check -> execute([$activityId, $_SESSION["email"]]);
+					if ($check -> fetch()) {
+						$error = "You have already registered for this activity.";
+					} else {
+						$insert = $pdo -> prepare("INSERT INTO activity_table (email, first_name, last_name, date, time, contact_number, status, record_type, activity_id) VALUES (?, ?, ?, ?, ?, ?, 'pending', 'registration', ?)");
+						$insert -> execute([$_SESSION["email"], $firstName, $lastName, $activityDate, $activityStartTime, $contactNumber, $activityId]);
+						$_SESSION["activity_registration_success"] = "You have successfully registered for ".$activityTitle.".";
+						header("Location: activities.php");
+						exit;
+					}
+				} catch (PDOException $e) {
+					error_log($e -> getMessage());
+					$error = "Unable to save your registration. Please try again.";
+				}
 			}
 		}
 	}
 } else {
-	$activities = $pdo -> query("SELECT id, title, activity_type AS type, description, date, time AS start_time, end_time, price, venue, table_name AS `table`, image FROM activity_table WHERE record_type = 'event' AND status = 'approved' ORDER BY date, time") -> fetchAll();
+	$activities = $pdo -> query("SELECT id, title, activity_type AS type, description, date, time AS start_time, end_time, price, venue, table_name AS `table`, image FROM activity_table WHERE record_type = 'event' AND status = 'approved' ORDER BY date, time")
+		-> fetchAll();
 }
 ?>

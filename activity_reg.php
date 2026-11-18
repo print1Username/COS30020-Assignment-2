@@ -6,8 +6,8 @@ require_once __DIR__."/activities_db.php";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <link rel="icon" href="public/logo.ico" sizes="any">
-    <link rel="icon" type="image/png" href="public/logo.png">
+		<link rel="icon" href="public/logo.ico" sizes="any">
+		<link rel="icon" type="image/png" href="public/logo.png">
 
 		<meta charset="utf-8">
 		<meta
@@ -40,7 +40,7 @@ require_once __DIR__."/activities_db.php";
 		<!-- Activity Registration CSS -->
 		<link
 			rel="stylesheet"
-			href="style/activity_reg.css?v=5"
+			href="style/activity_reg.css?v=7"
 		>
 	</head>
 
@@ -225,60 +225,27 @@ require_once __DIR__."/activities_db.php";
 						<!-- First Name / Last Name -->
 						<div class="activity-form-row">
 							<div class="activity-form-field">
-								<label
-									for="first_name"
-									class="form-label"
-								>
+								<span class="form-label">
 									First Name
-								</label>
-
-								<input
-									type="text"
-									id="first_name"
-									name="first_name"
-									class="form-control"
-									value="<?php echo htmlspecialchars($firstName); ?>"
-									required
-								>
+								</span>
+								<span class="activity-form-value"><?php echo htmlspecialchars($firstName); ?></span>
 							</div>
 
 							<div class="activity-form-field">
-								<label
-									for="last_name"
-									class="form-label"
-								>
+								<span class="form-label">
 									Last Name
-								</label>
-
-								<input
-									type="text"
-									id="last_name"
-									name="last_name"
-									class="form-control"
-									value="<?php echo htmlspecialchars($lastName); ?>"
-									required
-								>
+								</span>
+								<span class="activity-form-value"><?php echo htmlspecialchars($lastName); ?></span>
 							</div>
 						</div>
 
 						<!-- Email / Contact Number -->
 						<div class="activity-form-row">
 							<div class="activity-form-field">
-								<label
-									for="email"
-									class="form-label"
-								>
+								<span class="form-label">
 									Email
-								</label>
-
-								<input
-									type="text"
-									id="email"
-									name="email"
-									class="form-control"
-									value="<?php echo htmlspecialchars($email); ?>"
-									required
-								>
+								</span>
+								<span class="activity-form-value"><?php echo htmlspecialchars($email); ?></span>
 							</div>
 
 							<div class="activity-form-field">
@@ -304,20 +271,44 @@ require_once __DIR__."/activities_db.php";
 
 					<!-- Form Actions -->
 					<div class="activity-registration-actions">
-						<a
-							href="activities.php"
-							class="btn activity-cancel-button"
-						>
-							Cancel
-						</a>
+						<?php if ($registrationStatus !== "pending"): ?>
+							<a
+								href="activities.php"
+								class="btn activity-cancel-button"
+							>
+								Cancel
+							</a>
+						<?php endif; ?>
 
-						<button
-							type="submit"
-							class="btn activity-submit-button"
-						>
-							<i class="bi bi-calendar-check me-2"></i>
-							Register for Activity
-						</button>
+						<?php if ($registrationStatus === "pending"): ?>
+							<span class="alert alert-warning activity-registration-status mb-0" role="status">
+								<i class="bi bi-hourglass-split me-2"></i>
+								Your registration is pending approval.
+							</span>
+							<button
+								type="submit"
+								name="action"
+								value="cancel_registration"
+								formnovalidate
+								class="btn activity-cancel-registration-button"
+							>
+								<i class="bi bi-x-circle me-2"></i>
+								Cancel Registration
+							</button>
+						<?php elseif ($registrationStatus === "approved"): ?>
+							<span class="alert alert-success mb-0" role="status">
+								<i class="bi bi-check-circle-fill me-2"></i>
+								You have already joined this activity.
+							</span>
+						<?php else: ?>
+							<button
+								type="submit"
+								class="btn activity-submit-button"
+							>
+								<i class="bi bi-calendar-check me-2"></i>
+								Register for Activity
+							</button>
+						<?php endif; ?>
 					</div>
 				</form>
 
