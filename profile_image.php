@@ -8,22 +8,23 @@ if (($_SESSION["logged_in"] ?? false) !== true ||
 	exit;
 }
 
-require_once __DIR__ . "/db_setup.php";
-require_once __DIR__ . "/db_connect.php";
-$statement = $pdo->prepare("SELECT OCTET_LENGTH(profile_image_data) AS image_size, profile_image_mime FROM user_table WHERE email = ?");
-$statement->execute([$_SESSION["email"]]);
-$image = $statement->fetch();
-if (!$image || empty($image["image_size"]) ||
-	!in_array($image["profile_image_mime"], ["image/jpeg", "image/png"], true)) {
+require_once __DIR__."/db_setup.php";
+require_once __DIR__."/db_connect.php";
+require_once __DIR__."/upload_helpers.php";
+$statement = $pdo -> prepare("SELECT profile_image FROM user_table WHERE email = ?");
+$statement -> execute([$_SESSION["email"]]);
+$imagePath = $statement -> fetchColumn();
+if (!profileImageExists($_SESSION["email"], $imagePath)) {
 	http_response_code(404);
 	exit;
 }
 
-header("Content-Type: " . $image["profile_image_mime"]);
-header("Content-Length: " . $image["image_size"]);
-header("X-Content-Type-Options: nosniff");
-$readChunk = $pdo->prepare("SELECT SUBSTRING(profile_image_data, ?, 131072) FROM user_table WHERE email = ?");
-for ($offset = 1; $offset <= $image["image_size"]; $offset += 131072) {
-	$readChunk->execute([$offset, $_SESSION["email"]]);
-	echo $readChunk->fetchColumn();
+$mime = (new finfo(FILEINFO_MIME_TYPE)) -> file(__DIR__."/".$imagePath);
+if (!in_array($mime, ["image/jpeg", "image/png"], true)) {
+	http_response_code(404);
+	exit;
 }
+header("Content-Type: ".$mime);
+header("Content-Length: ".filesize(__DIR__."/".$imagePath));
+header("X-Content-Type-Options: nosniff");
+readfile(__DIR__."/".$imagePath);

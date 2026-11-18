@@ -1,0 +1,11 @@
+*
+!.gitignore
+!admin@swin.edu.my/
+admin@swin.edu.my/*
+!admin@swin.edu.my/admin.png
+!user1@swin.edu.my/
+user1@swin.edu.my/*
+!user1@swin.edu.my/user1.png
+!user2@swin.edu.my/
+user2@swin.edu.my/*
+!user2@swin.edu.my/user2.png

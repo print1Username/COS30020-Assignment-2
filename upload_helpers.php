@@ -1,34 +1,23 @@
 <?php
 
-function storeProfileImage(PDO $pdo, string $email, string $mime, string $path, bool $saveLocal = false): ?string
+function profileImageExists(string $email, mixed $path): bool
 {
-	$packetLimit = (int)$pdo -> query("SELECT @@max_allowed_packet") -> fetchColumn();
-	if (filesize($path) + 131072 > $packetLimit) {
-		throw new RuntimeException("MySQL max_allowed_packet is too small for this profile image.");
+	if (!is_string($path)) {
+		return false;
 	}
-	$stream = fopen($path, "rb");
-	if ($stream === false) {
-		throw new RuntimeException("The profile image could not be read.");
-	}
-	try {
-		$reset = $pdo -> prepare("UPDATE user_table SET profile_image = NULL, profile_image_data = '', profile_image_mime = ? WHERE email = ?");
-		$reset -> execute([$mime, $email]);
-		$append = $pdo -> prepare("UPDATE user_table SET profile_image_data = CONCAT(profile_image_data, ?) WHERE email = ?");
-		while (!feof($stream)) {
-			$chunk = fread($stream, 128 * 1024);
-			if ($chunk === false) {
-				throw new RuntimeException("The profile image could not be read.");
-			}
-			if ($chunk !== "") {
-				$append -> execute([$chunk, $email]);
-			}
-		}
-	} finally {
-		fclose($stream);
-	}
-	if (!$saveLocal) {
-		return null;
-	}
+	$defaultImages = [
+		"admin@swin.edu.my" => "admin.png",
+		"user1@swin.edu.my" => "user1.png",
+		"user2@swin.edu.my" => "user2.png"
+	];
+	$defaultImage = isset($defaultImages[$email]) &&
+		$path === "profile_images/".$email."/".$defaultImages[$email];
+	$userImage = preg_match('~^profile_images/'.preg_quote($email, '~').'/[a-f0-9]{32}\.(?:jpg|png)$~i', $path) === 1;
+	return ($defaultImage || $userImage) && is_file(__DIR__."/".$path);
+}
+
+function storeProfileImage(string $email, string $mime, string $path): string
+{
 	// Keep the full email as the folder name, but reject unsafe filesystem characters.
 	if (!filter_var($email, FILTER_VALIDATE_EMAIL) || preg_match('~[<>:"/\\\\|?*\x00-\x1f]~', $email)) {
 		throw new RuntimeException("This email address cannot be used as a profile image folder name.");
@@ -41,14 +30,15 @@ function storeProfileImage(PDO $pdo, string $email, string $mime, string $path, 
 	if (!is_dir($directory) && !mkdir($directory, 0755, true)) {
 		throw new RuntimeException("The profile image folder could not be created.");
 	}
-	$localPath = $directory."/".bin2hex(random_bytes(16)).".".$extension;
-	if (!copy($path, $localPath)) {
-		if (is_file($localPath)) {
-			unlink($localPath);
+	$relativePath = "profile_images/".$email."/".bin2hex(random_bytes(16)).".".$extension;
+	$absolutePath = __DIR__."/".$relativePath;
+	if (!copy($path, $absolutePath)) {
+		if (is_file($absolutePath)) {
+			unlink($absolutePath);
 		}
 		throw new RuntimeException("The local profile image could not be saved.");
 	}
-	return $localPath;
+	return $relativePath;
 }
 
 function saveValidatedUpload(array $file, string $folder, array $allowedMime, int $maxBytes): string

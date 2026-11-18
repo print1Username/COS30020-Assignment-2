@@ -52,7 +52,7 @@ try {
             dob DATE NULL,
             gender VARCHAR(6) NOT NULL,
             hometown VARCHAR(50) NOT NULL,
-            profile_image VARCHAR(100) NULL,
+            profile_image VARCHAR(255) NULL,
             resume_file VARCHAR(100) NULL,
             resume_filename VARCHAR(255) NULL
         ) ENGINE=InnoDB
@@ -139,8 +139,7 @@ try {
 		"user_table" => [
 			"resume_file" => "VARCHAR(100) NULL",
 			"resume_filename" => "VARCHAR(255) NULL",
-			"profile_image_data" => "LONGBLOB NULL",
-			"profile_image_mime" => "VARCHAR(30) NULL"
+			"profile_image" => "VARCHAR(255) NULL"
 		],
 		"activity_table" => [
 			"record_type" => "VARCHAR(12) NOT NULL DEFAULT 'registration'",
@@ -165,30 +164,21 @@ try {
 			}
 		}
 	}
+	$pdo -> exec("ALTER TABLE user_table MODIFY profile_image VARCHAR(255) NULL");
 
 	$defaultProfileImages = [
 		"admin@swin.edu.my" => "admin.png",
 		"user1@swin.edu.my" => "user1.png",
 		"user2@swin.edu.my" => "user2.png"
 	];
-	$needsDefaultProfileImage = $pdo -> prepare("SELECT COUNT(*) FROM user_table WHERE email = ? AND profile_image_data IS NULL");
+	$setDefaultProfileImage = $pdo -> prepare("UPDATE user_table SET profile_image = ? WHERE email = ? AND (profile_image IS NULL OR profile_image = '' OR profile_image = ?)");
 	foreach ($defaultProfileImages as $seedEmail => $filename) {
-		$needsDefaultProfileImage -> execute([$seedEmail]);
-		if (!$needsDefaultProfileImage -> fetchColumn()) {
-			continue;
-		}
-		$imagePath = __DIR__."/profile_images/".$filename;
+		$relativeImagePath = "profile_images/".$seedEmail."/".$filename;
+		$imagePath = __DIR__."/".$relativeImagePath;
 		if (!is_file($imagePath) || (new finfo(FILEINFO_MIME_TYPE)) -> file($imagePath) !== "image/png") {
 			throw new RuntimeException("Default profile image is missing or invalid: ".$filename);
 		}
-		$pdo -> beginTransaction();
-		try {
-			storeProfileImage($pdo, $seedEmail, "image/png", $imagePath);
-			$pdo -> commit();
-		} catch (Throwable $e) {
-			$pdo -> rollBack();
-			throw $e;
-		}
+		$setDefaultProfileImage -> execute([$relativeImagePath, $seedEmail, "profile_images/".$filename]);
 	}
 
 	$activities = json_decode(file_get_contents(__DIR__."/data/activities.json"), true);
