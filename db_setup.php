@@ -23,14 +23,23 @@ try {
 	// Select database
 	$pdo -> exec("USE `$dbName`");
 	require_once __DIR__."/upload_helpers.php";
+	$schemaFiles = [
+		"homepage_image_table.sql",
+		"user_table.sql",
+		"account_table.sql",
+		"smart_feature_table.sql",
+		"activity_table.sql",
+		"community_table.sql"
+	];
+	foreach ($schemaFiles as $schemaFile) {
+		$sql = file_get_contents(__DIR__."/database/".$schemaFile);
+		if ($sql === false) {
+			throw new RuntimeException("Database schema file could not be read: ".$schemaFile);
+		}
+		$pdo -> exec($sql);
+	}
 
 	// Homepage slideshow images
-	$pdo -> exec("CREATE TABLE IF NOT EXISTS homepage_image_table (
-		id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		filename VARCHAR(100) NOT NULL UNIQUE,
-		mime_type VARCHAR(30) NOT NULL,
-		image_data LONGBLOB NOT NULL
-	) ENGINE=InnoDB");
 	$insertHomepageImage = $pdo -> prepare("INSERT IGNORE INTO homepage_image_table (filename, mime_type, image_data) VALUES (?, ?, ?)");
 	for ($imageNumber = 1; $imageNumber <= 5; $imageNumber++) {
 		$imagePath = __DIR__."/img/boardgame-".$imageNumber.".jpg";
@@ -42,34 +51,6 @@ try {
 			]);
 		}
 	}
-
-	// 1. User table
-	$pdo -> exec("
-        CREATE TABLE IF NOT EXISTS user_table (
-            email VARCHAR(50) NOT NULL PRIMARY KEY,
-            first_name VARCHAR(50) NOT NULL,
-            last_name VARCHAR(50) NOT NULL,
-            dob DATE NULL,
-            gender VARCHAR(6) NOT NULL,
-            hometown VARCHAR(50) NOT NULL,
-            profile_image VARCHAR(255) NULL,
-            resume_file VARCHAR(100) NULL,
-            resume_filename VARCHAR(255) NULL
-        ) ENGINE=InnoDB
-    ");
-
-	// 2. Account table
-	$pdo -> exec("
-        CREATE TABLE IF NOT EXISTS account_table (
-            email VARCHAR(50) NOT NULL PRIMARY KEY,
-            password VARCHAR(255) NOT NULL,
-            type VARCHAR(5) NOT NULL,
-            FOREIGN KEY (email)
-                REFERENCES user_table(email)
-                ON UPDATE CASCADE
-                ON DELETE CASCADE
-        ) ENGINE=InnoDB
-    ");
 
 	$accounts = json_decode(file_get_contents(__DIR__."/data/accounts.json"), true);
 	$insertDefaultUser = $pdo -> prepare("INSERT IGNORE INTO user_table (email, first_name, last_name, dob, gender, hometown) VALUES (?, ?, ?, ?, ?, ?)");
@@ -85,17 +66,6 @@ try {
 		]);
 	}
 
-	// 3. Smart feature table
-	$pdo -> exec("
-        CREATE TABLE IF NOT EXISTS smart_feature_table (
-            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            item_name VARCHAR(50) NOT NULL,
-            item_category VARCHAR(50) NOT NULL,
-            item_image VARCHAR(100) NULL,
-            description_file VARCHAR(100) NULL,
-            status VARCHAR(10) NOT NULL
-        ) ENGINE=InnoDB
-    ");
 	$sampleGames = [
 		["Catan", "Strategy", "img/boardgame-1.jpg", "smart_feature_description/sample-catan.pdf"],
 		["Ticket to Ride", "Family Games", "img/boardgame-2.jpg", "smart_feature_description/sample-ticket-to-ride.pdf"],
@@ -108,31 +78,6 @@ try {
 	foreach ($sampleGames as $game) {
 		$insertSampleGame -> execute([...$game, $game[0]]);
 	}
-
-	// 4. Activity table
-	$pdo -> exec("
-        CREATE TABLE IF NOT EXISTS activity_table (
-            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            email VARCHAR(50) NOT NULL,
-            first_name VARCHAR(50) NOT NULL,
-            last_name VARCHAR(50) NOT NULL,
-            date DATE NULL,
-            time TIME NULL,
-            contact_number VARCHAR(15) NULL,
-            status VARCHAR(10) NOT NULL,
-            record_type VARCHAR(12) NOT NULL DEFAULT 'registration',
-            source_id INT NULL UNIQUE,
-            activity_id INT NULL,
-            title VARCHAR(100) NULL,
-            activity_type VARCHAR(50) NULL,
-            description TEXT NULL,
-            end_time TIME NULL,
-            price DECIMAL(8, 2) NULL,
-            venue VARCHAR(100) NULL,
-            table_name VARCHAR(50) NULL,
-            image VARCHAR(100) NULL
-        ) ENGINE=InnoDB
-    ");
 
 	// Add Part 3 columns to databases created by the earlier version.
 	$requiredColumns = [
@@ -192,30 +137,6 @@ try {
 			$seedActivity["table"], $seedActivity["image"]
 		]);
 	}
-
-	// 5. Community table
-	$pdo -> exec("
-        CREATE TABLE IF NOT EXISTS community_table (
-            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            first_name VARCHAR(50) NOT NULL,
-            last_name VARCHAR(50) NOT NULL,
-            contribution_image VARCHAR(100) NULL,
-            related_activity VARCHAR(50) NOT NULL,
-            status VARCHAR(10) NOT NULL,
-            source_id INT NULL UNIQUE,
-            title VARCHAR(100) NULL,
-            description TEXT NULL,
-            member_count INT NULL,
-            created_at DATE NULL,
-            contribution_title VARCHAR(100) NULL,
-            contribution_description TEXT NULL,
-            contribution_date DATE NULL,
-            record_type VARCHAR(20) NOT NULL DEFAULT 'community',
-            community_id INT NULL,
-            email VARCHAR(50) NULL,
-            member_counted TINYINT(1) NOT NULL DEFAULT 0
-        ) ENGINE=InnoDB
-    ");
 
 	$communityColumns = [
 		"source_id" => "INT NULL UNIQUE",

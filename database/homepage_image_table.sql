@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS homepage_image_table (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    filename VARCHAR(100) NOT NULL UNIQUE,
+    mime_type VARCHAR(30) NOT NULL,
+    image_data LONGBLOB NOT NULL
+) ENGINE=InnoDB;

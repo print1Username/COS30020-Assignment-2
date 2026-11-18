@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS activity_table (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(50) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    date DATE NULL,
+    time TIME NULL,
+    contact_number VARCHAR(15) NULL,
+    status VARCHAR(10) NOT NULL,
+    record_type VARCHAR(12) NOT NULL DEFAULT 'registration',
+    source_id INT NULL UNIQUE,
+    activity_id INT NULL,
+    title VARCHAR(100) NULL,
+    activity_type VARCHAR(50) NULL,
+    description TEXT NULL,
+    end_time TIME NULL,
+    price DECIMAL(8, 2) NULL,
+    venue VARCHAR(100) NULL,
+    table_name VARCHAR(50) NULL,
+    image VARCHAR(100) NULL
+) ENGINE=InnoDB;

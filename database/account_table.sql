@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS account_table (
+    email VARCHAR(50) NOT NULL PRIMARY KEY,
+    password VARCHAR(255) NOT NULL,
+    type VARCHAR(5) NOT NULL,
+    FOREIGN KEY (email)
+        REFERENCES user_table(email)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
