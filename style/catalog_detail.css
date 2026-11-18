@@ -2,7 +2,7 @@ body { background: var(--catalog-background); }
 .catalog-detail-container { max-width: 1160px; margin: 0 auto; padding: 44px 24px 80px; }
 .catalog-back-link { display: inline-flex; gap: 10px; align-items: center; color: var(--catalog-purple); text-decoration: none; font-weight: 600; margin-bottom: 28px; }
 .catalog-back-link:hover { color: var(--catalog-purple-dark); text-decoration: underline; }
-.catalog-detail-header { padding: 32px; border: 1px solid var(--catalog-border); border-radius: 20px; background: transparent; margin-bottom: 28px; }
+.catalog-detail-header { padding: 32px; border: 1px solid var(--catalog-border); border-radius: 20px; background: #ffffff; margin-bottom: 28px; }
 .catalog-detail-header .catalog-category-tag { background: var(--catalog-purple-light); color: var(--catalog-purple); }
 .catalog-detail-eyebrow { color: var(--catalog-purple); font-size: .78rem; font-weight: 700; letter-spacing: 1.5px; }
 .catalog-detail-header h1 { margin: 12px 0 18px; font-size: clamp(2rem, 5vw, 3rem); font-weight: 750; color: var(--catalog-text); }

@@ -34,7 +34,7 @@ function catalogDetailEscape($value)
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style/navbar.css">
     <link rel="stylesheet" href="style/catalog.css">
-    <link rel="stylesheet" href="style/catalog_detail.css">
+    <link rel="stylesheet" href="style/catalog_detail.css?v=<?php echo filemtime(__DIR__."/style/catalog_detail.css"); ?>">
 </head>
 <body>
 <?php include "navbar.php"; ?>
