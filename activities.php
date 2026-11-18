@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__."/activities_db.php";
+$activityRegistrationSuccess = $_SESSION["activity_registration_success"] ?? "";
+unset($_SESSION["activity_registration_success"]);
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +51,14 @@ require_once __DIR__."/activities_db.php";
 	<?php include "navbar.php"; ?>
 
 	<main class="container py-5">
+		<?php if ($activityRegistrationSuccess !== ""): ?>
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>
+				<?php echo htmlspecialchars($activityRegistrationSuccess, ENT_QUOTES, "UTF-8"); ?>
+				Your registration is pending approval.
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+		<?php endif; ?>
 		<div class="activities-header">
 			<div>
 				<span class="activities-eyebrow">BOARDGAME HUB</span>
