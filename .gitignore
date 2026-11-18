@@ -72,3 +72,15 @@ Thumbs.db
 !smart_feature_description/sample-7-wonders.pdf
 *.docx
 *.doc
+
+# ==========================================
+# 8. Local Codex Agent & Memory Files
+# ==========================================
+/AGENTS.md
+/AGENT.md
+/agent.md
+/MEMORY.md
+/memory.md
+/.codex/
+/.codex-memory/
+/.codex.md
