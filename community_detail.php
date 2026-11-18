@@ -19,7 +19,7 @@ require_once __DIR__."/community_db.php";
 		>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 		<link rel="stylesheet" href="style/navbar.css">
-		<link rel="stylesheet" href="style/community_detail.css">
+		<link rel="stylesheet" href="style/community_detail.css?v=<?php echo filemtime(__DIR__."/style/community_detail.css"); ?>">
 	</head>
 	<body>
 	<?php include "navbar.php"; ?>
@@ -37,6 +37,7 @@ require_once __DIR__."/community_db.php";
 					<a href="community.php" class="btn community-detail-primary-button">View all communities</a>
 				</section>
 			<?php else: ?>
+				<?php if ($joinError !== ""): ?><div class="alert alert-danger" role="alert"><?php echo communityDetailEscape($joinError); ?></div><?php endif; ?>
 				<?php
 				$communityTitle = $community["title"] ?? "Untitled Community";
 				$communityDescription = $community["description"] ?? "No description available.";
@@ -54,6 +55,13 @@ require_once __DIR__."/community_db.php";
 							Created <?php echo communityDetailEscape(date("d M Y", strtotime($createdAt))); ?>
 							</span><?php endif; ?>
 					</div>
+					<form method="post" class="community-detail-join-form">
+						<input type="hidden" name="join_token" value="<?php echo communityDetailEscape($_SESSION["community_join_token"]); ?>">
+						<button type="submit" name="join_community" value="1" class="btn community-detail-primary-button" <?php echo in_array($joinStatus, ["pending", "approved"], true) ? "disabled" : ""; ?>>
+							<i class="bi bi-person-plus-fill"></i>
+							<?php echo in_array($joinStatus, ["pending", "approved"], true) ? "Already in Community" : "Join Community"; ?>
+						</button>
+					</form>
 				</header>
 
 				<section class="community-detail-contributions" aria-labelledby="contributions-title">

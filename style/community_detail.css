@@ -258,6 +258,17 @@
     color: #fff;
 }
 
+.community-detail-join-form {
+    margin-top: 24px;
+}
+
+.community-detail-primary-button:disabled {
+    border-color: var(--community-detail-border);
+    background: var(--community-detail-purple-soft);
+    color: var(--community-detail-purple-dark);
+    opacity: 1;
+}
+
 @media (max-width: 767.98px) {
     .community-detail-container {
         padding-top: 28px;

@@ -19,6 +19,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			adminRedirect($page, "Entry deleted.");
 		}
 		if (in_array($action, ["approved", "rejected"], true) && $id) {
+			if ($community) {
+				$pdo->beginTransaction();
+				$lookup = $pdo->prepare("SELECT record_type, community_id, member_counted FROM community_table WHERE id=? FOR UPDATE");
+				$lookup->execute([$id]);
+				$reviewRow = $lookup->fetch();
+				if (!$reviewRow) throw new RuntimeException("The community entry could not be found.");
+				if ($reviewRow["record_type"] === "join" && $action === "approved" && !(int)$reviewRow["member_counted"]) {
+					$increment = $pdo->prepare("UPDATE community_table SET member_count = COALESCE(member_count, 0) + 1 WHERE id=? AND record_type='community'");
+					$increment->execute([$reviewRow["community_id"]]);
+					if ($increment->rowCount() !== 1) throw new RuntimeException("The selected community could not be found.");
+					$statement = $pdo->prepare("UPDATE community_table SET status='approved', member_counted=1 WHERE id=? AND record_type='join'");
+					$statement->execute([$id]);
+				} else {
+					$statement = $pdo->prepare("UPDATE community_table SET status=? WHERE id=?");
+					$statement->execute([$action, $id]);
+				}
+				$pdo->commit();
+				adminRedirect($page, "Status updated.");
+			}
 			$pendingOnly = $community ? "" : " AND status='pending'";
 			$statement = $pdo->prepare("UPDATE $table SET status=? WHERE id=?".$registrationOnly.$pendingOnly);
 			$statement->execute([$action, $id]);
@@ -59,6 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		}
 		adminRedirect($page, "Entry saved.");
 	} catch (RuntimeException|PDOException $exception) {
+		if ($pdo->inTransaction()) $pdo->rollBack();
 		$error = $exception instanceof PDOException ? "Unable to save entry. Please check the details." : $exception->getMessage();
 	}
 }

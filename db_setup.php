@@ -219,7 +219,11 @@ try {
             created_at DATE NULL,
             contribution_title VARCHAR(100) NULL,
             contribution_description TEXT NULL,
-            contribution_date DATE NULL
+            contribution_date DATE NULL,
+            record_type VARCHAR(20) NOT NULL DEFAULT 'community',
+            community_id INT NULL,
+            email VARCHAR(50) NULL,
+            member_counted TINYINT(1) NOT NULL DEFAULT 0
         ) ENGINE=InnoDB
     ");
 
@@ -231,13 +235,23 @@ try {
 		"created_at" => "DATE NULL",
 		"contribution_title" => "VARCHAR(100) NULL",
 		"contribution_description" => "TEXT NULL",
-		"contribution_date" => "DATE NULL"
+		"contribution_date" => "DATE NULL",
+		"record_type" => "VARCHAR(20) NOT NULL DEFAULT 'community'",
+		"community_id" => "INT NULL",
+		"email" => "VARCHAR(50) NULL",
+		"member_counted" => "TINYINT(1) NOT NULL DEFAULT 0"
 	];
 	foreach ($communityColumns as $column => $definition) {
 		$columnCheck -> execute([$dbName, "community_table", $column]);
 		if (!$columnCheck -> fetchColumn()) {
 			$pdo -> exec("ALTER TABLE `community_table` ADD COLUMN `$column` $definition");
 		}
+	}
+	$pdo -> exec("UPDATE community_table SET record_type = 'community' WHERE record_type IS NULL OR record_type = ''");
+	$joinIndex = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = ? AND table_name = 'community_table' AND index_name = 'unique_community_join'");
+	$joinIndex -> execute([$dbName]);
+	if (!$joinIndex -> fetchColumn()) {
+		$pdo -> exec("ALTER TABLE community_table ADD UNIQUE KEY unique_community_join (community_id, email, record_type)");
 	}
 
 	$communities = json_decode(file_get_contents(__DIR__."/data/community.json"), true);
