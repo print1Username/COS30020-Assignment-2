@@ -326,6 +326,19 @@
     color: #adb5bd;
 }
 
+.activity-form-field .form-control[readonly] {
+    border-color: #d5d8dc;
+    background-color: #eef0f2;
+    color: #6c757d;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.activity-form-field .form-control[readonly]:focus {
+    border-color: #d5d8dc;
+    box-shadow: none;
+}
+
 .activity-form-value {
     display: block;
     min-height: 46px;

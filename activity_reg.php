@@ -40,7 +40,7 @@ require_once __DIR__."/activities_db.php";
 		<!-- Activity Registration CSS -->
 		<link
 			rel="stylesheet"
-			href="style/activity_reg.css?v=9"
+			href="style/activity_reg.css?v=10"
 		>
 	</head>
 
@@ -264,6 +264,7 @@ require_once __DIR__."/activities_db.php";
 									value="<?php echo htmlspecialchars($contactNumber); ?>"
 									placeholder="Enter your contact number"
 									required
+									<?php echo $registrationStatus === "pending" ? "readonly aria-readonly=\"true\"" : ""; ?>
 								>
 							</div>
 						</div>
