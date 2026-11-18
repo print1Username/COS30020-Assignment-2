@@ -8,6 +8,31 @@
     --about-white: #ffffff;
 }
 
+.admin-about {
+    --about-purple: var(--admin-purple-dark);
+    --about-dark-purple: #24163d;
+    --about-light-purple: var(--admin-purple);
+    --about-border: var(--admin-border);
+}
+
+.admin-about .about-hero {
+    background-color: var(--admin-purple-dark);
+}
+
+.admin-about .about-card-icon {
+    color: #ffffff;
+}
+
+.admin-about .about-hero .about-eyebrow,
+.admin-about .about-hero p {
+    color: #ffffff;
+}
+
+.admin-about .about-video-link:focus,
+.admin-about .about-home-button:focus {
+    box-shadow: 0 0 0 .25rem rgba(50, 32, 82, .25);
+}
+
 .about-page {
     background-color: #ffffff;
     color: var(--about-text);

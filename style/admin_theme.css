@@ -35,6 +35,7 @@ body {
     transition: opacity 0.2s ease;
 }
 
+.admin-navbar .nav-link.active,
 .admin-navbar .nav-link:hover,
 .admin-navbar .nav-link:focus-visible {
     opacity: 1;
@@ -52,6 +53,7 @@ body {
     transition: transform 0.2s ease;
 }
 
+.admin-navbar .nav-link.active::after,
 .admin-navbar .nav-link:hover::after,
 .admin-navbar .nav-link:focus-visible::after {
     transform: scaleX(1);

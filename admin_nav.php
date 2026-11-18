@@ -1,13 +1,13 @@
+<?php $adminCurrentPage = basename($_SERVER["SCRIPT_NAME"] ?? ""); ?>
 <nav class="navbar navbar-expand-lg navbar-dark admin-navbar">
 	<div class="container">
 		<a class="navbar-brand fw-bold" href="main_menu_admin.php">Boardgame Hub Admin</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
 		<div class="collapse navbar-collapse" id="adminNav">
 			<div class="navbar-nav me-auto">
-				<a class="nav-link" href="main_menu_admin.php">Admin Menu</a>
-				<a class="nav-link" href="manage_accounts.php">Accounts</a>
-				<a class="nav-link" href="manage_community.php">Community</a>
-				<a class="nav-link" href="manage_activities.php">Activities</a>
+				<?php foreach (["main_menu_admin.php" => "Admin Menu", "manage_accounts.php" => "Accounts", "manage_community.php" => "Community", "manage_activities.php" => "Activities", "about.php" => "About"] as $adminPage => $adminLabel): ?>
+					<a class="nav-link<?php echo $adminCurrentPage === $adminPage ? ' active' : ''; ?>" href="<?php echo $adminPage; ?>"<?php echo $adminCurrentPage === $adminPage ? ' aria-current="page"' : ''; ?>><?php echo $adminLabel; ?></a>
+				<?php endforeach; ?>
 			</div>
 			<div class="d-flex align-items-center gap-2">
 				<a class="btn admin-account-button d-flex align-items-center gap-2" href="profile.php" aria-label="View Account Profile">

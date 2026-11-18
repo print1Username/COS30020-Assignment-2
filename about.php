@@ -1,4 +1,8 @@
-<?php session_start(); ?>
+<?php
+session_start();
+$isAdminAbout = ($_SESSION["logged_in"] ?? false) === true &&
+    ($_SESSION["type"] ?? null) === "admin" && isset($_SESSION["email"]);
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -13,11 +17,15 @@
 			integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"
 		>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-		<link rel="stylesheet" href="style/navbar.css">
-		<link rel="stylesheet" href="style/about.css">
+		<?php if ($isAdminAbout): ?>
+			<link rel="stylesheet" href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>">
+		<?php else: ?>
+			<link rel="stylesheet" href="style/navbar.css">
+		<?php endif; ?>
+		<link rel="stylesheet" href="style/about.css?v=<?php echo filemtime(__DIR__."/style/about.css"); ?>">
 	</head>
-	<body>
-	<?php include "navbar.php"; ?>
+	<body<?php echo $isAdminAbout ? ' class="admin-about"' : ''; ?>>
+	<?php include $isAdminAbout ? "admin_nav.php" : "navbar.php"; ?>
 
 	<main class="about-page">
 		<section class="about-hero">
