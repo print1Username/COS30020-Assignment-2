@@ -118,7 +118,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 				preg_match('~^profile_images/[^/]+/[a-f0-9]{32}\.(?:jpg|png)$~', $user["profile_image"]) &&
 				is_file(__DIR__."/".$user["profile_image"])) {
 				$existingMime = (new finfo(FILEINFO_MIME_TYPE)) -> file(__DIR__."/".$user["profile_image"]);
-				$newProfileImage = storeProfileImage($pdo, $email, $existingMime, __DIR__."/".$user["profile_image"], $currentEmail);
+				$newProfileImage = storeProfileImage($pdo, $email, $existingMime, __DIR__."/".$user["profile_image"],
+					$currentEmail);
 			}
 			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, resume_file = ?, resume_filename = ? WHERE email = ?");
 			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, $newResume, $newResumeFilename, $currentEmail]);
@@ -127,13 +128,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 				$updateImage -> execute([$newProfileImage, $email]);
 			}
 			$pdo -> commit();
-			if ($newProfileImage !== null && is_string($user["profile_image"]) && preg_match('~^profile_images/[^/]+/[a-f0-9]{32}\.(?:jpg|png)$~', $user["profile_image"]) && is_file(__DIR__."/".$user["profile_image"])) {
-				unlink(__DIR__."/".$user["profile_image"]);
-				@rmdir(dirname(__DIR__."/".$user["profile_image"]));
-			}
 			$_SESSION["email"] = $email;
 			header("Location: profile.php");
 			exit;
+
 		} catch (RuntimeException|PDOException $e) {
 			if ($newProfileImage !== null && is_file(__DIR__."/".$newProfileImage)) {
 				unlink(__DIR__."/".$newProfileImage);

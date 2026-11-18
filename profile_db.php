@@ -48,14 +48,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profile_image"])) {
 				throw new RuntimeException("Please upload a valid JPG, JPEG, or PNG image.");
 			}
 			$pdo -> beginTransaction();
-			$newProfileImage = storeProfileImage($pdo, $currentEmail, $mime, $imageFile["tmp_name"]);
+			$newProfileImage = storeProfileImage(
+				$pdo,
+				$currentEmail,
+				$mime,
+				$imageFile["tmp_name"]
+			);
 			$pdo -> commit();
-			if (is_string($oldProfileImage) && preg_match('~^profile_images/[^/]+/[a-f0-9]{32}\.(?:jpg|png)$~', $oldProfileImage) && is_file(__DIR__."/".$oldProfileImage)) {
-				unlink(__DIR__."/".$oldProfileImage);
-				@rmdir(dirname(__DIR__."/".$oldProfileImage));
-			}
 			header("Location: profile.php");
 			exit;
+
 		} catch (RuntimeException|PDOException $e) {
 			if ($newProfileImage !== null && is_file(__DIR__."/".$newProfileImage)) {
 				unlink(__DIR__."/".$newProfileImage);
