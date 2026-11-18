@@ -1,6 +1,8 @@
 <?php
 
-session_start();
+require_once __DIR__."/auth.php";
+require_once __DIR__."/validation.php";
+startSession();
 
 $errors = [];
 
@@ -116,7 +118,7 @@ if ($lastName !== "" && !preg_match("/^[a-zA-Z ]+$/", $lastName)) {
 |--------------------------------------------------------------------------
 */
 
-if ($email !== "" && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+if ($email !== "" && !isValidEmail($email)) {
 	$errors[] = "Please enter a valid email address.";
 }
 
@@ -140,15 +142,7 @@ if ($gender !== "" && $gender !== "Male" && $gender !== "Female") {
 
 if ($dob !== "") {
 
-	$date = DateTime::createFromFormat("Y-m-d", $dob);
-
-	$dateErrors = DateTime::getLastErrors();
-
-	if (
-		!$date ||
-		($dateErrors !== false &&
-			($dateErrors["warning_count"] > 0 || $dateErrors["error_count"] > 0))
-	) {
+	if (!isValidDate($dob)) {
 		$errors[] = "Please enter a valid Date of Birth.";
 	}
 }

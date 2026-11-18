@@ -1,13 +1,6 @@
 <?php
-session_start();
-
-
-if (($_SESSION["logged_in"] ?? false) !== true ||
-	($_SESSION["type"] ?? null) !== "user" ||
-	!isset($_SESSION["email"])) {
-	header("Location: login.php");
-	exit;
-}
+require_once __DIR__."/auth.php";
+requireUser();
 
 require_once __DIR__."/db_setup.php";
 require_once __DIR__."/db_connect.php";

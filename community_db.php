@@ -1,12 +1,7 @@
 <?php
-session_start();
-
-if (($_SESSION["logged_in"] ?? false) !== true ||
-	($_SESSION["type"] ?? null) !== "user" ||
-	!isset($_SESSION["email"])) {
-	header("Location: login.php");
-	exit;
-}
+require_once __DIR__."/auth.php";
+require_once __DIR__."/helpers.php";
+requireUser();
 
 
 if (($communityDbPage ?? "list") === "detail") {
@@ -70,10 +65,6 @@ if (($communityDbPage ?? "list") === "detail") {
 		}
 	}
 
-	function communityDetailEscape($value)
-	{
-		return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
-	}
 } else {
 	/*
 	 * ==========================
@@ -137,15 +128,6 @@ if (($communityDbPage ?? "list") === "detail") {
 	 * Helper Function
 	 * ==========================
 	 */
-
-	function communityEscape($value)
-	{
-		return htmlspecialchars(
-			(string)$value,
-			ENT_QUOTES,
-			"UTF-8"
-		);
-	}
 
 	function communitySelected($current, $value)
 	{

@@ -52,7 +52,7 @@ function storeProfileImage(PDO $pdo, string $email, string $mime, string $path, 
 	return $relativePath;
 }
 
-function saveValidatedUpload(array $file, string $folder, array $allowedMime, int $maxBytes): string
+function validateUpload(array $file, array $allowedMime, int $maxBytes): array
 {
 	if (($file["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
 		throw new RuntimeException("The file could not be uploaded.");
@@ -71,11 +71,17 @@ function saveValidatedUpload(array $file, string $folder, array $allowedMime, in
 	if ($mime !== "application/pdf" && getimagesize($file["tmp_name"]) === false) {
 		throw new RuntimeException("Please upload a valid image.");
 	}
+	return ["extension" => $extension, "mime" => $mime];
+}
+
+function saveValidatedUpload(array $file, string $folder, array $allowedMime, int $maxBytes): string
+{
+	$upload = validateUpload($file, $allowedMime, $maxBytes);
 	$directory = __DIR__."/".$folder;
 	if (!is_dir($directory) && !mkdir($directory, 0755, true)) {
 		throw new RuntimeException("The upload folder could not be created.");
 	}
-	$path = $folder."/".bin2hex(random_bytes(16)).".".$extension;
+	$path = $folder."/".bin2hex(random_bytes(16)).".".$upload["extension"];
 	if (!move_uploaded_file($file["tmp_name"], __DIR__."/".$path)) {
 		throw new RuntimeException("The uploaded file could not be saved.");
 	}

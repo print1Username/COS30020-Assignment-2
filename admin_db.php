@@ -1,5 +1,7 @@
 <?php
-session_start();
+require_once __DIR__."/auth.php";
+require_once __DIR__."/helpers.php";
+startSession();
 
 if (isset($_GET["logout"])) {
 	session_unset();
@@ -8,19 +10,14 @@ if (isset($_GET["logout"])) {
 	exit;
 }
 
-if (($_SESSION["logged_in"] ?? false) !== true ||
-	($_SESSION["type"] ?? null) !== "admin" ||
-	!isset($_SESSION["email"])) {
-	header("Location: login.php");
-	exit;
-}
+requireAdmin();
 
 require_once __DIR__."/db_setup.php";
 require_once __DIR__."/db_connect.php";
 
 function adminEscape($value): string
 {
-	return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
+	return e($value);
 }
 
 function adminToken(): string

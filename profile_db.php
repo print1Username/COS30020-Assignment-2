@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once __DIR__."/auth.php";
+startSession();
 
 /*
  * Handle logout
@@ -12,12 +13,7 @@ if (isset($_GET["logout"])) {
 	exit;
 }
 
-if (($_SESSION["logged_in"] ?? false) !== true ||
-	!in_array($_SESSION["type"] ?? null, ["user", "admin"], true) ||
-	!isset($_SESSION["email"])) {
-	header("Location: login.php");
-	exit;
-}
+requireUser(true);
 
 $currentEmail = $_SESSION["email"];
 require_once __DIR__."/db_setup.php";
@@ -34,19 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profile_image"])) {
 			$oldImageLookup = $pdo -> prepare("SELECT profile_image FROM user_table WHERE email = ?");
 			$oldImageLookup -> execute([$currentEmail]);
 			$oldProfileImage = $oldImageLookup -> fetchColumn();
-			$imageFile = $_FILES["profile_image"];
-			if (($imageFile["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK ||
-				($imageFile["size"] ?? 0) > 5 * 1024 * 1024 || ($imageFile["size"] ?? 0) < 1 ||
-				!is_uploaded_file($imageFile["tmp_name"])) {
-				throw new RuntimeException("The image exceeds 5MB or could not be uploaded.");
-			}
-			$extension = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
-			$mime = (new finfo(FILEINFO_MIME_TYPE)) -> file($imageFile["tmp_name"]);
 			$allowedImages = ["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"];
-			if (!isset($allowedImages[$extension]) || $allowedImages[$extension] !== $mime ||
-				getimagesize($imageFile["tmp_name"]) === false) {
-				throw new RuntimeException("Please upload a valid JPG, JPEG, or PNG image.");
-			}
+			$imageFile = $_FILES["profile_image"];
+			$mime = validateUpload($imageFile, $allowedImages, 5 * 1024 * 1024)["mime"];
 			$pdo -> beginTransaction();
 			$newProfileImage = storeProfileImage(
 				$pdo,
@@ -79,7 +65,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profile_image"])) {
 			$pdo -> beginTransaction();
 			$remove = $pdo -> prepare("UPDATE user_table SET resume_file = NULL, resume_filename = NULL WHERE email = ?");
 			$remove -> execute([$currentEmail]);
-			if (is_string($oldPath) && preg_match('~^resume/[a-f0-9]{32}\.pdf$~', $oldPath) && is_file(__DIR__."/".$oldPath)) {
+			if (is_string($oldPath) && preg_match('~^resume/[a-f0-9]{32}\.pdf$~',
+					$oldPath) && is_file(__DIR__."/".$oldPath)) {
 				if (!unlink(__DIR__."/".$oldPath)) {
 					throw new RuntimeException("The PDF could not be removed. Please try again.");
 				}
@@ -100,7 +87,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["profile_image"])) {
 			if (strlen($filename) > 255) {
 				throw new RuntimeException("The PDF filename is too long.");
 			}
-			$newResume = saveValidatedUpload($_FILES["resume_file"], "resume", ["pdf" => "application/pdf"], 7 * 1024 * 1024);
+			$newResume = saveValidatedUpload($_FILES["resume_file"], "resume", ["pdf" => "application/pdf"],
+				7 * 1024 * 1024);
 			$update = $pdo -> prepare("UPDATE user_table SET resume_file = ?, resume_filename = ? WHERE email = ?");
 			$update -> execute([$newResume, $filename, $currentEmail]);
 			header("Location: profile.php");
@@ -158,7 +146,8 @@ in_array($user["profile_image_mime"], ["image/jpeg", "image/png"], true)
 	? "profile_image.php"
 	: "";
 $resumePath = $user["resume_file"] ?? "";
-$resumeAvailable = is_string($resumePath) && preg_match('~^resume/[a-f0-9]{32}\.pdf$~', $resumePath) && is_file(__DIR__."/".$resumePath);
+$resumeAvailable = is_string($resumePath) && preg_match('~^resume/[a-f0-9]{32}\.pdf$~',
+		$resumePath) && is_file(__DIR__."/".$resumePath);
 $resumeName = $resumeAvailable ? ($user["resume_filename"] ?: basename($resumePath)) : "";
 
 ?>

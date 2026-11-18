@@ -83,7 +83,7 @@ require_once __DIR__."/community_db.php";
 							<input
 								type="hidden"
 								name="sort_order"
-								value="<?php echo communityEscape($sortOrder); ?>"
+								value="<?php echo e($sortOrder); ?>"
 							>
 
 							<label class="community-sort-option">
@@ -130,7 +130,7 @@ require_once __DIR__."/community_db.php";
 							<input
 								type="hidden"
 								name="sort_type"
-								value="<?php echo communityEscape($sortType); ?>"
+								value="<?php echo e($sortType); ?>"
 							>
 
 							<label class="community-sort-option">
@@ -200,17 +200,17 @@ require_once __DIR__."/community_db.php";
 						<a
 							href="community_detail.php?id=<?php echo urlencode((string)$communityId); ?>"
 							class="community-card-link"
-							aria-label="View <?php echo communityEscape($communityTitle); ?> details"
+							aria-label="View <?php echo e($communityTitle); ?> details"
 						></a>
 
 						<div class="community-card-content">
 
 							<h2 class="community-card-title">
-								<?php echo communityEscape($communityTitle); ?>
+								<?php echo e($communityTitle); ?>
 							</h2>
 
 							<p class="community-card-description">
-								<?php echo communityEscape($communityDescription); ?>
+								<?php echo e($communityDescription); ?>
 							</p>
 
 							<div class="community-card-footer">

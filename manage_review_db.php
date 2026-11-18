@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__."/admin_db.php";
+require_once __DIR__."/validation.php";
 $kind = $reviewKind ?? "";
 if (!in_array($kind, ["community", "activities"], true)) exit("Invalid management page.");
 $community = $kind === "community";
@@ -48,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		$first = trim($_POST["first_name"] ?? "");
 		$last = trim($_POST["last_name"] ?? "");
 		$status = trim($_POST["status"] ?? "pending");
-		if (!preg_match('/^[A-Za-z ]{1,50}$/', $first) || !preg_match('/^[A-Za-z ]{1,50}$/', $last) || !in_array($status, ["pending", "approved", "rejected"], true)) throw new RuntimeException("Enter valid names and status.");
+		if (!isValidName($first) || !isValidName($last) || !in_array($status, ["pending", "approved", "rejected"], true)) throw new RuntimeException("Enter valid names and status.");
 		if ($community) {
 			$related = trim($_POST["related_activity"] ?? "");
 			$image = trim($_POST["contribution_image"] ?? "");
@@ -67,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			$date = trim($_POST["date"] ?? "");
 			$time = trim($_POST["time"] ?? "");
 			$contact = trim($_POST["contact_number"] ?? "");
-			if (!filter_var($email,FILTER_VALIDATE_EMAIL) || strlen($email)>50 || strlen($contact)>15 || ($date !== "" && (!($parsed = DateTime::createFromFormat('!Y-m-d',$date)) || $parsed->format('Y-m-d') !== $date)) || ($time !== "" && !preg_match('/^([01][0-9]|2[0-3]):[0-5][0-9]$/',$time))) throw new RuntimeException("Enter valid registration details.");
+			if (!isValidEmail($email) || strlen($contact)>15 || ($date !== "" && !isValidDate($date)) || ($time !== "" && !isValidTime($time))) throw new RuntimeException("Enter valid registration details.");
 			if ($action === "add") {
 				$statement = $pdo->prepare("INSERT INTO activity_table (email,first_name,last_name,date,time,contact_number,status,record_type) VALUES (?,?,?,?,?,?,?,'registration')");
 				$statement->execute([$email,$first,$last,$date ?: null,$time ?: null,$contact ?: null,$status]);

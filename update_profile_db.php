@@ -1,12 +1,7 @@
 <?php
-session_start();
-
-if (($_SESSION["logged_in"] ?? false) !== true ||
-	!in_array($_SESSION["type"] ?? null, ["user", "admin"], true) ||
-	!isset($_SESSION["email"])) {
-	header("Location: login.php");
-	exit;
-}
+require_once __DIR__."/auth.php";
+require_once __DIR__."/validation.php";
+requireUser(true);
 
 require_once __DIR__."/db_setup.php";
 require_once __DIR__."/db_connect.php";
@@ -48,19 +43,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		"Hometown" => $hometown
 	];
 
-	$dobDate = DateTime::createFromFormat("!Y-m-d", $dob);
 	if ($firstName === "" || $lastName === "" || $dob === "" ||
 		$gender === "" || $email === "" || $hometown === "") {
 		$error = "Please complete all required fields.";
-	} elseif (!preg_match("/^[A-Za-z ]+$/", $firstName) ||
-		!preg_match("/^[A-Za-z ]+$/", $lastName) ||
-		strlen($firstName) > 50 || strlen($lastName) > 50) {
+	} elseif (!isValidName($firstName) || !isValidName($lastName)) {
 		$error = "Names must contain only letters and spaces (maximum 50 characters).";
-	} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 50) {
+	} elseif (!isValidEmail($email)) {
 		$error = "Please enter a valid email address (maximum 50 characters).";
 	} elseif (!in_array($gender, ["Male", "Female"], true)) {
 		$error = "Please select a valid gender.";
-	} elseif (!$dobDate || $dobDate -> format("Y-m-d") !== $dob) {
+	} elseif (!isValidDate($dob)) {
 		$error = "Please enter a valid date of birth.";
 	} elseif (strlen($hometown) > 50) {
 		$error = "Hometown must be 50 characters or fewer.";
@@ -83,19 +75,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			$newResumeFilename = $user["resume_filename"];
 			if (isset($_FILES["profile_image"]) &&
 				$_FILES["profile_image"]["error"] !== UPLOAD_ERR_NO_FILE) {
-				$imageFile = $_FILES["profile_image"];
-				if (($imageFile["error"] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK ||
-					($imageFile["size"] ?? 0) > 5 * 1024 * 1024 || ($imageFile["size"] ?? 0) < 1 ||
-					!is_uploaded_file($imageFile["tmp_name"])) {
-					throw new RuntimeException("The image exceeds the allowed size or could not be uploaded.");
-				}
-				$extension = strtolower(pathinfo($imageFile["name"], PATHINFO_EXTENSION));
-				$newImageMime = (new finfo(FILEINFO_MIME_TYPE)) -> file($imageFile["tmp_name"]);
 				$allowedImages = ["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"];
-				if (!isset($allowedImages[$extension]) || $allowedImages[$extension] !== $newImageMime ||
-					getimagesize($imageFile["tmp_name"]) === false) {
-					throw new RuntimeException("Please upload a valid JPG, JPEG, or PNG image.");
-				}
+				$imageFile = $_FILES["profile_image"];
+				$newImageMime = validateUpload($imageFile, $allowedImages, 5 * 1024 * 1024)["mime"];
 				$newImagePath = $imageFile["tmp_name"];
 			}
 			if (isset($_FILES["resume_file"]) &&

@@ -43,7 +43,7 @@ require_once __DIR__."/community_db.php";
 				<?php if ($joinError !== ""): ?>
 					<div
 						class="alert alert-danger" role="alert"
-					><?php echo communityDetailEscape($joinError); ?></div><?php endif; ?>
+					><?php echo e($joinError); ?></div><?php endif; ?>
 				<?php if ($joinStatus === "pending"): ?>
 					<div class="alert alert-dismissible fade show community-detail-pending-alert" role="status">
 						<i class="bi bi-hourglass-split" aria-hidden="true"></i>
@@ -60,23 +60,24 @@ require_once __DIR__."/community_db.php";
 				?>
 				<header class="community-detail-header">
 					<span class="community-detail-eyebrow">BOARDGAME HUB COMMUNITY</span>
-					<h1><?php echo communityDetailEscape($communityTitle); ?></h1>
-					<p><?php echo communityDetailEscape($communityDescription); ?></p>
+					<h1><?php echo e($communityTitle); ?></h1>
+					<p><?php echo e($communityDescription); ?></p>
 					<div class="community-detail-meta">
 						<span><i class="bi bi-people-fill"></i> <?php echo $memberCount; ?> Members</span>
 						<?php if ($createdAt !== ""): ?><span><i class="bi bi-calendar3"></i>
-							Created <?php echo communityDetailEscape(date("d M Y", strtotime($createdAt))); ?>
+							Created <?php echo e(date("d M Y", strtotime($createdAt))); ?>
 							</span><?php endif; ?>
 					</div>
 					<div class="community-detail-membership-actions">
 						<form method="post" class="community-detail-join-form">
 							<input
 								type="hidden" name="join_token"
-								value="<?php echo communityDetailEscape($_SESSION["community_join_token"]); ?>"
+								value="<?php echo e($_SESSION["community_join_token"]); ?>"
 							>
 							<button
 								type="submit" name="join_community" value="1"
-								class="btn community-detail-primary-button<?php echo $joinStatus === "pending" ? " community-detail-pending-button" : ($joinStatus === "approved" ? " community-detail-approved-status" : ""); ?>" <?php echo in_array($joinStatus, ["pending", "approved"], true) ? "disabled" : ""; ?>>
+								class="btn community-detail-primary-button<?php echo $joinStatus === "pending" ? " community-detail-pending-button" : ($joinStatus === "approved" ? " community-detail-approved-status" : ""); ?>" <?php echo in_array($joinStatus,
+								["pending", "approved"], true) ? "disabled" : ""; ?>>
 								<i class="bi <?php echo $joinStatus === "pending" ? "bi-hourglass-split" : ($joinStatus === "approved" ? "bi-check-circle-fill" : "bi-person-plus-fill"); ?>"></i>
 								<?php echo $joinStatus === "pending" ? "Pending Approval" : ($joinStatus === "approved" ? "Already in Community" : "Join Community"); ?>
 							</button>
@@ -121,13 +122,13 @@ require_once __DIR__."/community_db.php";
 									<div class="community-detail-media">
 										<?php if ($mediaType === "video" && $mediaExists): ?>
 											<video controls>
-												<source src="<?php echo communityDetailEscape($media); ?>">
+												<source src="<?php echo e($media); ?>">
 												Your browser does not support video playback.
 											</video>
 										<?php elseif ($mediaExists): ?>
 											<img
-												src="<?php echo communityDetailEscape($media); ?>"
-												alt="<?php echo communityDetailEscape($title); ?>"
+												src="<?php echo e($media); ?>"
+												alt="<?php echo e($title); ?>"
 											>
 										<?php else: ?>
 											<div
@@ -140,20 +141,21 @@ require_once __DIR__."/community_db.php";
 									</div>
 									<div class="community-detail-card-body">
 										<div class="community-detail-card-title-row">
-											<h3><?php echo communityDetailEscape($title); ?></h3>
+											<h3><?php echo e($title); ?></h3>
 											<?php if ($contributionDate !== ""): ?>
 												<time
-												datetime="<?php echo communityDetailEscape($contributionDate); ?>"><?php echo communityDetailEscape(date("d M Y", strtotime($contributionDate))); ?></time><?php endif; ?>
+												datetime="<?php echo e($contributionDate); ?>"><?php echo e(date("d M Y",
+													strtotime($contributionDate))); ?></time><?php endif; ?>
 										</div>
-										<p class="community-detail-description"><?php echo communityDetailEscape($description); ?></p>
+										<p class="community-detail-description"><?php echo e($description); ?></p>
 										<dl class="community-detail-information">
 											<div>
 												<dt><i class="bi bi-person-fill"></i> Contributor</dt>
-												<dd><?php echo communityDetailEscape($contributor); ?></dd>
+												<dd><?php echo e($contributor); ?></dd>
 											</div>
 											<div>
 												<dt><i class="bi bi-controller"></i> Related activity</dt>
-												<dd><?php echo communityDetailEscape($activity); ?></dd>
+												<dd><?php echo e($activity); ?></dd>
 											</div>
 										</dl>
 									</div>
