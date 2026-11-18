@@ -57,11 +57,6 @@ require_once __DIR__."/community_db.php";
 				</p>
 			</div>
 
-			<a href="#" class="btn community-create-btn">
-				<i class="bi bi-plus-lg"></i>
-				Create Community
-			</a>
-
 		</section>
 
 		<!-- ==========================
@@ -77,7 +72,7 @@ require_once __DIR__."/community_db.php";
 
 					<summary class="community-sort-trigger">
 						<i class="bi bi-funnel"></i>
-						<span>Sorting Type</span>
+						<span>Sorting Type: <?php echo $sortType === "alphabetical" ? "Alphabetical" : "Time"; ?></span>
 						<i class="bi bi-chevron-down community-sort-chevron"></i>
 					</summary>
 
@@ -124,7 +119,7 @@ require_once __DIR__."/community_db.php";
 
 					<summary class="community-sort-trigger">
 						<i class="bi bi-sort-down"></i>
-						<span>Sorting Order</span>
+						<span>Sorting Order: <?php echo $sortOrder === "descending" ? "Descending" : "Ascending"; ?></span>
 						<i class="bi bi-chevron-down community-sort-chevron"></i>
 					</summary>
 
