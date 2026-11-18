@@ -83,7 +83,12 @@ if (($communityDbPage ?? "list") === "detail") {
 
 	require_once __DIR__."/db_setup.php";
 	require_once __DIR__."/db_connect.php";
-	$communities = $pdo -> query("SELECT id, COALESCE(title, contribution_title, related_activity) AS title, COALESCE(description, contribution_description, '') AS description, COALESCE(member_count, 0) AS member_count, created_at FROM community_table WHERE record_type = 'community' AND status = 'approved'") -> fetchAll();
+	$communityStatement = $pdo -> prepare("SELECT community.id, COALESCE(community.title, community.contribution_title, community.related_activity) AS title, COALESCE(community.description, community.contribution_description, '') AS description, COALESCE(community.member_count, 0) AS member_count, community.created_at, membership.status AS join_status
+		FROM community_table AS community
+		LEFT JOIN community_table AS membership ON membership.community_id = community.id AND membership.email = ? AND membership.record_type = 'join'
+		WHERE community.record_type = 'community' AND community.status = 'approved'");
+	$communityStatement -> execute([$_SESSION["email"]]);
+	$communities = $communityStatement -> fetchAll();
 
 	/*
 	 * ==========================

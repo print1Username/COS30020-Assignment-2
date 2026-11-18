@@ -6,8 +6,8 @@ require_once __DIR__."/community_db.php";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <link rel="icon" href="public/logo.ico" sizes="any">
-    <link rel="icon" type="image/png" href="public/logo.png">
+		<link rel="icon" href="public/logo.ico" sizes="any">
+		<link rel="icon" type="image/png" href="public/logo.png">
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,7 +19,10 @@ require_once __DIR__."/community_db.php";
 		>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 		<link rel="stylesheet" href="style/navbar.css">
-		<link rel="stylesheet" href="style/community_detail.css?v=<?php echo filemtime(__DIR__."/style/community_detail.css"); ?>">
+		<link
+			rel="stylesheet"
+			href="style/community_detail.css?v=<?php echo filemtime(__DIR__."/style/community_detail.css"); ?>"
+		>
 	</head>
 	<body>
 	<?php include "navbar.php"; ?>
@@ -37,7 +40,17 @@ require_once __DIR__."/community_db.php";
 					<a href="community.php" class="btn community-detail-primary-button">View all communities</a>
 				</section>
 			<?php else: ?>
-				<?php if ($joinError !== ""): ?><div class="alert alert-danger" role="alert"><?php echo communityDetailEscape($joinError); ?></div><?php endif; ?>
+				<?php if ($joinError !== ""): ?>
+					<div
+						class="alert alert-danger" role="alert"
+					><?php echo communityDetailEscape($joinError); ?></div><?php endif; ?>
+				<?php if ($joinStatus === "pending"): ?>
+					<div class="alert alert-dismissible fade show community-detail-pending-alert" role="status">
+						<i class="bi bi-hourglass-split" aria-hidden="true"></i>
+						<span>Your request requires admin approval.</span>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				<?php endif; ?>
 				<?php
 				$communityTitle = $community["title"] ?? "Untitled Community";
 				$communityDescription = $community["description"] ?? "No description available.";
@@ -55,13 +68,28 @@ require_once __DIR__."/community_db.php";
 							Created <?php echo communityDetailEscape(date("d M Y", strtotime($createdAt))); ?>
 							</span><?php endif; ?>
 					</div>
-					<form method="post" class="community-detail-join-form">
-						<input type="hidden" name="join_token" value="<?php echo communityDetailEscape($_SESSION["community_join_token"]); ?>">
-						<button type="submit" name="join_community" value="1" class="btn community-detail-primary-button" <?php echo in_array($joinStatus, ["pending", "approved"], true) ? "disabled" : ""; ?>>
-							<i class="bi bi-person-plus-fill"></i>
-							<?php echo in_array($joinStatus, ["pending", "approved"], true) ? "Already in Community" : "Join Community"; ?>
-						</button>
-					</form>
+					<div class="community-detail-membership-actions">
+						<form method="post" class="community-detail-join-form">
+							<input
+								type="hidden" name="join_token"
+								value="<?php echo communityDetailEscape($_SESSION["community_join_token"]); ?>"
+							>
+							<button
+								type="submit" name="join_community" value="1"
+								class="btn community-detail-primary-button<?php echo $joinStatus === "pending" ? " community-detail-pending-button" : ($joinStatus === "approved" ? " community-detail-approved-status" : ""); ?>" <?php echo in_array($joinStatus, ["pending", "approved"], true) ? "disabled" : ""; ?>>
+								<i class="bi <?php echo $joinStatus === "pending" ? "bi-hourglass-split" : ($joinStatus === "approved" ? "bi-check-circle-fill" : "bi-person-plus-fill"); ?>"></i>
+								<?php echo $joinStatus === "pending" ? "Pending Approval" : ($joinStatus === "approved" ? "Already in Community" : "Join Community"); ?>
+							</button>
+						</form>
+						<?php if ($joinStatus === "approved"): ?>
+							<button
+								type="button" class="btn community-detail-quit-button" disabled
+								title="Quit function is not available yet"
+							>
+								<i class="bi bi-box-arrow-right" aria-hidden="true"></i> Quit
+							</button>
+						<?php endif; ?>
+					</div>
 				</header>
 
 				<section class="community-detail-contributions" aria-labelledby="contributions-title">

@@ -5,8 +5,8 @@ require_once __DIR__."/community_db.php";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <link rel="icon" href="public/logo.ico" sizes="any">
-    <link rel="icon" type="image/png" href="public/logo.png">
+		<link rel="icon" href="public/logo.ico" sizes="any">
+		<link rel="icon" type="image/png" href="public/logo.png">
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -192,6 +192,7 @@ require_once __DIR__."/community_db.php";
 					$communityTitle = $community["title"] ?? "Untitled Community";
 					$communityDescription = $community["description"] ?? "No description available.";
 					$memberCount = $community["member_count"] ?? 0;
+					$joinStatus = $community["join_status"] ?? null;
 					?>
 
 					<article class="community-card">
@@ -221,13 +222,29 @@ require_once __DIR__."/community_db.php";
                                     </span>
 								</div>
 
-								<button
-									type="button"
-									class="btn community-join-btn"
-									onclick="event.preventDefault(); event.stopPropagation();"
-								>
-									Join
-								</button>
+								<?php if ($joinStatus === "pending"): ?>
+									<span
+										class="community-membership-icon community-membership-pending" role="img"
+										aria-label="Membership pending admin approval" title="Pending approval"
+									>
+										<i class="bi bi-hourglass-split" aria-hidden="true"></i>
+									</span>
+								<?php elseif ($joinStatus === "approved"): ?>
+									<span
+										class="community-membership-icon community-membership-approved" role="img"
+										aria-label="Already in community" title="Already in community"
+									>
+										<i class="bi bi-check-circle" aria-hidden="true"></i>
+									</span>
+								<?php else: ?>
+									<button
+										type="button"
+										class="btn community-join-btn"
+										onclick="event.preventDefault(); event.stopPropagation();"
+									>
+										Join
+									</button>
+								<?php endif; ?>
 
 							</div>
 
