@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS community_info (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	title VARCHAR(100) NOT NULL,
+	description TEXT NULL,
+	member_count INT NOT NULL DEFAULT 0,
+	created_at DATE NULL
+) ENGINE = InnoDB;

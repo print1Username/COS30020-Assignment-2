@@ -18,7 +18,7 @@ try {
 	// Select database
 	$pdo -> exec("USE `$dbName`");
 	require_once __DIR__."/upload_helpers.php";
-	$schemaFiles = ["homepage_image_table.sql", "user_table.sql", "account_table.sql", "smart_feature_table.sql", "activity_info.sql", "activity_table.sql", "community_table.sql"];
+	$schemaFiles = ["homepage_image_table.sql", "user_table.sql", "account_table.sql", "smart_feature_table.sql", "activity_info.sql", "activity_table.sql", "community_info.sql", "community_table.sql", "community_member.sql"];
 	foreach ($schemaFiles as $schemaFile) {
 		$sql = file_get_contents(__DIR__."/database/".$schemaFile);
 		if ($sql === false) {
@@ -93,27 +93,51 @@ try {
 		$insertActivity -> execute([$seedActivity["id"], $seedActivity["date"], $seedActivity["start_time"], $seedActivity["title"], $seedActivity["type"], $seedActivity["description"], $seedActivity["end_time"], $seedActivity["price"], $seedActivity["venue"], $seedActivity["table"], $seedActivity["image"]]);
 	}
 
-	$communityColumns = ["source_id" => "INT NULL UNIQUE", "title" => "VARCHAR(100) NULL", "description" => "TEXT NULL", "member_count" => "INT NULL", "created_at" => "DATE NULL", "contribution_title" => "VARCHAR(100) NULL", "contribution_description" => "TEXT NULL", "contribution_date" => "DATE NULL", "record_type" => "VARCHAR(20) NOT NULL DEFAULT 'community'", "community_id" => "INT NULL", "email" => "VARCHAR(50) NULL", "member_counted" => "TINYINT(1) NOT NULL DEFAULT 0"];
-	foreach ($communityColumns as $column => $definition) {
-		$columnCheck -> execute([$dbName, "community_table", $column]);
-		if (!$columnCheck -> fetchColumn()) {
-			$pdo -> exec("ALTER TABLE `community_table` ADD COLUMN `$column` $definition");
+	$tableCheck = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?");
+	$tableCheck -> execute([$dbName, "community_table_legacy"]);
+	$legacyCommunityExists = (bool)$tableCheck -> fetchColumn();
+	$columnCheck -> execute([$dbName, "community_table", "record_type"]);
+	$combinedCommunityExists = (bool)$columnCheck -> fetchColumn();
+	if ($combinedCommunityExists && !$legacyCommunityExists) {
+		$pdo -> exec("RENAME TABLE community_table TO community_table_legacy");
+		$legacyCommunityExists = true;
+		$sql = file_get_contents(__DIR__."/database/community_table.sql");
+		if ($sql === false) {
+			throw new RuntimeException("Database schema file could not be read: community_table.sql");
 		}
+		$pdo -> exec($sql);
 	}
-	$pdo -> exec("UPDATE community_table SET record_type = 'community' WHERE record_type IS NULL OR record_type = ''");
-	$joinIndex = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = ? AND table_name = 'community_table' AND index_name = 'unique_community_join'");
-	$joinIndex -> execute([$dbName]);
-	if (!$joinIndex -> fetchColumn()) {
-		$pdo -> exec("ALTER TABLE community_table ADD UNIQUE KEY unique_community_join (community_id, email, record_type)");
+	if ($legacyCommunityExists) {
+		$pdo -> beginTransaction();
+		try {
+			$pdo -> exec("INSERT IGNORE INTO community_info (id, title, description, member_count, created_at)
+				SELECT id, COALESCE(title, related_activity), description, COALESCE(member_count, 0), created_at
+				FROM community_table_legacy WHERE record_type = 'community'");
+			$pdo -> exec("INSERT IGNORE INTO community_table (id, community_id, first_name, last_name, contribution_image, related_activity, status, title, description, created_at)
+				SELECT id, id, first_name, last_name, contribution_image, related_activity, status, contribution_title, contribution_description, contribution_date
+				FROM community_table_legacy WHERE record_type = 'community'");
+			$pdo -> exec("INSERT IGNORE INTO community_member (id, community_id, email, status)
+				SELECT id, community_id, email, status FROM community_table_legacy WHERE record_type = 'join'");
+			$pdo -> commit();
+		} catch (Throwable $e) {
+			$pdo -> rollBack();
+			throw $e;
+		}
+		$pdo -> exec("DROP TABLE community_table_legacy");
 	}
 
 	$communities = json_decode(file_get_contents(__DIR__."/data/community.json"), true);
-	$insertCommunity = $pdo -> prepare("INSERT IGNORE INTO community_table (first_name, last_name, contribution_image, related_activity, status, source_id, title, description, member_count, created_at, contribution_title, contribution_description, contribution_date) VALUES (?, ?, ?, ?, 'approved', ?, ?, ?, ?, ?, ?, ?, ?)");
-	$seedCommunities = (int)$pdo -> query("SELECT COUNT(*) FROM community_table") -> fetchColumn() === 0;
-	foreach ($seedCommunities ? $communities : [] as $seedCommunity) {
+	$insertCommunityInfo = $pdo -> prepare("INSERT IGNORE INTO community_info (id, title, description, member_count, created_at) VALUES (?, ?, ?, ?, ?)");
+	$insertCommunityPost = $pdo -> prepare("INSERT INTO community_table (id, community_id, first_name, last_name, contribution_image, related_activity, status, title, description, created_at)
+		SELECT ?, ?, ?, ?, ?, ?, 'approved', ?, ?, ? WHERE NOT EXISTS
+		(SELECT 1 FROM community_table WHERE community_id = ? AND title = ? AND first_name = ? AND last_name = ?)");
+	foreach ($communities as $seedCommunity) {
+		$insertCommunityInfo -> execute([$seedCommunity["id"], $seedCommunity["title"], $seedCommunity["description"], $seedCommunity["member_count"], $seedCommunity["created_at"]]);
 		$contribution = $seedCommunity["contributions"][0] ?? [];
 		$name = explode(" ", $contribution["contributor"] ?? "", 2);
-		$insertCommunity -> execute([$name[0] ?? "", $name[1] ?? "", $contribution["media"] ?? null, $contribution["activity"] ?? "", $seedCommunity["id"], $seedCommunity["title"], $seedCommunity["description"], $seedCommunity["member_count"], $seedCommunity["created_at"], $contribution["title"] ?? null, $contribution["description"] ?? null, $contribution["created_at"] ?? null]);
+		if (isset($contribution["id"])) {
+			$insertCommunityPost -> execute([$contribution["id"], $seedCommunity["id"], $name[0] ?? "", $name[1] ?? "", $contribution["media"] ?? null, $contribution["activity"] ?? "", $contribution["title"] ?? null, $contribution["description"] ?? null, $contribution["created_at"] ?? null, $seedCommunity["id"], $contribution["title"] ?? null, $name[0] ?? "", $name[1] ?? ""]);
+		}
 	}
 
 } catch (PDOException|RuntimeException $e) {

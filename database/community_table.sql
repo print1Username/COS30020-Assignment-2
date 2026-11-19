@@ -1,20 +1,13 @@
 CREATE TABLE IF NOT EXISTS community_table (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	community_id INT NOT NULL,
 	first_name VARCHAR(50) NOT NULL,
 	last_name VARCHAR(50) NOT NULL,
 	contribution_image VARCHAR(100) NULL,
 	related_activity VARCHAR(50) NOT NULL,
 	status VARCHAR(10) NOT NULL,
-	source_id INT NULL UNIQUE,
 	title VARCHAR(100) NULL,
 	description TEXT NULL,
-	member_count INT NULL,
 	created_at DATE NULL,
-	contribution_title VARCHAR(100) NULL,
-	contribution_description TEXT NULL,
-	contribution_date DATE NULL,
-	record_type VARCHAR(20) NOT NULL DEFAULT 'community',
-	community_id INT NULL,
-	email VARCHAR(50) NULL,
-	member_counted TINYINT(1) NOT NULL DEFAULT 0
+	CONSTRAINT fk_community_post_info FOREIGN KEY (community_id) REFERENCES community_info(id) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB;
