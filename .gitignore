@@ -63,7 +63,8 @@ Thumbs.db
 # ==========================================
 /uploads/
 /img/logo/uploads/
-/community_images/
+/community_images/*
+!/community_images/.gitignore
 
 # File
 *.pdf

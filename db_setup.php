@@ -137,15 +137,35 @@ try {
 
 	$communities = json_decode(file_get_contents(__DIR__."/data/community.json"), true);
 	$insertCommunityInfo = $pdo -> prepare("INSERT IGNORE INTO community_info (id, title, description, member_count, created_at) VALUES (?, ?, ?, ?, ?)");
+	$findCommunityPostById = $pdo -> prepare("SELECT id FROM community_table WHERE id = ?");
+	$findSeedCommunityPost = $pdo -> prepare("SELECT id FROM community_table WHERE community_id = ? AND title = ? AND first_name = ? AND last_name = ? LIMIT 1");
 	$insertCommunityPost = $pdo -> prepare("INSERT INTO community_table (id, community_id, first_name, last_name, contribution_image, related_activity, status, title, description, created_at)
-		SELECT ?, ?, ?, ?, ?, ?, 'approved', ?, ?, ? WHERE NOT EXISTS
-		(SELECT 1 FROM community_table WHERE community_id = ? AND title = ? AND first_name = ? AND last_name = ?)");
+		VALUES (?, ?, ?, ?, ?, ?, 'approved', ?, ?, ?)");
+	$updateSeedCommunityPost = $pdo -> prepare("UPDATE community_table SET id = ?, community_id = ?, first_name = ?, last_name = ?, contribution_image = ?, related_activity = ?, status = 'approved', title = ?, description = ?, created_at = ? WHERE id = ?");
 	foreach ($communities as $seedCommunity) {
 		$insertCommunityInfo -> execute([$seedCommunity["id"], $seedCommunity["title"], $seedCommunity["description"], $seedCommunity["member_count"], $seedCommunity["created_at"]]);
 		$contribution = $seedCommunity["contributions"][0] ?? [];
 		$name = explode(" ", $contribution["contributor"] ?? "", 2);
 		if (isset($contribution["id"])) {
-			$insertCommunityPost -> execute([$contribution["id"], $seedCommunity["id"], $name[0] ?? "", $name[1] ?? "", $contribution["media"] ?? null, $contribution["activity"] ?? "", $contribution["title"] ?? null, $contribution["description"] ?? null, $contribution["created_at"] ?? null, $seedCommunity["id"], $contribution["title"] ?? null, $name[0] ?? "", $name[1] ?? ""]);
+			$postId = (int) $contribution["id"];
+			$postTitle = $contribution["title"] ?? null;
+			$firstName = $name[0] ?? "";
+			$lastName = $name[1] ?? "";
+			$imagePath = trim($contribution["media"] ?? "") ?: null;
+			$postValues = [$postId, $seedCommunity["id"], $firstName, $lastName, $imagePath, $contribution["activity"] ?? "", $postTitle, $contribution["description"] ?? null, $contribution["created_at"] ?? null];
+
+			$findCommunityPostById -> execute([$postId]);
+			$existingPostId = $findCommunityPostById -> fetchColumn();
+			if ($existingPostId === false) {
+				$findSeedCommunityPost -> execute([$seedCommunity["id"], $postTitle, $firstName, $lastName]);
+				$existingPostId = $findSeedCommunityPost -> fetchColumn();
+			}
+
+			if ($existingPostId === false) {
+				$insertCommunityPost -> execute($postValues);
+			} else {
+				$updateSeedCommunityPost -> execute([...$postValues, $existingPostId]);
+			}
 		}
 	}
 
