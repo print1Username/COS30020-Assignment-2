@@ -151,7 +151,7 @@ if ($community) {
 	$adminUserStatement -> execute([$_SESSION["email"]]);
 	$adminUser = $adminUserStatement -> fetch() ?: ["first_name" => "", "last_name" => "", "email" => ""];
 	$communities = $pdo -> query("SELECT id, title FROM community_info ORDER BY title") -> fetchAll();
-	$rows = $pdo -> query("SELECT post.*, community.title AS community_title FROM community_table AS post LEFT JOIN community_info AS community ON community.id=post.community_id ORDER BY post.id DESC")
+	$rows = $pdo -> query("SELECT post.id,post.community_id,post.email,post.first_name,post.last_name,post.contribution_image,post.related_activity,post.status,post.title,post.description,post.created_at,post.community_image_data IS NOT NULL AND OCTET_LENGTH(post.community_image_data) > 0 AND post.community_image_mime IN ('image/jpeg','image/png') AS has_community_image,community.title AS community_title FROM community_table AS post LEFT JOIN community_info AS community ON community.id=post.community_id ORDER BY post.id DESC")
 		-> fetchAll();
 } else {
 	$events = $pdo -> query("SELECT id, title, activity_type, description, date, time, end_time, price, venue, table_name, status FROM activity_info ORDER BY date, time")

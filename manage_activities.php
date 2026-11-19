@@ -131,7 +131,7 @@ require_once __DIR__."/manage_review_db.php"; ?>
 									<td><?= adminEscape($row['activity_title'] ?? 'Not linked to an activity') ?></td>
 									<td><?= adminEscape($row['email']) ?></td>
 									<td><?= adminEscape($row['first_name'].' '.$row['last_name']) ?></td>
-									<td><?= adminEscape($row['date'].' '.$row['time']) ?></td>
+									<td><?= adminEscape(adminFormatDate($row['date']).' '.adminFormatTime($row['time'])) ?></td>
 									<td><?= adminEscape($row['contact_number']) ?></td>
 									<td><?= adminEscape($row['status']) ?></td>
 									<td>
@@ -205,8 +205,8 @@ require_once __DIR__."/manage_review_db.php"; ?>
 										class="text-secondary small"
 									><?= adminEscape($event['description']) ?></div><?php endif; ?></td>
 							<td><?= adminEscape($event['activity_type']) ?></td>
-							<td><?= adminEscape($event['date']) ?></td>
-							<td><?= adminEscape($event['time']) ?><?php if ($event['end_time']): ?> - <?= adminEscape($event['end_time']) ?><?php endif; ?></td>
+							<td><?= adminEscape(adminFormatDate($event['date'])) ?></td>
+							<td><?= adminEscape(adminFormatTime($event['time'])) ?><?php if ($event['end_time']): ?> - <?= adminEscape(adminFormatTime($event['end_time'])) ?><?php endif; ?></td>
 							<td><?= adminEscape($event['venue']) ?></td>
 							<td><?= adminEscape($event['table_name']) ?></td>
 							<td><?= adminEscape($event['status']) ?></td></tr><?php endforeach; ?>

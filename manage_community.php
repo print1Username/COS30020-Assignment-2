@@ -168,14 +168,12 @@ require_once __DIR__."/file_upload.php"; ?>
 											><?= adminEscape($row['email']) ?></small><?php endif; ?></td>
 									<td><strong><?= adminEscape($row['title']) ?></strong></td>
 									<td class="admin-post-description"><?= adminEscape($row['description']) ?></td>
-									<td><?php if ($row['contribution_image']): ?><?php if (is_file(__DIR__.'/'.$row['contribution_image'])): ?>
-											<img class="admin-post-thumbnail"
-												 src="<?= adminEscape($row['contribution_image']) ?>"
-												 alt="Post image"><?php else: ?>
-											<small><?= adminEscape($row['contribution_image']) ?></small><?php endif; ?><?php else: ?>&mdash;<?php endif; ?>
-									</td>
+									<td><?php if (!empty($row['has_community_image'])): ?><img
+											class="admin-post-thumbnail"
+											src="community_image.php?id=<?= (int)$row['id'] ?>" alt="Post image"
+											><?php endif; ?></td>
 									<td><?= adminEscape(ucfirst($row['status'])) ?></td>
-									<td><?= adminEscape($row['created_at']) ?></td>
+									<td><?= adminEscape(adminFormatDateTime($row['created_at'])) ?></td>
 									<td>
 										<div class="admin-actions admin-post-actions">
 											<?php if ($row['status'] === 'pending'): ?>

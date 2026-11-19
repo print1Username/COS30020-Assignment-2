@@ -32,6 +32,15 @@ document.querySelectorAll('[data-admin-activity-picker]').forEach((picker) => {
         return `${hour % 12 || 12}:${minute} ${period}`;
     }
 
+    function formatDate(date) {
+        if (!date) return '';
+        const parsed = new Date(date + 'T00:00:00');
+        if (Number.isNaN(parsed.getTime())) return date;
+        return new Intl.DateTimeFormat('en-GB', {
+            day: '2-digit', month: 'short', year: 'numeric'
+        }).format(parsed).replace(',', '');
+    }
+
     function selectActivity(button) {
         const activity = button.dataset;
         activityId.value = activity.activityId;
@@ -44,7 +53,7 @@ document.querySelectorAll('[data-admin-activity-picker]').forEach((picker) => {
         summary.className = 'admin-activity-summary';
         const timeRange = [formatTime(activity.activityTime), formatTime(activity.activityEndTime)]
             .filter(Boolean).join(' - ');
-        const summaryItems = [activity.activityCategory, activity.activityDate, timeRange,
+        const summaryItems = [activity.activityCategory, formatDate(activity.activityDate), timeRange,
             activity.activityVenue, activity.activityTable && `Table: ${activity.activityTable}`,
             activity.activityPrice && `Price: RM ${activity.activityPrice}`].filter(Boolean);
         summary.replaceChildren(...summaryItems.flatMap((item, index) => {

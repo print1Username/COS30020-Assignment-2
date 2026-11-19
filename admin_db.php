@@ -42,3 +42,21 @@ function adminRedirect(string $page, string $message): void
 	header("Location: ".$page);
 	exit;
 }
+
+function adminFormatDate(?string $value): string
+{
+	$timestamp = $value ? strtotime($value) : false;
+	return $timestamp === false ? "" : date("d M Y", $timestamp);
+}
+
+function adminFormatTime(?string $value): string
+{
+	$timestamp = $value ? strtotime($value) : false;
+	return $timestamp === false ? "" : date("g:i A", $timestamp);
+}
+
+function adminFormatDateTime(?string $value): string
+{
+	$timestamp = $value ? strtotime($value) : false;
+	return $timestamp === false ? "" : date("d M Y, g:i A", $timestamp);
+}
