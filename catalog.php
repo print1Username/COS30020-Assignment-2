@@ -57,7 +57,7 @@ $categories = [
 		<link rel="stylesheet" href="style/navbar.css">
 
 		<!-- Catalogue CSS -->
-		<link rel="stylesheet" href="style/catalog.css">
+		<link rel="stylesheet" href="style/catalog.css?v=<?php echo filemtime(__DIR__."/style/catalog.css"); ?>">
 		<link rel="stylesheet" href="style/pagination.css">
 
 	</head>
@@ -212,17 +212,16 @@ $categories = [
 										</div>
 									</div>
 
-									<!-- Reservation Button -->
-									<a
-										href="catalog_detail.php?id=<?php echo (int)$game["id"]; ?>"
-										class="catalog-reserve-btn stretched-link"
-										aria-label="View <?php echo escapeHTML($game["name"] ?? "boardgame"); ?> details"
-									>
-										<i class="bi bi-calendar-check"></i>
-										View Details
-									</a>
+									<div class="catalog-detail-label"><i
+											class="bi bi-info-circle" aria-hidden="true"
+										></i><span>View Details</span></div>
 
 								</div>
+								<a
+									href="catalog_detail.php?id=<?php echo (int)$game["id"]; ?>"
+									class="catalog-card-link stretched-link"
+									aria-label="View <?php echo escapeHTML($game["name"] ?? "boardgame"); ?> details"
+								></a>
 							</article>
 						</div>
 
