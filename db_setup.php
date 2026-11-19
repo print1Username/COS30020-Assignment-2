@@ -119,6 +119,10 @@ try {
 		}
 	}
 	$pdo -> exec("ALTER TABLE activity_table MODIFY activity_id INT NOT NULL");
+	$columnCheck -> execute([$dbName, "activity_info", "source_id"]);
+	if ($columnCheck -> fetchColumn()) {
+		$pdo -> exec("ALTER TABLE activity_info DROP COLUMN source_id");
+	}
 	$activityForeignKeys = $pdo -> prepare("SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'activity_table' AND REFERENCED_TABLE_NAME IS NOT NULL");
 	$activityForeignKeys -> execute([$dbName]);
 	$existingActivityKeys = $activityForeignKeys -> fetchAll(PDO::FETCH_COLUMN);
@@ -153,11 +157,11 @@ try {
 	}
 
 	$activities = json_decode(file_get_contents(__DIR__."/data/activities.json"), true);
-	$insertActivity = $pdo -> prepare("INSERT IGNORE INTO activity_info (date, time, status, source_id, title, activity_type, description, end_time, price, venue, table_name, image) VALUES (?, ?, 'approved', ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	$insertActivity = $pdo -> prepare("INSERT IGNORE INTO activity_info (id, date, time, status, title, activity_type, description, end_time, price, venue, table_name, image) VALUES (?, ?, ?, 'approved', ?, ?, ?, ?, ?, ?, ?, ?)");
 	$seedActivities = (int)$pdo -> query("SELECT COUNT(*) FROM activity_info") -> fetchColumn() === 0;
 	foreach ($seedActivities ? $activities : [] as $seedActivity) {
 		$insertActivity -> execute([
-			$seedActivity["date"], $seedActivity["start_time"], $seedActivity["id"],
+			$seedActivity["id"], $seedActivity["date"], $seedActivity["start_time"],
 			$seedActivity["title"], $seedActivity["type"], $seedActivity["description"],
 			$seedActivity["end_time"], $seedActivity["price"], $seedActivity["venue"],
 			$seedActivity["table"], $seedActivity["image"]

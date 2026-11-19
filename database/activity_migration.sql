@@ -1,5 +1,5 @@
-INSERT IGNORE INTO activity_info (id, source_id, title, activity_type, description, date, time, end_time, price, venue, table_name, image, status)
-SELECT id, source_id, title, activity_type, description, date, time, end_time, price, venue, table_name, image, status
+INSERT IGNORE INTO activity_info (id, title, activity_type, description, date, time, end_time, price, venue, table_name, image, status)
+SELECT id, title, activity_type, description, date, time, end_time, price, venue, table_name, image, status
 FROM activity_table WHERE record_type = 'event';
 
 DELETE FROM activity_table WHERE id = 21 AND record_type = 'registration' AND email = 'wdawda@fefsef.com' AND activity_id IS NULL;
