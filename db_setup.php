@@ -57,7 +57,7 @@ try {
 	// Add Part 3 columns to databases created by the earlier version.
 	$requiredColumns = [
 		"user_table" => ["resume_file" => "VARCHAR(100) NULL", "resume_filename" => "VARCHAR(255) NULL", "profile_image" => "VARCHAR(255) NULL", "profile_image_data" => "LONGBLOB NULL", "profile_image_mime" => "VARCHAR(30) NULL"],
-		"community_table" => ["email" => "VARCHAR(50) NULL"]
+		"community_table" => ["email" => "VARCHAR(50) NULL", "community_image_data" => "LONGBLOB NULL", "community_image_mime" => "VARCHAR(30) NULL"]
 	];
 	$columnCheck = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?");
 	foreach ($requiredColumns as $table => $columns) {

@@ -24,53 +24,92 @@ require_once __DIR__."/manage_review_db.php"; ?>
 		<details class="admin-panel admin-disclosure mb-4" <?= $edit || $error ? 'open' : '' ?>>
 			<summary class="admin-disclosure-header"><span><span
 						class="admin-disclosure-title"
-					><?= $edit ? 'Edit' : 'Add' ?> Post</span><span class="admin-disclosure-subtitle">Enter author, community and post details</span></span>
+					><?= $edit ? 'Edit Post' : 'Create Post' ?></span><span class="admin-disclosure-subtitle">Enter author and post content details</span></span>
 			</summary>
-			<form method="post" class="row g-3 admin-disclosure-content"><input
+			<form method="post" enctype="multipart/form-data" class="admin-disclosure-content"><input
 					type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>"
 				><input type="hidden" name="action" value="<?= $edit ? 'edit' : 'add' ?>"><input
 					type="hidden" name="id" value="<?= (int)($edit['id'] ?? 0) ?>"
 				>
-				<div class="col-md-6"><label class="form-label" for="community_id">Community</label><select
-						class="form-select" id="community_id" name="community_id" required
-					>
-						<option value="">Select a community</option><?php foreach ($communities as $community): ?>
-							<option
-								value="<?= (int)$community['id'] ?>" <?= (int)($edit['community_id'] ?? ($_POST['community_id'] ?? 0)) === (int)$community['id'] ? 'selected' : '' ?>><?= adminEscape($community['title']) ?></option>
-						<?php endforeach; ?></select></div>
-				<?php foreach (['first_name' => 'First Name', 'last_name' => 'Last Name'] as $field => $label): ?>
-					<div class="col-md-3"><label class="form-label" for="<?= $field ?>"><?= $label ?></label><input
-							class="form-control" id="<?= $field ?>" name="<?= $field ?>" maxlength="50" required
-							value="<?= adminEscape($edit[$field] ?? ($_POST[$field] ?? '')) ?>"
-						></div>
-				<?php endforeach; ?>
-				<div class="col-md-6"><label class="form-label" for="email">Author Email <span
-							class="text-muted"
-						>(optional)</span></label><input
-						class="form-control" id="email" name="email" type="email" maxlength="50"
-						value="<?= adminEscape($edit['email'] ?? ($_POST['email'] ?? '')) ?>"
-					></div>
-				<div class="col-md-6"><label class="form-label" for="title">Title</label><input
-						class="form-control" id="title" name="title" maxlength="100" required
-						value="<?= adminEscape($edit['title'] ?? ($_POST['title'] ?? '')) ?>"
-					></div>
-				<div class="col-md-8"><label class="form-label" for="contribution_image">Image Path</label><input
-						class="form-control" id="contribution_image" name="contribution_image" maxlength="100"
-						value="<?= adminEscape($edit['contribution_image'] ?? ($_POST['contribution_image'] ?? '')) ?>"
-					></div>
-				<div class="col-md-4"><label class="form-label" for="status">Status</label><select
-						class="form-select" id="status" name="status"
-					><?php foreach (['pending', 'approved', 'rejected'] as $status): ?>
-							<option
-							value="<?= $status ?>" <?= ($edit['status'] ?? 'pending') === $status ? 'selected' : '' ?>><?= ucfirst($status) ?></option><?php
-						endforeach; ?></select></div>
-				<div class="col-12"><label
-						class="form-label" for="description"
-					>Description</label><textarea
-						class="form-control" id="description" name="description" rows="4" required
-					><?= adminEscape($edit['description'] ?? ($_POST['description'] ?? '')) ?></textarea></div>
-				<div class="col-12">
-					<button class="btn btn-primary">Save Post</button> <?php if ($edit): ?><a
+				<div class="admin-post-form-grid">
+					<section class="admin-post-form-section" aria-labelledby="post-user-title">
+						<h3 id="post-user-title">User Details</h3>
+						<?php foreach (['first_name' => 'First Name', 'last_name' => 'Last Name'] as $field => $label):
+							?>
+							<div><label class="form-label" for="<?= $field ?>"><?= $label ?></label><input
+									class="form-control" id="<?= $field ?>" name="<?= $field ?>" maxlength="50" required
+									value="<?= adminEscape($edit[$field] ?? ($_POST[$field] ?? $adminUser[$field])) ?>"
+								></div>
+						<?php endforeach; ?>
+						<div><label class="form-label" for="email">Email <span
+									class="text-muted"
+								>(optional)</span></label><input
+								class="form-control" id="email" name="email" type="email" maxlength="50"
+								value="<?= adminEscape($edit['email'] ?? ($_POST['email'] ?? $adminUser['email'])) ?>"
+							></div>
+					</section>
+					<section class="admin-post-form-section" aria-labelledby="post-content-title">
+						<h3 id="post-content-title">Post Content</h3>
+						<div class="admin-community-picker" data-admin-community-picker>
+							<label class="form-label" for="community-search">Community</label>
+							<div class="admin-activity-search-menu">
+								<div class="input-group admin-activity-search-group">
+									<input
+										class="form-control" id="community-search" type="search"
+										placeholder="Search communities by name" autocomplete="off" required
+										aria-controls="admin-community-results" aria-expanded="false"
+									>
+									<button
+										type="button" class="btn admin-activity-toggle"
+										aria-label="Show community options" aria-controls="admin-community-results"
+										aria-expanded="false"
+									><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+								</div>
+								<input
+									type="hidden" name="community_id"
+									value="<?= (int)($edit['community_id'] ?? ($_POST['community_id'] ?? 0)) ?>"
+								>
+								<div
+									class="admin-activity-results" id="admin-community-results"
+									aria-label="Matching communities" hidden
+								>
+									<?php foreach ($communities as $community): ?>
+										<button type="button" class="admin-activity-result admin-community-result"
+										        data-community-id="<?= (int)$community['id'] ?>"
+										        data-community-title="<?= adminEscape($community['title']) ?>"><?= adminEscape($community['title']) ?></button><?php
+									endforeach; ?>
+									<p class="admin-activity-no-results text-muted" hidden>No matching communities.</p>
+								</div>
+							</div>
+						</div>
+						<div><label class="form-label" for="title">Title</label><input
+								class="form-control" id="title" name="title" maxlength="100" required
+								value="<?= adminEscape($edit['title'] ?? ($_POST['title'] ?? '')) ?>"
+							></div>
+						<div><label class="form-label" for="description">Description</label><textarea
+								class="form-control" id="description" name="description" rows="5" required
+							><?= adminEscape($edit['description'] ?? ($_POST['description'] ?? '')) ?></textarea></div>
+						<div><label class="form-label" for="contribution_image">Image <span class="text-muted">(optional, JPG/JPEG/PNG, max 5MB)</span></label><input
+								class="form-control" id="contribution_image" name="contribution_image" type="file"
+								accept="image/jpeg,image/png"
+							><?php if ($edit && $edit['contribution_image']): ?>
+								<div class="admin-current-post-image"><img
+									src="<?= adminEscape($edit['contribution_image']) ?>" alt="Current post image"
+								><small class="text-muted">Uploading a new image will replace the current image.</small>
+								</div><?php endif; ?></div>
+						<?php if ($edit): ?>
+							<div class="admin-post-status"><label class="form-label" for="status">Status</label><select
+								class="form-select" id="status" name="status"
+							><?php foreach (['pending', 'approved', 'rejected'] as $status): ?>
+									<option
+									value="<?= $status ?>" <?= ($edit['status'] ?? 'pending') === $status ? 'selected' : '' ?>><?= ucfirst($status) ?></option><?php
+								endforeach; ?></select></div><?php endif; ?>
+					</section>
+				</div>
+				<div class="admin-post-form-actions">
+					<button
+						class="btn btn-primary"
+					><?= $edit ? 'Save Post' : 'Create Post' ?></button><?php if ($edit): ?><a
 						class="btn btn-outline-secondary" href="manage_community.php"
 					>Cancel</a><?php endif; ?></div>
 			</form>
@@ -119,8 +158,8 @@ require_once __DIR__."/manage_review_db.php"; ?>
 									<td class="admin-post-description"><?= adminEscape($row['description']) ?></td>
 									<td><?php if ($row['contribution_image']): ?><?php if (is_file(__DIR__.'/'.$row['contribution_image'])): ?>
 											<img class="admin-post-thumbnail"
-											     src="<?= adminEscape($row['contribution_image']) ?>"
-											     alt="Post image"><?php else: ?>
+												 src="<?= adminEscape($row['contribution_image']) ?>"
+												 alt="Post image"><?php else: ?>
 											<small><?= adminEscape($row['contribution_image']) ?></small><?php endif; ?><?php else: ?>&mdash;<?php endif; ?>
 									</td>
 									<td><?= adminEscape(ucfirst($row['status'])) ?></td>
@@ -173,6 +212,9 @@ require_once __DIR__."/manage_review_db.php"; ?>
 	</main>
 	<script src="components/pagination.js"></script>
 	<script src="components/admin_pagination.js"></script>
+	<script
+		src="components/admin_community_picker.js?v=<?php echo filemtime(__DIR__.'/components/admin_community_picker.js'); ?>"
+	></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 	</body>
 </html>

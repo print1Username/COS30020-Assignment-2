@@ -419,6 +419,54 @@ main > h1 {
     white-space: nowrap;
 }
 
+.admin-post-form-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+    gap: 24px;
+}
+
+.admin-post-form-section {
+    display: grid;
+    align-content: start;
+    gap: 16px;
+    padding: 22px;
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    background: var(--admin-background);
+}
+
+.admin-post-form-section h3 {
+    margin: 0;
+    color: var(--admin-purple-dark);
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.admin-post-status {
+    padding-top: 16px;
+    border-top: 1px solid var(--admin-border);
+}
+
+.admin-post-form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.admin-current-post-image {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.admin-current-post-image img {
+    width: 84px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
 @media (max-width: 767.98px) {
     .admin-hero {
         padding: 52px 0 44px;
@@ -443,6 +491,10 @@ main > h1 {
 
     .admin-disclosure-content {
         padding: 0 20px 20px;
+    }
+
+    .admin-post-form-grid {
+        grid-template-columns: 1fr;
     }
 
     .admin-navbar .nav-link {

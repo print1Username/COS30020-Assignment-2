@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS community_table (
 	first_name VARCHAR(50) NOT NULL,
 	last_name VARCHAR(50) NOT NULL,
 	contribution_image VARCHAR(100) NULL,
+	community_image_data LONGBLOB NULL,
+	community_image_mime VARCHAR(30) NULL,
 	related_activity VARCHAR(50) NOT NULL,
 	status VARCHAR(10) NOT NULL,
 	title VARCHAR(100) NULL,
