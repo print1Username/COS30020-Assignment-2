@@ -164,9 +164,11 @@ $categories = [
 								<div class="catalog-game-image-wrapper">
 									<img
 										src="<?php echo escapeHTML($game["has_image_data"] ? "catalog_image.php?id=".(int)$game["id"] : ($game["image"] ?? "img/boardgames/placeholder.svg")); ?>"
-										alt="<?php echo escapeHTML($game["name"] ?? "Boardgame"); ?>"
+										alt=""
+										aria-hidden="true"
 										class="catalog-game-image"
 										loading="lazy"
+										onerror="this.style.display='none'"
 									>
 
 									<span class="catalog-image-overlay">
