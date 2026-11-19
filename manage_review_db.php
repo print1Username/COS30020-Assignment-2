@@ -13,9 +13,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	$action = $_POST["action"] ?? "";
 	$id = filter_var($_POST["id"] ?? null, FILTER_VALIDATE_INT);
 	try {
-		$registrationOnly = $community ? "" : " AND record_type='registration'";
 		if ($action === "delete" && $id) {
-			$statement = $pdo->prepare("DELETE FROM $table WHERE id=?".$registrationOnly);
+			$statement = $pdo->prepare("DELETE FROM $table WHERE id=?");
 			$statement->execute([$id]);
 			adminRedirect($page, "Entry deleted.");
 		}
@@ -40,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 				adminRedirect($page, "Status updated.");
 			}
 			$pendingOnly = $community ? "" : " AND status='pending'";
-			$statement = $pdo->prepare("UPDATE $table SET status=? WHERE id=?".$registrationOnly.$pendingOnly);
+			$statement = $pdo->prepare("UPDATE $table SET status=? WHERE id=?".$pendingOnly);
 			$statement->execute([$action, $id]);
 			if (!$community && $statement->rowCount() === 0) throw new RuntimeException("Only pending registrations can be approved or rejected. Use Edit to change a reviewed registration.");
 			adminRedirect($page, "Status updated.");
@@ -70,10 +69,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			$contact = trim($_POST["contact_number"] ?? "");
 			if (!isValidEmail($email) || strlen($contact)>15 || ($date !== "" && !isValidDate($date)) || ($time !== "" && !isValidTime($time))) throw new RuntimeException("Enter valid registration details.");
 			if ($action === "add") {
-				$statement = $pdo->prepare("INSERT INTO activity_table (email,first_name,last_name,date,time,contact_number,status,record_type) VALUES (?,?,?,?,?,?,?,'registration')");
-				$statement->execute([$email,$first,$last,$date ?: null,$time ?: null,$contact ?: null,$status]);
+				$activityId = filter_var($_POST["activity_id"] ?? null, FILTER_VALIDATE_INT);
+				$activityCheck = $pdo->prepare("SELECT id FROM activity_info WHERE id=?");
+				$activityCheck->execute([$activityId ?: 0]);
+				if (!$activityCheck->fetchColumn()) throw new RuntimeException("Select a valid activity.");
+				$statement = $pdo->prepare("INSERT INTO activity_table (email,first_name,last_name,date,time,contact_number,status,activity_id) VALUES (?,?,?,?,?,?,?,?)");
+				$statement->execute([$email,$first,$last,$date ?: null,$time ?: null,$contact ?: null,$status,$activityId]);
 			} else {
-				$statement = $pdo->prepare("UPDATE activity_table SET email=?,first_name=?,last_name=?,date=?,time=?,contact_number=?,status=? WHERE id=? AND record_type='registration'");
+				$statement = $pdo->prepare("UPDATE activity_table SET email=?,first_name=?,last_name=?,date=?,time=?,contact_number=?,status=? WHERE id=?");
 				$statement->execute([$email,$first,$last,$date ?: null,$time ?: null,$contact ?: null,$status,$id]);
 			}
 		}
@@ -84,15 +87,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	}
 }
 if (isset($_GET["edit"])) {
-	$statement = $pdo->prepare("SELECT * FROM $table WHERE id=?".($community ? "" : " AND record_type='registration'"));
+	$statement = $pdo->prepare("SELECT * FROM $table WHERE id=?");
 	$statement->execute([$_GET["edit"]]);
 	$edit = $statement->fetch() ?: null;
 }
 if ($community) {
 	$rows = $pdo->query("SELECT * FROM community_table ORDER BY id DESC")->fetchAll();
 } else {
-	$events = $pdo->query("SELECT id, title, activity_type, description, date, time, end_time, venue, table_name, status FROM activity_table WHERE record_type='event' ORDER BY date, time")->fetchAll();
-	$rows = $pdo->query("SELECT registration.*, event.title AS activity_title FROM activity_table AS registration LEFT JOIN activity_table AS event ON event.id=registration.activity_id AND event.record_type='event' WHERE registration.record_type='registration' ORDER BY registration.id DESC")->fetchAll();
+	$events = $pdo->query("SELECT id, title, activity_type, description, date, time, end_time, venue, table_name, status FROM activity_info ORDER BY date, time")->fetchAll();
+	$rows = $pdo->query("SELECT registration.*, event.title AS activity_title FROM activity_table AS registration LEFT JOIN activity_info AS event ON event.id=registration.activity_id ORDER BY registration.id DESC")->fetchAll();
 }
 $notice = $_SESSION["admin_notice"] ?? "";
 unset($_SESSION["admin_notice"]);
