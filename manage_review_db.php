@@ -64,18 +64,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			}
 		} else {
 			$email = trim($_POST["email"] ?? "");
-			$date = trim($_POST["date"] ?? "");
-			$time = trim($_POST["time"] ?? "");
 			$contact = trim($_POST["contact_number"] ?? "");
-			if (!isValidEmail($email) || strlen($contact)>15 || ($date !== "" && !isValidDate($date)) || ($time !== "" && !isValidTime($time))) throw new RuntimeException("Enter valid registration details.");
+			if (!isValidEmail($email) || strlen($contact)>15) throw new RuntimeException("Enter valid registration details.");
 			if ($action === "add") {
+				if ($contact === "") throw new RuntimeException("Enter a contact number.");
 				$activityId = filter_var($_POST["activity_id"] ?? null, FILTER_VALIDATE_INT);
-				$activityCheck = $pdo->prepare("SELECT id FROM activity_info WHERE id=?");
+				$activityCheck = $pdo->prepare("SELECT date, time FROM activity_info WHERE id=? AND status='approved'");
 				$activityCheck->execute([$activityId ?: 0]);
-				if (!$activityCheck->fetchColumn()) throw new RuntimeException("Select a valid activity.");
+				$selectedActivity = $activityCheck->fetch();
+				if (!$selectedActivity) throw new RuntimeException("Select a valid activity.");
 				$statement = $pdo->prepare("INSERT INTO activity_table (email,first_name,last_name,date,time,contact_number,status,activity_id) VALUES (?,?,?,?,?,?,?,?)");
-				$statement->execute([$email,$first,$last,$date ?: null,$time ?: null,$contact ?: null,$status,$activityId]);
+				$statement->execute([$email,$first,$last,$selectedActivity['date'],$selectedActivity['time'],$contact ?: null,'pending',$activityId]);
 			} else {
+				$date = trim($_POST["date"] ?? "");
+				$time = trim($_POST["time"] ?? "");
+				if (($date !== "" && !isValidDate($date)) || ($time !== "" && !isValidTime($time))) throw new RuntimeException("Enter valid registration details.");
 				$statement = $pdo->prepare("UPDATE activity_table SET email=?,first_name=?,last_name=?,date=?,time=?,contact_number=?,status=? WHERE id=?");
 				$statement->execute([$email,$first,$last,$date ?: null,$time ?: null,$contact ?: null,$status,$id]);
 			}
@@ -94,7 +97,7 @@ if (isset($_GET["edit"])) {
 if ($community) {
 	$rows = $pdo->query("SELECT * FROM community_table ORDER BY id DESC")->fetchAll();
 } else {
-	$events = $pdo->query("SELECT id, title, activity_type, description, date, time, end_time, venue, table_name, status FROM activity_info ORDER BY date, time")->fetchAll();
+	$events = $pdo->query("SELECT id, title, activity_type, description, date, time, end_time, price, venue, table_name, status FROM activity_info ORDER BY date, time")->fetchAll();
 	$rows = $pdo->query("SELECT registration.*, event.title AS activity_title FROM activity_table AS registration LEFT JOIN activity_info AS event ON event.id=registration.activity_id ORDER BY registration.id DESC")->fetchAll();
 }
 $notice = $_SESSION["admin_notice"] ?? "";
