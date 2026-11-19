@@ -10,7 +10,9 @@ if (($communityDbPage ?? "list") === "detail") {
 	$joinStatus = null;
 	$joinError = "";
 	$quitNotice = $_SESSION["community_quit_notice"] ?? "";
+	$cancelNotice = $_SESSION["community_cancel_notice"] ?? "";
 	unset($_SESSION["community_quit_notice"]);
+	unset($_SESSION["community_cancel_notice"]);
 
 	if ($communityId !== false && $communityId !== null) {
 		require_once __DIR__."/db_setup.php";
@@ -40,6 +42,24 @@ if (($communityDbPage ?? "list") === "detail") {
 						$joinStatus = "pending";
 					} catch (RuntimeException|PDOException $exception) {
 						$joinError = $exception instanceof PDOException ? "The join request could not be saved. Please try again." : $exception -> getMessage();
+					}
+				}
+			}
+			if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["cancel_community_request"])) {
+				if (!hash_equals($_SESSION["community_join_token"], (string)($_POST["join_token"] ?? ""))) {
+					$joinError = "Invalid cancellation request. Please try again.";
+				} else {
+					try {
+						$cancelStatement = $pdo -> prepare("DELETE FROM community_member WHERE community_id = ? AND email = ? AND status = 'pending'");
+						$cancelStatement -> execute([$communityId, $_SESSION["email"]]);
+						if ($cancelStatement -> rowCount() !== 1) {
+							throw new RuntimeException("Your pending request could not be found.");
+						}
+						$_SESSION["community_cancel_notice"] = "Your community join request has been cancelled.";
+						header("Location: community_detail.php?id=".urlencode((string)$communityId));
+						exit;
+					} catch (RuntimeException|PDOException $exception) {
+						$joinError = $exception instanceof PDOException ? "The join request could not be cancelled. Please try again." : $exception -> getMessage();
 					}
 				}
 			}

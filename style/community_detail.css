@@ -270,7 +270,8 @@
     margin: 0;
 }
 
-.community-detail-quit-form {
+.community-detail-quit-form,
+.community-detail-cancel-form {
     margin: 0;
 }
 
@@ -306,8 +307,24 @@
 }
 
 .community-detail-approved-status i,
-.community-detail-quit-button i {
+.community-detail-quit-button i,
+.community-detail-cancel-button i {
     margin-right: 7px;
+}
+
+.community-detail-cancel-button {
+    border-color: #b02a37;
+    background: #fff;
+    color: #b02a37;
+    font-weight: 600;
+    padding: 12px 28px;
+    font-size: 1.05rem;
+}
+
+.community-detail-cancel-button:hover {
+    border-color: #8d202b;
+    background: #fff;
+    color: #8d202b;
 }
 
 .community-detail-quit-button {
@@ -315,8 +332,8 @@
     background: #b02a37;
     color: #fff;
     font-weight: 600;
-	padding: 12px 28px;
-	font-size: 1.05rem;
+    padding: 12px 28px;
+    font-size: 1.05rem;
 }
 
 .community-detail-quit-button:disabled {
@@ -327,9 +344,9 @@
 }
 
 .community-detail-quit-button:hover {
-	border-color: #8d202b;
-	background: #8d202b;
-	color: #fff;
+    border-color: #8d202b;
+    background: #8d202b;
+    color: #fff;
 }
 
 @media (max-width: 767.98px) {
@@ -356,14 +373,14 @@
 }
 
 @media (max-width: 575.98px) {
-	.community-detail-membership-actions {
-		align-items: stretch;
-		flex-direction: column;
-	}
+    .community-detail-membership-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
 
-	.community-detail-membership-actions .btn {
-		width: 100%;
-	}
+    .community-detail-membership-actions .btn {
+        width: 100%;
+    }
 
     .community-detail-section-heading, .community-detail-card-title-row {
         align-items: start;

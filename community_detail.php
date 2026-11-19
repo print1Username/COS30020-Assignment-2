@@ -47,6 +47,13 @@ require_once __DIR__."/community_db.php";
 						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 					</div>
 				<?php endif; ?>
+				<?php if ($cancelNotice !== ""): ?>
+					<div class="alert alert-success alert-dismissible fade show" role="status">
+						<i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+						<?php echo e($cancelNotice); ?>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				<?php endif; ?>
 				<?php if ($joinError !== ""): ?>
 					<div
 						class="alert alert-danger" role="alert"
@@ -89,13 +96,30 @@ require_once __DIR__."/community_db.php";
 								<?php echo $joinStatus === "pending" ? "Pending Approval" : ($joinStatus === "approved" ? "Already in Community" : "Join Community"); ?>
 							</button>
 						</form>
+						<?php if ($joinStatus === "pending"): ?>
+							<form method="post" class="community-detail-cancel-form">
+								<input
+									type="hidden" name="join_token"
+									value="<?php echo e($_SESSION["community_join_token"]); ?>"
+								>
+								<button
+									type="submit" name="cancel_community_request" value="1"
+									class="btn community-detail-cancel-button"
+								>
+									<i class="bi bi-x-circle" aria-hidden="true"></i> Cancel
+								</button>
+							</form>
+						<?php endif; ?>
 						<?php if ($joinStatus === "approved"): ?>
 							<form method="post" class="community-detail-quit-form">
 								<input
 									type="hidden" name="join_token"
 									value="<?php echo e($_SESSION["community_join_token"]); ?>"
 								>
-								<button type="submit" name="quit_community" value="1" class="btn community-detail-quit-button">
+								<button
+									type="submit" name="quit_community" value="1"
+									class="btn community-detail-quit-button"
+								>
 									<i class="bi bi-box-arrow-right" aria-hidden="true"></i> Quit
 								</button>
 							</form>
