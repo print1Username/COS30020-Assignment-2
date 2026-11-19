@@ -105,7 +105,7 @@ if (($activityDbPage ?? "list") === "registration") {
 					if ($error === "") {
 						$_SESSION["activity_registration_success"] = "You have successfully registered for ".$activityTitle.".";
 						$_SESSION["activity_registration_notice"] = "pending";
-						header("Location: activities.php");
+						header("Location: activity_reg.php?id=".urlencode((string)$activityId));
 						exit;
 					}
 				} catch (PDOException $e) {

@@ -1,6 +1,11 @@
 <?php
 $activityDbPage = "registration";
 require_once __DIR__."/activities_db.php";
+require_once __DIR__."/helpers.php";
+$registrationSuccess = $_SESSION["activity_registration_success"] ?? "";
+if ($registrationSuccess !== "") {
+	unset($_SESSION["activity_registration_success"], $_SESSION["activity_registration_notice"]);
+}
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +54,11 @@ require_once __DIR__."/activities_db.php";
 
 	<main class="activity-registration-page">
 		<div class="container py-5">
+			<?php if ($registrationSuccess !== "" && $registrationStatus !== "pending"): ?>
+				<div class="alert alert-warning" role="status">Your registration has been submitted and is waiting for
+					admin approval.
+				</div>
+			<?php endif; ?>
 
 			<!-- Back Button -->
 			<div class="activity-registration-back">
