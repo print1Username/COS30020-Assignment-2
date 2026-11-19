@@ -127,18 +127,18 @@
 
 .community-detail-card {
     overflow: hidden;
-    border: 1px solid var(--community-detail-border);
-    border-radius: 14px;
+    border: 1px solid #ebe5f4;
+    border-radius: 15px;
     background: #fff;
-    box-shadow: 0 4px 16px rgba(45, 25, 80, .06);
+    box-shadow: 0 2px 10px rgba(45, 25, 80, .04);
 }
 
 .community-post-composer {
     margin-bottom: 22px;
-    border: 0;
-    border-radius: 14px;
-    background: #f7f2ff;
-    box-shadow: 0 7px 20px rgba(79, 43, 135, .11);
+    border: 8px solid #faf8fd;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0 0 0 1px #ebe5f4, 0 2px 10px rgba(45, 25, 80, .04);
 }
 
 .community-post-composer-trigger,
@@ -151,15 +151,24 @@
 
 .community-post-composer-trigger {
     width: 100%;
-    padding: 14px 18px;
-    color: var(--community-detail-purple-dark);
+    padding: 10px 12px;
+    color: #6c757d;
     font-weight: 600;
     text-align: left;
     cursor: pointer;
+    transition: box-shadow .2s ease, color .2s ease;
+}
+
+.community-post-composer-trigger:hover,
+.community-post-composer-trigger:focus-visible {
+    color: #5f6368;
+    box-shadow: 0 0 0 2px #6938b6;
+    outline: 0;
 }
 
 .community-post-composer-trigger > i:last-child {
     margin-left: auto;
+    color: #6938b6;
     font-size: 1.15rem;
 }
 
@@ -181,8 +190,8 @@
     height: 48px;
     overflow: hidden;
     border-radius: 50%;
-    background: var(--community-detail-purple-soft);
-    color: var(--community-detail-purple);
+    background: #f2ecf9;
+    color: #6938b6;
 }
 
 .community-post-avatar img {
@@ -225,6 +234,13 @@
     color: var(--community-detail-text);
 }
 
+.community-post-form input:focus,
+.community-post-form textarea:focus {
+    border-color: #6938b6;
+    box-shadow: 0 0 0 3px rgba(105, 56, 182, .14);
+    outline: 0;
+}
+
 .community-post-form textarea {
     resize: vertical;
 }
@@ -233,6 +249,17 @@
     overflow: hidden;
     border: 0;
     border-radius: 14px;
+}
+
+.community-post-modal .community-detail-primary-button {
+    border-color: #6938b6;
+    background: #6938b6;
+}
+
+.community-post-modal .community-detail-primary-button:hover {
+    border-color: #6938b6;
+    background: #6938b6;
+    opacity: .92;
 }
 
 .community-post-form .modal-footer .community-detail-primary-button {

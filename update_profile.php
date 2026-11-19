@@ -27,7 +27,7 @@ require_once __DIR__."/update_profile_db.php";
 		<link rel="stylesheet" href="style/navbar.css">
 		<?php if ($_SESSION["type"] === "admin"): ?>
 			<link rel="stylesheet"
-			      href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
+				  href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
 		<link rel="stylesheet" href="style/profile.css?v=<?php echo filemtime(__DIR__."/style/profile.css"); ?>">
 	</head>
 

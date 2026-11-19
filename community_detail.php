@@ -268,8 +268,8 @@ require_once __DIR__."/community_db.php";
 										<h3><?php echo e($title); ?></h3>
 										<p class="community-detail-description"><?php echo e($description); ?></p>
 										<?php if ($mediaExists): ?><img class="community-post-image"
-										                                src="<?php echo e($media); ?>"
-										                                alt="<?php echo e($title); ?>"><?php endif; ?>
+																		src="<?php echo e($media); ?>"
+																		alt="<?php echo e($title); ?>"><?php endif; ?>
 									</div>
 								</article>
 							<?php endforeach; ?>

@@ -86,7 +86,7 @@ require_once __DIR__."/manage_review_db.php"; ?>
 									href="manage_community.php?edit=<?= (int)$row['id'] ?>">Edit</a><?php endif; ?><?php
 								foreach (['approved' => 'Approve', 'rejected' => 'Reject', 'delete' => 'Delete'] as
 								         $action => $label): ?>
-									<form
+								<form
 									method="post" <?= $action === 'delete' ? 'onsubmit="return confirm(\'Delete this entry?\')"' : '' ?>>
 									<input type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>"><input
 										type="hidden" name="action" value="<?= $action ?>"
