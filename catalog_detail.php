@@ -68,7 +68,7 @@ function catalogDetailEscape($value)
 						<p><?php echo catalogDetailEscape($game["description"] ?? ""); ?></p>
 					</div>
 				</section>
-				<aside class="catalog-detail-panel catalog-reservation" aria-label="Game information and reservation">
+				<aside class="catalog-detail-panel catalog-reservation" aria-label="Game information">
 					<span class="catalog-detail-eyebrow">PLAN YOUR GAME</span>
 					<h2>At a Glance</h2>
 					<dl>
@@ -79,11 +79,6 @@ function catalogDetailEscape($value)
 						<dt><i class="bi bi-grid"></i> Categories</dt>
 						<dd><?php echo catalogDetailEscape(implode(", ", $game["categories"] ?? [])); ?></dd>
 					</dl>
-					<button class="catalog-reserve-btn" type="button" disabled aria-describedby="reservation-note"><i
-							class="bi bi-calendar-check"
-						></i> Reserve Now
-					</button>
-					<p id="reservation-note" class="catalog-reservation-note">Reservations are not available yet.</p>
 				</aside>
 			</div>
 		<?php endif; ?>

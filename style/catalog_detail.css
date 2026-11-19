@@ -110,22 +110,6 @@ body {
     font-weight: 600;
 }
 
-.catalog-reservation .catalog-reserve-btn {
-    width: 100%;
-}
-
-.catalog-reservation .catalog-reserve-btn:disabled {
-    cursor: not-allowed;
-    opacity: .65;
-}
-
-.catalog-reservation-note {
-    color: var(--catalog-muted);
-    font-size: .85rem;
-    text-align: center;
-    margin: 14px 0 0;
-}
-
 @media (max-width: 767px) {
     .catalog-detail-layout {
         grid-template-columns: 1fr;
