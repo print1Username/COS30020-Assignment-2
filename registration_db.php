@@ -200,7 +200,6 @@ if (!empty($errors)) {
 }
 
 
-require_once __DIR__."/db_setup.php";
 require_once __DIR__."/db_connect.php";
 
 try {

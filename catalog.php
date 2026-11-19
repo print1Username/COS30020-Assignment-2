@@ -8,18 +8,11 @@ if (($_SESSION["logged_in"] ?? false) !== true ||
 	exit;
 }
 
-// Load boardgame data from JSON
-$catalogueFile = "data/catalog.json";
-$games = [];
-
-if (file_exists($catalogueFile)) {
-	$jsonData = file_get_contents($catalogueFile);
-	$decodedData = json_decode($jsonData, true);
-
-	if (is_array($decodedData)) {
-		$games = $decodedData;
-	}
-}
+require_once __DIR__."/db_connect.php";
+$games = $pdo -> query("SELECT id,name,categories,description,players,duration,image,image_data IS NOT NULL AS has_image_data FROM catalog_info ORDER BY id")
+	-> fetchAll();
+foreach ($games as &$game) $game["categories"] = json_decode($game["categories"], true) ?? [];
+unset($game);
 
 // Escape output safely
 function escapeHTML($value)
@@ -170,7 +163,7 @@ $categories = [
 								<!-- Game Image -->
 								<div class="catalog-game-image-wrapper">
 									<img
-										src="<?php echo escapeHTML($game["image"] ?? "img/boardgames/placeholder.svg"); ?>"
+										src="<?php echo escapeHTML($game["has_image_data"] ? "catalog_image.php?id=".(int)$game["id"] : ($game["image"] ?? "img/boardgames/placeholder.svg")); ?>"
 										alt="<?php echo escapeHTML($game["name"] ?? "Boardgame"); ?>"
 										class="catalog-game-image"
 										loading="lazy"
@@ -279,7 +272,7 @@ $categories = [
 	<script src="components/pagination.js"></script>
 
 	<!-- Catalogue JavaScript -->
-	<script src="components/catalog.js"></script>
+	<script src="components/catalog.js?v=<?= filemtime(__DIR__."/components/catalog.js") ?>"></script>
 
 	</body>
 </html>

@@ -3,7 +3,6 @@ require_once __DIR__."/auth.php";
 require_once __DIR__."/validation.php";
 requireUser(true);
 
-require_once __DIR__."/db_setup.php";
 require_once __DIR__."/db_connect.php";
 require_once __DIR__."/upload_helpers.php";
 

@@ -38,8 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !in_array($_POST["action"] ?? "",
 				$imageLookup = $pdo -> prepare("SELECT contribution_image FROM community_table WHERE id=?");
 				$imageLookup -> execute([$id]);
 				$oldImagePath = $imageLookup -> fetchColumn() ?: null;
-				$markDeleted = $pdo -> prepare("INSERT IGNORE INTO community_deleted_seed_post (id) VALUES (?)");
-				$markDeleted -> execute([$id]);
 			}
 			$statement = $pdo -> prepare("DELETE FROM $table WHERE id=?");
 			$statement -> execute([$id]);

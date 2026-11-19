@@ -18,7 +18,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		$error = "Please enter a valid email address.";
 
 	} else {
-		require_once __DIR__."/db_setup.php";
 		require_once __DIR__."/db_connect.php";
 		$statement = $pdo -> prepare("SELECT email, password, type FROM account_table WHERE email = ?");
 		$statement -> execute([$email]);

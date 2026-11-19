@@ -35,7 +35,6 @@ if ($isUser && $_SERVER["REQUEST_METHOD"] === "POST") {
 				);
 				$newFiles[] = $imagePath;
 			}
-			require_once __DIR__."/db_setup.php";
 			require_once __DIR__."/db_connect.php";
 			$insert = $pdo -> prepare("INSERT INTO smart_feature_table (item_name, item_category, item_image, description_file, status) VALUES (?, ?, ?, ?, 'pending')");
 			$insert -> execute([$itemName, $itemCategory, $imagePath, $pdfPath]);

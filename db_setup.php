@@ -1,30 +1,29 @@
 <?php
-$host = "localhost";
-$dbName = "cos30020a2";
-$dbUser = "root";
-$dbPass = "";
-
+if (!defined("DB_INITIALIZE_DUMMY_DATA")) {
+	http_response_code(403);
+	exit("Database initialization is not available here.");
+}
+require_once __DIR__."/upload_helpers.php";
 try {
-	// Connect to MySQL server
-	$pdo = new PDO("mysql:host=$host;charset=utf8mb4", $dbUser, $dbPass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-
-	// Create database automatically
-	$pdo -> exec("
-        CREATE DATABASE IF NOT EXISTS `$dbName`
-        CHARACTER SET utf8mb4
-        COLLATE utf8mb4_unicode_ci
-    ");
-
-	// Select database
-	$pdo -> exec("USE `$dbName`");
-	require_once __DIR__."/upload_helpers.php";
-	$schemaFiles = ["homepage_image_table.sql", "user_table.sql", "account_table.sql", "smart_feature_table.sql", "activity_info.sql", "activity_table.sql", "community_info.sql", "community_table.sql", "community_member.sql", "community_deleted_seed.sql", "community_deleted_seed_post.sql"];
-	foreach ($schemaFiles as $schemaFile) {
-		$sql = file_get_contents(__DIR__."/database/".$schemaFile);
-		if ($sql === false) {
-			throw new RuntimeException("Database schema file could not be read: ".$schemaFile);
-		}
-		$pdo -> exec($sql);
+	$catalogFile = __DIR__."/data/catalog.json";
+	$catalogSeeds = json_decode(file_get_contents($catalogFile), true);
+	if (!is_array($catalogSeeds)) throw new RuntimeException("Catalogue seed data is invalid.");
+	$insertCatalog = $pdo -> prepare("INSERT INTO catalog_info (id,name,categories,description,players,duration,image,image_data,image_mime) VALUES (?,?,?,?,?,?,?,?,?)");
+	foreach ($catalogSeeds as $catalogSeed) {
+		$insertCatalog -> execute([$catalogSeed["id"], $catalogSeed["name"], json_encode($catalogSeed["categories"]), $catalogSeed["description"], $catalogSeed["players"], $catalogSeed["duration"], $catalogSeed["image"], null, null]);
+	}
+	$catalogImages = $pdo -> query("SELECT id,image FROM catalog_info WHERE image_data IS NULL AND image IS NOT NULL")
+		-> fetchAll(PDO::FETCH_ASSOC);
+	$saveCatalogImage = $pdo -> prepare("UPDATE catalog_info SET image_data=?,image_mime=? WHERE id=? AND image_data IS NULL");
+	foreach ($catalogImages as $catalogImage) {
+		$imagePath = $catalogImage["image"];
+		if (!preg_match('~^img/[a-zA-Z0-9_./-]+$~', $imagePath) || str_contains($imagePath, "..")) continue;
+		$absoluteImagePath = __DIR__."/".$imagePath;
+		if (!is_file($absoluteImagePath)) continue;
+		$imageMime = (new finfo(FILEINFO_MIME_TYPE)) -> file($absoluteImagePath);
+		if (!in_array($imageMime, ["image/jpeg", "image/png", "image/webp", "image/svg+xml"], true)) continue;
+		$imageData = file_get_contents($absoluteImagePath);
+		if ($imageData !== false) $saveCatalogImage -> execute([$imageData, $imageMime, $catalogImage["id"]]);
 	}
 
 	// Homepage slideshow images
@@ -54,22 +53,6 @@ try {
 		$insertSampleGame -> execute([...$game, $game[0]]);
 	}
 
-	// Add Part 3 columns to databases created by the earlier version.
-	$requiredColumns = [
-		"user_table" => ["resume_file" => "VARCHAR(100) NULL", "resume_filename" => "VARCHAR(255) NULL", "profile_image" => "VARCHAR(255) NULL", "profile_image_data" => "LONGBLOB NULL", "profile_image_mime" => "VARCHAR(30) NULL"],
-		"community_table" => ["email" => "VARCHAR(50) NULL", "community_image_data" => "LONGBLOB NULL", "community_image_mime" => "VARCHAR(30) NULL"]
-	];
-	$columnCheck = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?");
-	foreach ($requiredColumns as $table => $columns) {
-		foreach ($columns as $column => $definition) {
-			$columnCheck -> execute([$dbName, $table, $column]);
-			if (!$columnCheck -> fetchColumn()) {
-				$pdo -> exec("ALTER TABLE `$table` ADD COLUMN `$column` $definition");
-			}
-		}
-	}
-	$pdo -> exec("ALTER TABLE user_table MODIFY profile_image VARCHAR(255) NULL");
-
 	$defaultProfileImages = ["admin@swin.edu.my" => "admin.png", "user1@swin.edu.my" => "user1.png", "user2@swin.edu.my" => "user2.png"];
 	$setDefaultProfileImage = $pdo -> prepare("UPDATE user_table SET profile_image = ? WHERE email = ? AND (profile_image IS NULL OR profile_image = '' OR profile_image = ?)");
 	$defaultImageExists = $pdo -> prepare("SELECT COUNT(*) FROM user_table WHERE email = ? AND profile_image_data IS NOT NULL AND OCTET_LENGTH(profile_image_data) > 0");
@@ -96,45 +79,6 @@ try {
 		$insertActivity -> execute([$seedActivity["id"], $seedActivity["date"], $seedActivity["start_time"], $seedActivity["title"], $seedActivity["type"], $seedActivity["description"], $seedActivity["end_time"], $seedActivity["price"], $seedActivity["venue"], $seedActivity["table"], $seedActivity["image"]]);
 	}
 
-	$tableCheck = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?");
-	$tableCheck -> execute([$dbName, "community_table_legacy"]);
-	$legacyCommunityExists = (bool)$tableCheck -> fetchColumn();
-	$columnCheck -> execute([$dbName, "community_table", "record_type"]);
-	$combinedCommunityExists = (bool)$columnCheck -> fetchColumn();
-	if ($combinedCommunityExists && !$legacyCommunityExists) {
-		$pdo -> exec("RENAME TABLE community_table TO community_table_legacy");
-		$legacyCommunityExists = true;
-		$sql = file_get_contents(__DIR__."/database/community_table.sql");
-		if ($sql === false) {
-			throw new RuntimeException("Database schema file could not be read: community_table.sql");
-		}
-		$pdo -> exec($sql);
-	}
-	if ($legacyCommunityExists) {
-		$pdo -> beginTransaction();
-		try {
-			$pdo -> exec("INSERT IGNORE INTO community_info (id, title, description, member_count, created_at)
-				SELECT id, COALESCE(title, related_activity), description, COALESCE(member_count, 0), created_at
-				FROM community_table_legacy WHERE record_type = 'community'");
-			$pdo -> exec("INSERT IGNORE INTO community_table (id, community_id, first_name, last_name, contribution_image, related_activity, status, title, description, created_at)
-				SELECT id, id, first_name, last_name, contribution_image, related_activity, status, contribution_title, contribution_description, contribution_date
-				FROM community_table_legacy WHERE record_type = 'community'");
-			$pdo -> exec("INSERT IGNORE INTO community_member (id, community_id, email, status)
-				SELECT id, community_id, email, status FROM community_table_legacy WHERE record_type = 'join'");
-			$pdo -> commit();
-		} catch (Throwable $e) {
-			$pdo -> rollBack();
-			throw $e;
-		}
-		$pdo -> exec("DROP TABLE community_table_legacy");
-	}
-	$pdo -> exec("ALTER TABLE community_table MODIFY created_at DATETIME NULL");
-	$communityPostUserForeignKey = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.referential_constraints WHERE constraint_schema = ? AND table_name = 'community_table' AND constraint_name = 'fk_community_post_user'");
-	$communityPostUserForeignKey -> execute([$dbName]);
-	if (!$communityPostUserForeignKey -> fetchColumn()) {
-		$pdo -> exec("ALTER TABLE community_table ADD CONSTRAINT fk_community_post_user FOREIGN KEY (email) REFERENCES user_table(email) ON UPDATE CASCADE ON DELETE SET NULL");
-	}
-
 	$communities = json_decode(file_get_contents(__DIR__."/data/community.json"), true);
 	$insertCommunityInfo = $pdo -> prepare("INSERT IGNORE INTO community_info (id, title, description, member_count, created_at) VALUES (?, ?, ?, ?, ?)");
 	$findCommunityPostById = $pdo -> prepare("SELECT id FROM community_table WHERE id = ?");
@@ -143,17 +87,12 @@ try {
 		VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?, ?, ?)");
 	$updateSeedCommunityPost = $pdo -> prepare("UPDATE community_table SET id = ?, community_id = ?, first_name = ?, last_name = ?, contribution_image = ?, community_image_data = ?, community_image_mime = ?, related_activity = ?, status = 'approved', title = ?, description = ?, created_at = ? WHERE id = ?");
 	$seedCommunityPostIds = [];
-	$deletedCommunitySeeds = $pdo -> query("SELECT id FROM community_deleted_seed") -> fetchAll(PDO::FETCH_COLUMN);
-	$deletedCommunitySeedPosts = $pdo -> query("SELECT id FROM community_deleted_seed_post")
-		-> fetchAll(PDO::FETCH_COLUMN);
 	foreach ($communities as $seedCommunity) {
-		if (in_array($seedCommunity["id"], $deletedCommunitySeeds)) continue;
 		$insertCommunityInfo -> execute([$seedCommunity["id"], $seedCommunity["title"], $seedCommunity["description"], $seedCommunity["member_count"], $seedCommunity["created_at"]]);
 		$contribution = $seedCommunity["contributions"][0] ?? [];
 		$name = explode(" ", $contribution["contributor"] ?? "", 2);
 		if (isset($contribution["id"])) {
 			$postId = (int)$contribution["id"];
-			if (in_array($postId, $deletedCommunitySeedPosts)) continue;
 			$seedCommunityPostIds[] = $postId;
 			$postTitle = $contribution["title"] ?? null;
 			$firstName = $name[0] ?? "";

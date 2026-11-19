@@ -7,14 +7,11 @@ if (($_SESSION["logged_in"] ?? false) !== true ||
 }
 
 $gameId = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
-$games = json_decode(file_get_contents(__DIR__."/data/catalog.json"), true) ?? [];
-$game = null;
-foreach ($games as $entry) {
-	if ($gameId !== false && $gameId !== null && (int)$entry["id"] === $gameId) {
-		$game = $entry;
-		break;
-	}
-}
+require_once __DIR__."/db_connect.php";
+$statement = $pdo -> prepare("SELECT id,name,categories,description,players,duration,image,image_data IS NOT NULL AS has_image_data FROM catalog_info WHERE id=?");
+$statement -> execute([$gameId ?: 0]);
+$game = $statement -> fetch() ?: null;
+if ($game) $game["categories"] = json_decode($game["categories"], true) ?? [];
 if ($game === null) {
 	http_response_code(404);
 }
@@ -63,7 +60,7 @@ function catalogDetailEscape($value)
 				<section class="catalog-detail-panel">
 					<img
 						class="catalog-detail-image"
-						src="<?php echo catalogDetailEscape($game["image"] ?? "img/boardgames/placeholder.svg"); ?>"
+						src="<?php echo catalogDetailEscape($game["has_image_data"] ? "catalog_image.php?id=".(int)$game["id"] : ($game["image"] ?? "img/boardgames/placeholder.svg")); ?>"
 						alt="<?php echo catalogDetailEscape($game["name"]); ?>"
 					>
 					<div class="catalog-detail-description">

@@ -2,7 +2,6 @@
 require_once __DIR__."/auth.php";
 requireUser();
 
-require_once __DIR__."/db_setup.php";
 require_once __DIR__."/db_connect.php";
 
 if (($activityDbPage ?? "list") === "registration") {

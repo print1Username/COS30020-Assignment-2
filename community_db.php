@@ -18,7 +18,6 @@ if (($communityDbPage ?? "list") === "detail") {
 	unset($_SESSION["community_post_notice"]);
 
 	if ($communityId !== false && $communityId !== null) {
-		require_once __DIR__."/db_setup.php";
 		require_once __DIR__."/db_connect.php";
 		$statement = $pdo -> prepare("SELECT id, title, description, member_count, created_at FROM community_info WHERE id = ?");
 		$statement -> execute([$communityId]);
@@ -170,7 +169,6 @@ if (($communityDbPage ?? "list") === "detail") {
 	 * ==========================
 	 */
 
-	require_once __DIR__."/db_setup.php";
 	require_once __DIR__."/db_connect.php";
 	$communityStatement = $pdo -> prepare("SELECT community.id, community.title, COALESCE(community.description, '') AS description, community.member_count, community.created_at, membership.status AS join_status
 		FROM community_info AS community
