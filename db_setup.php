@@ -142,12 +142,14 @@ try {
 	$insertCommunityPost = $pdo -> prepare("INSERT INTO community_table (id, community_id, first_name, last_name, contribution_image, related_activity, status, title, description, created_at)
 		VALUES (?, ?, ?, ?, ?, ?, 'approved', ?, ?, ?)");
 	$updateSeedCommunityPost = $pdo -> prepare("UPDATE community_table SET id = ?, community_id = ?, first_name = ?, last_name = ?, contribution_image = ?, related_activity = ?, status = 'approved', title = ?, description = ?, created_at = ? WHERE id = ?");
+	$seedCommunityPostIds = [];
 	foreach ($communities as $seedCommunity) {
 		$insertCommunityInfo -> execute([$seedCommunity["id"], $seedCommunity["title"], $seedCommunity["description"], $seedCommunity["member_count"], $seedCommunity["created_at"]]);
 		$contribution = $seedCommunity["contributions"][0] ?? [];
 		$name = explode(" ", $contribution["contributor"] ?? "", 2);
 		if (isset($contribution["id"])) {
-			$postId = (int) $contribution["id"];
+			$postId = (int)$contribution["id"];
+			$seedCommunityPostIds[] = $postId;
 			$postTitle = $contribution["title"] ?? null;
 			$firstName = $name[0] ?? "";
 			$lastName = $name[1] ?? "";
@@ -168,6 +170,10 @@ try {
 			}
 		}
 	}
+	$seedPostPlaceholders = implode(", ", array_fill(0, count($seedCommunityPostIds), "?"));
+	$deleteRemovedSeedPosts = $pdo -> prepare("DELETE FROM community_table WHERE id BETWEEN 101 AND 108".
+		($seedPostPlaceholders ? " AND id NOT IN ($seedPostPlaceholders)" : ""));
+	$deleteRemovedSeedPosts -> execute($seedCommunityPostIds);
 
 } catch (PDOException|RuntimeException $e) {
 	error_log($e -> getMessage());

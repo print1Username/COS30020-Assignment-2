@@ -24,18 +24,7 @@
 		"description": "Explore challenging strategy games, exchange tactics, and improve your strategic thinking with fellow players.",
 		"member_count": 24,
 		"created_at": "2026-09-03",
-		"contributions": [
-			{
-				"id": 102,
-				"title": "Strategy Game Tournament",
-				"description": "Members participated in a friendly tournament featuring several competitive strategy boardgames.",
-				"contributor": "Emily Tan",
-				"activity": "Strategy Game Tournament",
-				"media_type": "image",
-				"media": "",
-				"created_at": "2026-09-07"
-			}
-		]
+		"contributions": []
 	},
 	{
 		"id": 3,
@@ -100,18 +89,7 @@
 		"description": "A welcoming space for beginners to learn boardgame rules, meet other players, and build confidence.",
 		"member_count": 15,
 		"created_at": "2026-09-11",
-		"contributions": [
-			{
-				"id": 106,
-				"title": "Beginner Boardgame Workshop",
-				"description": "New players learned the basics of several popular boardgames with guidance from experienced members.",
-				"contributor": "Jessica Lim",
-				"activity": "Beginner Boardgame Workshop",
-				"media_type": "image",
-				"media": "",
-				"created_at": "2026-09-15"
-			}
-		]
+		"contributions": []
 	},
 	{
 		"id": 7,
@@ -138,17 +116,6 @@
 		"description": "Share your boardgame collection, discover new releases, and discuss your favourite games.",
 		"member_count": 19,
 		"created_at": "2026-09-15",
-		"contributions": [
-			{
-				"id": 108,
-				"title": "Boardgame Collection Showcase",
-				"description": "Members presented their favourite boardgames and discussed memorable gaming experiences.",
-				"contributor": "Olivia Wong",
-				"activity": "Boardgame Collection Showcase",
-				"media_type": "image",
-				"media": "",
-				"created_at": "2026-09-19"
-			}
-		]
+		"contributions": []
 	}
 ]
