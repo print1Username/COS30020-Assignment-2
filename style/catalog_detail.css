@@ -54,7 +54,7 @@ body {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
     gap: 28px;
-    align-items: start;
+    align-items: stretch;
 }
 
 .catalog-detail-panel {
@@ -63,6 +63,10 @@ body {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 8px 24px rgba(45, 25, 80, .04);
+}
+
+.catalog-detail-layout > .catalog-detail-panel {
+    height: 100%;
 }
 
 .catalog-detail-image {
@@ -113,6 +117,10 @@ body {
 @media (max-width: 767px) {
     .catalog-detail-layout {
         grid-template-columns: 1fr;
+    }
+
+    .catalog-detail-layout > .catalog-detail-panel {
+        height: auto;
     }
 
     .catalog-detail-container {
