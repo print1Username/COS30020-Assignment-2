@@ -24,7 +24,8 @@ function removeCommunityPostImage(?string $path): void
 	}
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST" && !in_array($_POST["action"] ?? "",
+		["community_add", "community_edit", "community_delete"], true)) {
 	adminCheckPost();
 	$action = $_POST["action"] ?? "";
 	$id = filter_var($_POST["id"] ?? null, FILTER_VALIDATE_INT);
@@ -33,12 +34,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	try {
 		if ($action === "delete" && $id) {
 			if ($community) {
+				$pdo -> beginTransaction();
 				$imageLookup = $pdo -> prepare("SELECT contribution_image FROM community_table WHERE id=?");
 				$imageLookup -> execute([$id]);
 				$oldImagePath = $imageLookup -> fetchColumn() ?: null;
+				$markDeleted = $pdo -> prepare("INSERT IGNORE INTO community_deleted_seed_post (id) VALUES (?)");
+				$markDeleted -> execute([$id]);
 			}
 			$statement = $pdo -> prepare("DELETE FROM $table WHERE id=?");
 			$statement -> execute([$id]);
+			if ($community) $pdo -> commit();
 			if ($community && $statement -> rowCount() === 1) {
 				removeCommunityPostImage($oldImagePath);
 			}

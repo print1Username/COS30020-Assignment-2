@@ -1,5 +1,6 @@
 <?php $reviewKind = "community";
 require_once __DIR__."/manage_review_db.php";
+require_once __DIR__."/manage_community_info_db.php";
 require_once __DIR__."/file_upload.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +26,8 @@ require_once __DIR__."/file_upload.php"; ?>
 		<?php if ($error): ?>
 			<div class="alert alert-danger"><?= adminEscape($error) ?></div><?php endif; ?><?php if ($notice): ?>
 			<div class="alert alert-success"><?= adminEscape($notice) ?></div><?php endif; ?>
+		<?php if ($communityError): ?>
+			<div class="alert alert-danger"><?= adminEscape($communityError) ?></div><?php endif; ?>
 		<details class="admin-panel admin-disclosure mb-4" <?= $edit || $error ? 'open' : '' ?>>
 			<summary class="admin-disclosure-header"><span><span
 						class="admin-disclosure-title"
@@ -219,9 +222,85 @@ require_once __DIR__."/file_upload.php"; ?>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</section>
+		<hr class="admin-registration-divider my-4">
+		<details
+			class="admin-panel admin-disclosure mb-4" <?= $communityEdit || ($communityError && ($_POST['action'] ?? '') !== 'community_delete') ? 'open' : '' ?>>
+			<summary class="admin-disclosure-header"><span><span
+						class="admin-disclosure-title"
+					><?= $communityEdit ? 'Edit Community' : 'Create Community' ?></span><span
+						class="admin-disclosure-subtitle"
+					>Enter community details</span></span></summary>
+			<form method="post" class="admin-disclosure-content">
+				<input type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>">
+				<input type="hidden" name="action" value="<?= $communityEdit ? 'community_edit' : 'community_add' ?>">
+				<input type="hidden" name="community_id" value="<?= (int)($communityEdit['id'] ?? 0) ?>">
+				<div class="admin-post-form-section">
+					<div><label class="form-label" for="community-title">Name</label><input
+							class="form-control" id="community-title" name="community_title" maxlength="100" required
+							value="<?= adminEscape($communityEdit['title'] ?? ($_POST['community_title'] ?? '')) ?>"
+						></div>
+					<div><label class="form-label" for="community-description">Description <span class="text-muted">(optional)</span></label><textarea
+							class="form-control" id="community-description" name="community_description" rows="4"
+						><?= adminEscape($communityEdit['description'] ?? ($_POST['community_description'] ?? '')) ?></textarea>
+					</div>
+				</div>
+				<div class="admin-post-form-actions">
+					<button
+						class="btn btn-primary"
+					><?= $communityEdit ? 'Save Community' : 'Create Community' ?></button><?php if ($communityEdit): ?>
+						<a class="btn btn-outline-secondary" href="manage_community.php">Cancel</a><?php endif; ?></div>
+			</form>
+		</details>
+		<section class="admin-panel"><h2 class="h4">Manage Community</h2>
+			<?php if (!$communityRows): ?><p class="mb-0">No communities are available.</p><?php else: ?>
+				<div class="table-responsive">
+					<table class="table table-striped align-middle">
+						<thead>
+						<tr>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Description</th>
+							<th>Members</th>
+							<th>Posts</th>
+							<th>Created At</th>
+							<th>Actions</th>
+						</tr>
+						</thead>
+						<tbody data-admin-pagination="communities-pagination" data-admin-page-size="4">
+						<?php foreach ($communityRows as $communityRow): ?>
+							<tr>
+							<td><?= (int)$communityRow['id'] ?></td>
+							<td><strong><?= adminEscape($communityRow['title']) ?></strong></td>
+							<td class="admin-post-description"><?= adminEscape($communityRow['description'] ?? '') ?></td>
+							<td><?= (int)$communityRow['member_count'] ?></td>
+							<td><?= (int)$communityRow['post_count'] ?></td>
+							<td><?= adminEscape(adminFormatDate($communityRow['created_at'])) ?></td>
+							<td>
+								<div class="admin-actions admin-post-actions"><a
+										class="btn btn-sm btn-outline-primary"
+										href="manage_community.php?community_edit=<?= (int)$communityRow['id'] ?>"
+									>Edit</a>
+									<form method="post" onsubmit="return confirm('Delete this community?')"><input
+											type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>"
+										><input type="hidden" name="action" value="community_delete"><input
+											type="hidden" name="community_id" value="<?= (int)$communityRow['id'] ?>"
+										>
+										<button class="btn btn-sm btn-outline-danger">Delete</button>
+									</form>
+								</div>
+							</td>
+							</tr><?php endforeach; ?>
+						</tbody>
+					</table>
+				</div>
+				<nav class="admin-pagination" aria-label="Communities pagination">
+					<ul id="communities-pagination" class="pagination justify-content-center mb-0"></ul>
+				</nav>
+			<?php endif; ?>
+		</section>
 	</main>
-	<script src="components/pagination.js"></script>
-	<script src="components/admin_pagination.js"></script>
+	<script src="components/pagination.js?v=<?= filemtime(__DIR__."/components/pagination.js") ?>"></script>
+	<script src="components/admin_pagination.js?v=<?= filemtime(__DIR__."/components/admin_pagination.js") ?>"></script>
 	<script
 		src="components/admin_community_picker.js?v=<?php echo filemtime(__DIR__.'/components/admin_community_picker.js'); ?>"
 	></script>

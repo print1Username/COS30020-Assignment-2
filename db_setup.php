@@ -18,7 +18,7 @@ try {
 	// Select database
 	$pdo -> exec("USE `$dbName`");
 	require_once __DIR__."/upload_helpers.php";
-	$schemaFiles = ["homepage_image_table.sql", "user_table.sql", "account_table.sql", "smart_feature_table.sql", "activity_info.sql", "activity_table.sql", "community_info.sql", "community_table.sql", "community_member.sql"];
+	$schemaFiles = ["homepage_image_table.sql", "user_table.sql", "account_table.sql", "smart_feature_table.sql", "activity_info.sql", "activity_table.sql", "community_info.sql", "community_table.sql", "community_member.sql", "community_deleted_seed.sql", "community_deleted_seed_post.sql"];
 	foreach ($schemaFiles as $schemaFile) {
 		$sql = file_get_contents(__DIR__."/database/".$schemaFile);
 		if ($sql === false) {
@@ -143,12 +143,17 @@ try {
 		VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?, ?, ?)");
 	$updateSeedCommunityPost = $pdo -> prepare("UPDATE community_table SET id = ?, community_id = ?, first_name = ?, last_name = ?, contribution_image = ?, community_image_data = ?, community_image_mime = ?, related_activity = ?, status = 'approved', title = ?, description = ?, created_at = ? WHERE id = ?");
 	$seedCommunityPostIds = [];
+	$deletedCommunitySeeds = $pdo -> query("SELECT id FROM community_deleted_seed") -> fetchAll(PDO::FETCH_COLUMN);
+	$deletedCommunitySeedPosts = $pdo -> query("SELECT id FROM community_deleted_seed_post")
+		-> fetchAll(PDO::FETCH_COLUMN);
 	foreach ($communities as $seedCommunity) {
+		if (in_array($seedCommunity["id"], $deletedCommunitySeeds)) continue;
 		$insertCommunityInfo -> execute([$seedCommunity["id"], $seedCommunity["title"], $seedCommunity["description"], $seedCommunity["member_count"], $seedCommunity["created_at"]]);
 		$contribution = $seedCommunity["contributions"][0] ?? [];
 		$name = explode(" ", $contribution["contributor"] ?? "", 2);
 		if (isset($contribution["id"])) {
 			$postId = (int)$contribution["id"];
+			if (in_array($postId, $deletedCommunitySeedPosts)) continue;
 			$seedCommunityPostIds[] = $postId;
 			$postTitle = $contribution["title"] ?? null;
 			$firstName = $name[0] ?? "";

@@ -48,7 +48,7 @@ function createPagination(options) {
             if (currentPage > 1) {
                 currentPage--;
                 renderItems();
-                scrollToTop();
+                if (options.scrollToTopOnChange !== false) scrollToTop();
             }
         });
 
@@ -77,7 +77,7 @@ function createPagination(options) {
                 if (currentPage !== page) {
                     currentPage = page;
                     renderItems();
-                    scrollToTop();
+                    if (options.scrollToTopOnChange !== false) scrollToTop();
                 }
             });
 
@@ -102,7 +102,7 @@ function createPagination(options) {
             if (currentPage < totalPages) {
                 currentPage++;
                 renderItems();
-                scrollToTop();
+                if (options.scrollToTopOnChange !== false) scrollToTop();
             }
         });
 

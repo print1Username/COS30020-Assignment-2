@@ -217,8 +217,8 @@ require_once __DIR__."/manage_review_db.php"; ?>
 					<ul id="events-pagination" class="pagination justify-content-center mb-0"></ul>
 				</nav><?php endif; ?></section>
 	</main>
-	<script src="components/pagination.js"></script>
-	<script src="components/admin_pagination.js"></script>
+	<script src="components/pagination.js?v=<?= filemtime(__DIR__."/components/pagination.js") ?>"></script>
+	<script src="components/admin_pagination.js?v=<?= filemtime(__DIR__."/components/admin_pagination.js") ?>"></script>
 	<script
 		src="components/admin_activity_picker.js?v=<?php echo filemtime(__DIR__.'/components/admin_activity_picker.js'); ?>"
 	></script>

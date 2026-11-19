@@ -103,8 +103,8 @@
 			</nav>
 		</section>
 	</main>
-	<script src="components/pagination.js"></script>
-	<script src="components/admin_pagination.js"></script>
+	<script src="components/pagination.js?v=<?= filemtime(__DIR__."/components/pagination.js") ?>"></script>
+	<script src="components/admin_pagination.js?v=<?= filemtime(__DIR__."/components/admin_pagination.js") ?>"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 	</body>
 </html>
