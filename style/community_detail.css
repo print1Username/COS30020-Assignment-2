@@ -135,13 +135,13 @@
 
 .community-post-composer {
     margin-bottom: 22px;
-    border: 1px solid var(--community-detail-border);
+    border: 0;
     border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 4px 16px rgba(45, 25, 80, .06);
+    background: #f7f2ff;
+    box-shadow: 0 7px 20px rgba(79, 43, 135, .11);
 }
 
-.community-post-composer-summary,
+.community-post-composer-trigger,
 .community-post-composer-locked,
 .community-post-user {
     display: flex;
@@ -149,25 +149,18 @@
     gap: 14px;
 }
 
-.community-post-composer-summary {
-    padding: 18px 20px;
-    color: var(--community-detail-muted);
+.community-post-composer-trigger {
+    width: 100%;
+    padding: 14px 18px;
+    color: var(--community-detail-purple-dark);
     font-weight: 600;
+    text-align: left;
     cursor: pointer;
-    list-style: none;
 }
 
-.community-post-composer-summary::-webkit-details-marker {
-    display: none;
-}
-
-.community-post-composer-chevron {
+.community-post-composer-trigger > i:last-child {
     margin-left: auto;
-    transition: transform .2s ease;
-}
-
-.community-post-composer[open] .community-post-composer-chevron {
-    transform: rotate(180deg);
+    font-size: 1.15rem;
 }
 
 .community-post-composer-locked {
@@ -203,14 +196,12 @@
 }
 
 .community-post-form {
-    display: grid;
-    gap: 10px;
-    padding: 0 20px 20px;
-    border-top: 1px solid var(--community-detail-border);
+    margin: 0;
 }
 
-.community-post-form label:first-of-type {
-    margin-top: 18px;
+.community-post-form .modal-body {
+    display: grid;
+    gap: 10px;
 }
 
 .community-post-form label {
@@ -238,13 +229,25 @@
     resize: vertical;
 }
 
-.community-post-form .community-detail-primary-button {
-    justify-self: start;
+.community-post-modal {
+    overflow: hidden;
+    border: 0;
+    border-radius: 14px;
+}
+
+.community-post-form .modal-footer .community-detail-primary-button {
+    margin-top: 0;
 }
 
 .community-post-user {
     padding: 18px 22px;
-    border-bottom: 1px solid var(--community-detail-border);
+}
+
+.community-post-user-details {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
 }
 
 .community-post-user strong {
@@ -253,7 +256,8 @@
 }
 
 .community-post-user time {
-    margin-left: auto;
+    color: var(--community-detail-muted);
+    font-size: .78rem;
 }
 
 .community-post-content {

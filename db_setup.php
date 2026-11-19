@@ -128,6 +128,7 @@ try {
 		}
 		$pdo -> exec("DROP TABLE community_table_legacy");
 	}
+	$pdo -> exec("ALTER TABLE community_table MODIFY created_at DATETIME NULL");
 	$communityPostUserForeignKey = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.referential_constraints WHERE constraint_schema = ? AND table_name = 'community_table' AND constraint_name = 'fk_community_post_user'");
 	$communityPostUserForeignKey -> execute([$dbName]);
 	if (!$communityPostUserForeignKey -> fetchColumn()) {

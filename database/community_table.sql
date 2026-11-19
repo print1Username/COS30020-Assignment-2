@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS community_table (
 	status VARCHAR(10) NOT NULL,
 	title VARCHAR(100) NULL,
 	description TEXT NULL,
-	created_at DATE NULL,
+	created_at DATETIME NULL,
 	CONSTRAINT fk_community_post_info FOREIGN KEY ( community_id ) REFERENCES community_info( id ) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT fk_community_post_user FOREIGN KEY ( email ) REFERENCES user_table( email ) ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE = InnoDB;
