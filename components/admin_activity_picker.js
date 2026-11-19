@@ -24,6 +24,14 @@ document.querySelectorAll('[data-admin-activity-picker]').forEach((picker) => {
         noResults.hidden = matches !== 0;
     }
 
+    function formatTime(time) {
+        if (!time) return '';
+        const [hourValue, minute = '00'] = time.split(':');
+        const hour = Number(hourValue);
+        const period = hour >= 12 ? 'PM' : 'AM';
+        return `${hour % 12 || 12}:${minute} ${period}`;
+    }
+
     function selectActivity(button) {
         const activity = button.dataset;
         activityId.value = activity.activityId;
@@ -33,10 +41,22 @@ document.querySelectorAll('[data-admin-activity-picker]').forEach((picker) => {
         const title = document.createElement('strong');
         title.textContent = activity.activityTitle;
         const summary = document.createElement('p');
-        summary.textContent = [activity.activityCategory, activity.activityDate,
-            [activity.activityTime, activity.activityEndTime].filter(Boolean).join(' - '),
+        summary.className = 'admin-activity-summary';
+        const timeRange = [formatTime(activity.activityTime), formatTime(activity.activityEndTime)]
+            .filter(Boolean).join(' - ');
+        const summaryItems = [activity.activityCategory, activity.activityDate, timeRange,
             activity.activityVenue, activity.activityTable && `Table: ${activity.activityTable}`,
-            activity.activityPrice && `Price: ${activity.activityPrice}`].filter(Boolean).join(' · ');
+            activity.activityPrice && `Price: RM ${activity.activityPrice}`].filter(Boolean);
+        summary.replaceChildren(...summaryItems.flatMap((item, index) => {
+            const value = document.createElement('span');
+            value.textContent = item;
+            if (index === summaryItems.length - 1) return [value];
+            const separator = document.createElement('span');
+            separator.className = 'admin-activity-summary-separator';
+            separator.textContent = '|';
+            separator.setAttribute('aria-hidden', 'true');
+            return [value, separator];
+        }));
         const description = document.createElement('p');
         description.textContent = activity.activityDescription || '';
         details.append(title, summary, description);
