@@ -63,6 +63,8 @@ if (($communityDbPage ?? "list") === "detail") {
 					$title = trim($_POST["title"] ?? "");
 					$description = trim($_POST["description"] ?? "");
 					$imagePath = null;
+					$imageData = null;
+					$imageMime = null;
 					try {
 						if ($title === "" || mb_strlen($title) > 100) {
 							throw new RuntimeException("Title is required and must not exceed 100 characters.");
@@ -73,9 +75,14 @@ if (($communityDbPage ?? "list") === "detail") {
 						if (isset($_FILES["contribution_image"]) && $_FILES["contribution_image"]["error"] !== UPLOAD_ERR_NO_FILE) {
 							$imagePath = saveValidatedUpload($_FILES["contribution_image"], "community_images",
 								["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"], 5 * 1024 * 1024);
+							$imageData = file_get_contents(__DIR__."/".$imagePath);
+							$imageMime = (new finfo(FILEINFO_MIME_TYPE)) -> file(__DIR__."/".$imagePath);
+							if ($imageData === false || !in_array($imageMime, ["image/jpeg", "image/png"], true)) {
+								throw new RuntimeException("The uploaded image could not be stored.");
+							}
 						}
-						$savePost = $pdo -> prepare("INSERT INTO community_table (community_id, email, first_name, last_name, contribution_image, related_activity, status, title, description, created_at) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, NOW())");
-						$savePost -> execute([$communityId, $_SESSION["email"], $postingUser["first_name"], $postingUser["last_name"], $imagePath, $row["title"], $title, $description]);
+						$savePost = $pdo -> prepare("INSERT INTO community_table (community_id, email, first_name, last_name, contribution_image, community_image_data, community_image_mime, related_activity, status, title, description, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, NOW())");
+						$savePost -> execute([$communityId, $_SESSION["email"], $postingUser["first_name"], $postingUser["last_name"], $imagePath, $imageData, $imageMime, $row["title"], $title, $description]);
 						$_SESSION["community_post_notice"] = "Your post has been submitted and is waiting for admin approval.";
 						header("Location: community_detail.php?id=".urlencode((string)$communityId));
 						exit;
@@ -139,7 +146,7 @@ if (($communityDbPage ?? "list") === "detail") {
 					}
 				}
 			}
-			$contributionStatement = $pdo -> prepare("SELECT post.title, post.description, post.contribution_image AS media, post.created_at, post.first_name, post.last_name, post.email, user.profile_image_data IS NOT NULL AND OCTET_LENGTH(user.profile_image_data) > 0 AS has_profile_image
+			$contributionStatement = $pdo -> prepare("SELECT post.id, post.title, post.description, post.created_at, post.first_name, post.last_name, post.email, post.community_image_data IS NOT NULL AND OCTET_LENGTH(post.community_image_data) > 0 AS has_community_image, user.profile_image_data IS NOT NULL AND OCTET_LENGTH(user.profile_image_data) > 0 AS has_profile_image
 				FROM community_table AS post
 				LEFT JOIN user_table AS user ON user.email = post.email
 				WHERE post.community_id = ? AND post.status = 'approved'

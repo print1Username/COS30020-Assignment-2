@@ -245,8 +245,7 @@ require_once __DIR__."/file_upload.php";
 						<div class="community-detail-contribution-grid">
 							<?php foreach ($contributions as $contribution): ?>
 								<?php
-								$media = $contribution["media"] ?? "";
-								$mediaExists = $media !== "" && is_file(__DIR__."/".$media);
+								$hasCommunityImage = !empty($contribution["has_community_image"]);
 								$title = $contribution["title"] ?? "Untitled contribution";
 								$description = $contribution["description"] ?? "No description available.";
 								$contributor = trim(($contribution["first_name"] ?? "")." ".($contribution["last_name"] ?? ""));
@@ -275,9 +274,9 @@ require_once __DIR__."/file_upload.php";
 									<div class="community-post-content">
 										<h3><?php echo e($title); ?></h3>
 										<p class="community-detail-description"><?php echo e($description); ?></p>
-										<?php if ($mediaExists): ?><img class="community-post-image"
-																		src="<?php echo e($media); ?>"
-																		alt="<?php echo e($title); ?>"><?php endif; ?>
+										<?php if ($hasCommunityImage): ?><img class="community-post-image"
+																			  src="community_image.php?id=<?php echo (int)$contribution["id"]; ?>"
+																			  alt="<?php echo e($title); ?>"><?php endif; ?>
 									</div>
 								</article>
 							<?php endforeach; ?>

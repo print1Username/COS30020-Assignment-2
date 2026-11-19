@@ -139,9 +139,9 @@ try {
 	$insertCommunityInfo = $pdo -> prepare("INSERT IGNORE INTO community_info (id, title, description, member_count, created_at) VALUES (?, ?, ?, ?, ?)");
 	$findCommunityPostById = $pdo -> prepare("SELECT id FROM community_table WHERE id = ?");
 	$findSeedCommunityPost = $pdo -> prepare("SELECT id FROM community_table WHERE community_id = ? AND title = ? AND first_name = ? AND last_name = ? LIMIT 1");
-	$insertCommunityPost = $pdo -> prepare("INSERT INTO community_table (id, community_id, first_name, last_name, contribution_image, related_activity, status, title, description, created_at)
-		VALUES (?, ?, ?, ?, ?, ?, 'approved', ?, ?, ?)");
-	$updateSeedCommunityPost = $pdo -> prepare("UPDATE community_table SET id = ?, community_id = ?, first_name = ?, last_name = ?, contribution_image = ?, related_activity = ?, status = 'approved', title = ?, description = ?, created_at = ? WHERE id = ?");
+	$insertCommunityPost = $pdo -> prepare("INSERT INTO community_table (id, community_id, first_name, last_name, contribution_image, community_image_data, community_image_mime, related_activity, status, title, description, created_at)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?, ?, ?)");
+	$updateSeedCommunityPost = $pdo -> prepare("UPDATE community_table SET id = ?, community_id = ?, first_name = ?, last_name = ?, contribution_image = ?, community_image_data = ?, community_image_mime = ?, related_activity = ?, status = 'approved', title = ?, description = ?, created_at = ? WHERE id = ?");
 	$seedCommunityPostIds = [];
 	foreach ($communities as $seedCommunity) {
 		$insertCommunityInfo -> execute([$seedCommunity["id"], $seedCommunity["title"], $seedCommunity["description"], $seedCommunity["member_count"], $seedCommunity["created_at"]]);
@@ -154,7 +154,20 @@ try {
 			$firstName = $name[0] ?? "";
 			$lastName = $name[1] ?? "";
 			$imagePath = trim($contribution["media"] ?? "") ?: null;
-			$postValues = [$postId, $seedCommunity["id"], $firstName, $lastName, $imagePath, $contribution["activity"] ?? "", $postTitle, $contribution["description"] ?? null, $contribution["created_at"] ?? null];
+			$imageData = null;
+			$imageMime = null;
+			if ($imagePath !== null) {
+				$absoluteImagePath = __DIR__."/".$imagePath;
+				if (!is_file($absoluteImagePath) || getimagesize($absoluteImagePath) === false) {
+					throw new RuntimeException("Community seed image is invalid: ".$imagePath);
+				}
+				$imageData = file_get_contents($absoluteImagePath);
+				$imageMime = (new finfo(FILEINFO_MIME_TYPE)) -> file($absoluteImagePath);
+				if ($imageData === false || !in_array($imageMime, ["image/jpeg", "image/png"], true)) {
+					throw new RuntimeException("Community seed image could not be loaded: ".$imagePath);
+				}
+			}
+			$postValues = [$postId, $seedCommunity["id"], $firstName, $lastName, $imagePath, $imageData, $imageMime, $contribution["activity"] ?? "", $postTitle, $contribution["description"] ?? null, $contribution["created_at"] ?? null];
 
 			$findCommunityPostById -> execute([$postId]);
 			$existingPostId = $findCommunityPostById -> fetchColumn();

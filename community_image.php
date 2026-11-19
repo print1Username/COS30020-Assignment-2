@@ -1,5 +1,7 @@
 <?php
-require_once __DIR__."/admin_db.php";
+require_once __DIR__."/auth.php";
+requireUser(true);
+require_once __DIR__."/db_connect.php";
 
 $postId = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
 if ($postId === false || $postId === null) {
@@ -7,7 +9,9 @@ if ($postId === false || $postId === null) {
 	exit;
 }
 
-$statement = $pdo -> prepare("SELECT community_image_data, community_image_mime FROM community_table WHERE id=?");
+$isAdmin = ($_SESSION["type"] ?? null) === "admin";
+$statement = $pdo -> prepare("SELECT community_image_data, community_image_mime FROM community_table WHERE id = ?".
+	($isAdmin ? "" : " AND status = 'approved'"));
 $statement -> execute([$postId]);
 $image = $statement -> fetch();
 if (!$image || empty($image["community_image_data"]) ||
