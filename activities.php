@@ -54,8 +54,14 @@ unset($_SESSION["activity_registration_notice"]);
 
 	<main class="container py-5">
 		<?php if ($activityRegistrationSuccess !== ""): ?>
-			<div class="alert <?php echo $activityRegistrationNotice === "pending" ? "alert-warning" : "alert-success"; ?> alert-dismissible fade show" role="alert">
-				<i class="bi <?php echo $activityRegistrationNotice === "pending" ? "bi-hourglass-split" : "bi-check-circle-fill"; ?> me-2" aria-hidden="true"></i>
+			<div
+				class="alert <?php echo $activityRegistrationNotice === "pending" ? "alert-warning" : "alert-success"; ?> alert-dismissible fade show"
+				role="alert"
+			>
+				<i
+					class="bi <?php echo $activityRegistrationNotice === "pending" ? "bi-hourglass-split" : "bi-check-circle-fill"; ?> me-2"
+					aria-hidden="true"
+				></i>
 				<?php echo htmlspecialchars($activityRegistrationSuccess, ENT_QUOTES, "UTF-8"); ?>
 				<?php if ($activityRegistrationNotice === "pending"): ?>
 					Your registration is pending admin approval.
@@ -150,12 +156,7 @@ unset($_SESSION["activity_registration_notice"]);
 											<span class="activity-detail-label">Date</span>
 											<span class="activity-detail-value">
                                                     <?php
-													echo htmlspecialchars(
-														date(
-															"d M Y",
-															strtotime($activity["date"])
-														)
-													);
+													echo htmlspecialchars(date("d M Y", strtotime($activity["date"])));
 													?>
                                                 </span>
 										</div>
@@ -167,21 +168,13 @@ unset($_SESSION["activity_registration_notice"]);
 											<span class="activity-detail-label">Time</span>
 											<span class="activity-detail-value">
                                                     <?php
-													echo htmlspecialchars(
-														date(
-															"g:i A",
-															strtotime($activity["start_time"])
-														)
-													);
+													echo htmlspecialchars(date("g:i A",
+														strtotime($activity["start_time"])));
 													?>
                                                     -
                                                     <?php
-													echo htmlspecialchars(
-														date(
-															"g:i A",
-															strtotime($activity["end_time"])
-														)
-													);
+													echo htmlspecialchars(date("g:i A",
+														strtotime($activity["end_time"])));
 													?>
                                                 </span>
 										</div>

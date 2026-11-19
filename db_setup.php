@@ -28,6 +28,7 @@ try {
 		"user_table.sql",
 		"account_table.sql",
 		"smart_feature_table.sql",
+		"activity_info.sql",
 		"activity_table.sql",
 		"community_table.sql"
 	];
@@ -88,19 +89,7 @@ try {
 			"profile_image_data" => "LONGBLOB NULL",
 			"profile_image_mime" => "VARCHAR(30) NULL"
 		],
-		"activity_table" => [
-			"record_type" => "VARCHAR(12) NOT NULL DEFAULT 'registration'",
-			"source_id" => "INT NULL UNIQUE",
-			"activity_id" => "INT NULL",
-			"title" => "VARCHAR(100) NULL",
-			"activity_type" => "VARCHAR(50) NULL",
-			"description" => "TEXT NULL",
-			"end_time" => "TIME NULL",
-			"price" => "DECIMAL(8, 2) NULL",
-			"venue" => "VARCHAR(100) NULL",
-			"table_name" => "VARCHAR(50) NULL",
-			"image" => "VARCHAR(100) NULL"
-		]
+		"activity_table" => ["activity_id" => "INT NULL"]
 	];
 	$columnCheck = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ?");
 	foreach ($requiredColumns as $table => $columns) {
@@ -112,6 +101,33 @@ try {
 		}
 	}
 	$pdo -> exec("ALTER TABLE user_table MODIFY profile_image VARCHAR(255) NULL");
+
+	$columnCheck -> execute([$dbName, "activity_table", "record_type"]);
+	if ($columnCheck -> fetchColumn()) {
+		$invalidRegistrations = $pdo -> query("SELECT COUNT(*) FROM activity_table AS registration LEFT JOIN user_table AS user ON user.email = registration.email LEFT JOIN activity_table AS event ON event.id = registration.activity_id AND event.record_type = 'event' WHERE registration.record_type = 'registration' AND NOT (registration.id = 21 AND registration.email = 'wdawda@fefsef.com' AND registration.activity_id IS NULL) AND (user.email IS NULL OR event.id IS NULL)") -> fetchColumn();
+		if ((int)$invalidRegistrations > 0) {
+			throw new RuntimeException("Activity registrations must reference an existing user and event before migration.");
+		}
+		$migrationSql = file_get_contents(__DIR__."/database/activity_migration.sql");
+		if ($migrationSql === false) {
+			throw new RuntimeException("Activity migration SQL could not be read.");
+		}
+		foreach (explode(";", $migrationSql) as $migrationStatement) {
+			if (trim($migrationStatement) !== "") {
+				$pdo -> exec($migrationStatement);
+			}
+		}
+	}
+	$pdo -> exec("ALTER TABLE activity_table MODIFY activity_id INT NOT NULL");
+	$activityForeignKeys = $pdo -> prepare("SELECT CONSTRAINT_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'activity_table' AND REFERENCED_TABLE_NAME IS NOT NULL");
+	$activityForeignKeys -> execute([$dbName]);
+	$existingActivityKeys = $activityForeignKeys -> fetchAll(PDO::FETCH_COLUMN);
+	if (!in_array("fk_activity_user", $existingActivityKeys, true)) {
+		$pdo -> exec("ALTER TABLE activity_table ADD CONSTRAINT fk_activity_user FOREIGN KEY (email) REFERENCES user_table(email) ON UPDATE CASCADE ON DELETE CASCADE");
+	}
+	if (!in_array("fk_activity_info", $existingActivityKeys, true)) {
+		$pdo -> exec("ALTER TABLE activity_table ADD CONSTRAINT fk_activity_info FOREIGN KEY (activity_id) REFERENCES activity_info(id) ON UPDATE CASCADE ON DELETE CASCADE");
+	}
 
 	$defaultProfileImages = [
 		"admin@swin.edu.my" => "admin.png",
@@ -137,8 +153,8 @@ try {
 	}
 
 	$activities = json_decode(file_get_contents(__DIR__."/data/activities.json"), true);
-	$insertActivity = $pdo -> prepare("INSERT IGNORE INTO activity_table (email, first_name, last_name, date, time, status, record_type, source_id, title, activity_type, description, end_time, price, venue, table_name, image) VALUES ('', '', '', ?, ?, 'approved', 'event', ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-	$seedActivities = (int)$pdo -> query("SELECT COUNT(*) FROM activity_table") -> fetchColumn() === 0;
+	$insertActivity = $pdo -> prepare("INSERT IGNORE INTO activity_info (date, time, status, source_id, title, activity_type, description, end_time, price, venue, table_name, image) VALUES (?, ?, 'approved', ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	$seedActivities = (int)$pdo -> query("SELECT COUNT(*) FROM activity_info") -> fetchColumn() === 0;
 	foreach ($seedActivities ? $activities : [] as $seedActivity) {
 		$insertActivity -> execute([
 			$seedActivity["date"], $seedActivity["start_time"], $seedActivity["id"],
