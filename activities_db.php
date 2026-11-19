@@ -14,7 +14,7 @@ if (($activityDbPage ?? "list") === "registration") {
 	$activityId = isset($_GET["id"])
 		? (int)$_GET["id"]
 		: (int)($_POST["activity_id"] ?? 0);
-	$statement = $pdo -> prepare("SELECT id, title, date, time, end_time, price, venue, table_name, image FROM activity_table WHERE id = ? AND record_type = 'event' AND status = 'approved'");
+	$statement = $pdo -> prepare("SELECT id, title, date, time, end_time, price, venue, table_name, image FROM activity_info WHERE id = ? AND status = 'approved'");
 	$statement -> execute([$activityId]);
 	$selectedActivity = $statement -> fetch();
 	$activityTitle = $selectedActivity["title"] ?? "";
@@ -40,7 +40,7 @@ if (($activityDbPage ?? "list") === "registration") {
 	}
 
 	$registrationStatus = null;
-	$registrationStatement = $pdo -> prepare("SELECT status, contact_number FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ?");
+	$registrationStatement = $pdo -> prepare("SELECT status, contact_number FROM activity_table WHERE activity_id = ? AND email = ?");
 	$registrationStatement -> execute([$activityId, $_SESSION["email"]]);
 	$currentRegistration = $registrationStatement -> fetch();
 	if ($currentRegistration) {
@@ -55,7 +55,7 @@ if (($activityDbPage ?? "list") === "registration") {
 				$error = "Only pending or approved registrations can be cancelled.";
 			} else {
 				try {
-					$cancelRegistration = $pdo -> prepare("DELETE FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ? AND status IN ('pending', 'approved')");
+					$cancelRegistration = $pdo -> prepare("DELETE FROM activity_table WHERE activity_id = ? AND email = ? AND status IN ('pending', 'approved')");
 					$cancelRegistration -> execute([$activityId, $_SESSION["email"]]);
 					if ($cancelRegistration -> rowCount() > 0) {
 						$_SESSION["activity_registration_success"] = "Your registration for ".$activityTitle." has been cancelled.";
@@ -86,12 +86,12 @@ if (($activityDbPage ?? "list") === "registration") {
 				$error = "Please enter a valid contact number (maximum 15 characters).";
 			} else {
 				try {
-					$check = $pdo -> prepare("SELECT id FROM activity_table WHERE record_type = 'registration' AND activity_id = ? AND email = ?");
+					$check = $pdo -> prepare("SELECT id FROM activity_table WHERE activity_id = ? AND email = ?");
 					$check -> execute([$activityId, $_SESSION["email"]]);
 					if ($check -> fetch()) {
 						$error = "You have already registered for this activity.";
 					} else {
-						$insert = $pdo -> prepare("INSERT INTO activity_table (email, first_name, last_name, date, time, contact_number, status, record_type, activity_id) VALUES (?, ?, ?, ?, ?, ?, 'pending', 'registration', ?)");
+						$insert = $pdo -> prepare("INSERT INTO activity_table (email, first_name, last_name, date, time, contact_number, status, activity_id) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)");
 						$insert -> execute([$_SESSION["email"], $firstName, $lastName, $activityDate, $activityStartTime, $contactNumber, $activityId]);
 						$_SESSION["activity_registration_success"] = "You have successfully registered for ".$activityTitle.".";
 						$_SESSION["activity_registration_notice"] = "pending";
@@ -106,7 +106,7 @@ if (($activityDbPage ?? "list") === "registration") {
 		}
 	}
 } else {
-	$activitiesStatement = $pdo -> prepare("SELECT event.id, event.title, event.activity_type AS type, event.description, event.date, event.time AS start_time, event.end_time, event.price, event.venue, event.table_name AS `table`, event.image, (SELECT registration.status FROM activity_table AS registration WHERE registration.record_type = 'registration' AND registration.activity_id = event.id AND registration.email = ? ORDER BY registration.id DESC LIMIT 1) AS registration_status FROM activity_table AS event WHERE event.record_type = 'event' AND event.status = 'approved' ORDER BY event.date, event.time");
+	$activitiesStatement = $pdo -> prepare("SELECT event.id, event.title, event.activity_type AS type, event.description, event.date, event.time AS start_time, event.end_time, event.price, event.venue, event.table_name AS `table`, event.image, (SELECT registration.status FROM activity_table AS registration WHERE registration.activity_id = event.id AND registration.email = ? ORDER BY registration.id DESC LIMIT 1) AS registration_status FROM activity_info AS event WHERE event.status = 'approved' ORDER BY event.date, event.time");
 	$activitiesStatement -> execute([$_SESSION["email"]]);
 	$activities = $activitiesStatement -> fetchAll();
 }
