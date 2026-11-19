@@ -147,10 +147,16 @@ require_once __DIR__."/community_db.php";
 					</div>
 
 					<?php if ($joinStatus === "approved"): ?>
-						<button type="button" class="community-post-composer community-post-composer-trigger" data-bs-toggle="modal" data-bs-target="#communityPostModal">
+						<button
+							type="button" class="community-post-composer community-post-composer-trigger"
+							data-bs-toggle="modal" data-bs-target="#communityPostModal"
+						>
 							<span class="community-post-avatar">
 								<?php if (!empty($postingUser["has_profile_image"])): ?>
-									<img src="profile_image.php?email=<?php echo urlencode($_SESSION["email"]); ?>" alt="Your profile photo">
+									<img
+										src="profile_image.php?email=<?php echo urlencode($_SESSION["email"]); ?>"
+										alt="Your profile photo"
+									>
 								<?php else: ?>
 									<i class="bi bi-person-circle" aria-hidden="true"></i>
 								<?php endif; ?>
@@ -158,26 +164,51 @@ require_once __DIR__."/community_db.php";
 							<span>Share something with this community</span>
 							<i class="bi bi-pencil-square" aria-hidden="true"></i>
 						</button>
-						<div class="modal fade" id="communityPostModal" tabindex="-1" aria-labelledby="communityPostModalLabel" aria-hidden="true">
+						<div
+							class="modal fade" id="communityPostModal" tabindex="-1"
+							aria-labelledby="communityPostModalLabel" aria-hidden="true"
+						>
 							<div class="modal-dialog modal-dialog-centered">
 								<div class="modal-content community-post-modal">
 									<form method="post" enctype="multipart/form-data" class="community-post-form">
 										<div class="modal-header">
-											<h2 class="modal-title fs-5" id="communityPostModalLabel">Create a Community Post</h2>
-											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											<h2 class="modal-title fs-5" id="communityPostModalLabel">Create a Community
+												Post</h2>
+											<button
+												type="button" class="btn-close" data-bs-dismiss="modal"
+												aria-label="Close"
+											></button>
 										</div>
 										<div class="modal-body">
-											<input type="hidden" name="post_token" value="<?php echo e($_SESSION["community_post_token"]); ?>">
+											<input
+												type="hidden" name="post_token"
+												value="<?php echo e($_SESSION["community_post_token"]); ?>"
+											>
 											<label for="community-post-title">Title</label>
-											<input type="text" id="community-post-title" name="title" maxlength="100" required value="<?php echo e($_POST["title"] ?? ""); ?>">
+											<input
+												type="text" id="community-post-title" name="title" maxlength="100"
+												required value="<?php echo e($_POST["title"] ?? ""); ?>"
+											>
 											<label for="community-post-description">Description</label>
-											<textarea id="community-post-description" name="description" rows="5" required><?php echo e($_POST["description"] ?? ""); ?></textarea>
+											<textarea
+												id="community-post-description" name="description" rows="5" required
+											><?php echo e($_POST["description"] ?? ""); ?></textarea>
 											<label for="community-post-image">Image <span>(optional, JPG/JPEG/PNG, max 5MB)</span></label>
-											<input type="file" id="community-post-image" name="contribution_image" accept="image/jpeg,image/png">
+											<input
+												type="file" id="community-post-image" name="contribution_image"
+												accept="image/jpeg,image/png"
+											>
 										</div>
 										<div class="modal-footer">
-											<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-											<button type="submit" name="submit_community_post" value="1" class="btn community-detail-primary-button">Submit Post</button>
+											<button
+												type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+											>Cancel
+											</button>
+											<button
+												type="submit" name="submit_community_post" value="1"
+												class="btn community-detail-primary-button"
+											>Submit Post
+											</button>
 										</div>
 									</form>
 								</div>
@@ -187,7 +218,10 @@ require_once __DIR__."/community_db.php";
 						<div class="community-post-composer community-post-composer-locked">
 							<span class="community-post-avatar">
 								<?php if (!empty($postingUser["has_profile_image"])): ?>
-									<img src="profile_image.php?email=<?php echo urlencode($_SESSION["email"]); ?>" alt="Your profile photo">
+									<img
+										src="profile_image.php?email=<?php echo urlencode($_SESSION["email"]); ?>"
+										alt="Your profile photo"
+									>
 								<?php else: ?>
 									<i class="bi bi-person-circle" aria-hidden="true"></i>
 								<?php endif; ?>
@@ -214,20 +248,28 @@ require_once __DIR__."/community_db.php";
 									<div class="community-post-user">
 										<span class="community-post-avatar">
 											<?php if (!empty($contribution["email"]) && !empty($contribution["has_profile_image"])): ?>
-												<img src="profile_image.php?email=<?php echo urlencode($contribution["email"]); ?>" alt="<?php echo e($contributor); ?> profile photo">
+												<img
+													src="profile_image.php?email=<?php echo urlencode($contribution["email"]); ?>"
+													alt="<?php echo e($contributor); ?> profile photo"
+												>
 											<?php else: ?>
 												<i class="bi bi-person-circle" aria-hidden="true"></i>
 											<?php endif; ?>
 										</span>
 										<div class="community-post-user-details">
 											<strong><?php echo e($contributor !== "" ? $contributor : "Unknown contributor"); ?></strong>
-											<?php if ($contributionDate !== ""): ?><time datetime="<?php echo e(date("c", strtotime($contributionDate))); ?>"><?php echo e(date("d M Y, g:i A", strtotime($contributionDate))); ?></time><?php endif; ?>
+											<?php if ($contributionDate !== ""): ?>
+												<timedatetime="<?php echo e(date("c",
+													strtotime($contributionDate))); ?>"><?php echo e(date("d M Y, g:i A",
+													strtotime($contributionDate))); ?></time><?php endif; ?>
 										</div>
 									</div>
 									<div class="community-post-content">
 										<h3><?php echo e($title); ?></h3>
 										<p class="community-detail-description"><?php echo e($description); ?></p>
-										<?php if ($mediaExists): ?><img class="community-post-image" src="<?php echo e($media); ?>" alt="<?php echo e($title); ?>"><?php endif; ?>
+										<?php if ($mediaExists): ?><img class="community-post-image"
+										                                src="<?php echo e($media); ?>"
+										                                alt="<?php echo e($title); ?>"><?php endif; ?>
 									</div>
 								</article>
 							<?php endforeach; ?>
@@ -245,7 +287,7 @@ require_once __DIR__."/community_db.php";
 	></script>
 	<?php if ($postError !== "" && $joinStatus === "approved"): ?>
 		<script>
-			bootstrap.Modal.getOrCreateInstance(document.getElementById("communityPostModal")).show();
+            bootstrap.Modal.getOrCreateInstance(document.getElementById("communityPostModal")).show();
 		</script>
 	<?php endif; ?>
 	</body>

@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         constrainImage();
         drawCanvas();
-    }, { passive: false });
+    }, {passive: false});
 
     function constrainImage() {
         const canvasWidth = cropCanvas.width;

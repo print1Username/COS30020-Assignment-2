@@ -1,14 +1,15 @@
 <?php
 session_start();
 require_once "db_setup.php";
-$homepageImages = $pdo->query("SELECT filename, mime_type, image_data FROM homepage_image_table ORDER BY filename")->fetchAll();
+$homepageImages = $pdo -> query("SELECT filename, mime_type, image_data FROM homepage_image_table ORDER BY filename")
+	-> fetchAll();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <link rel="icon" href="public/logo.ico" sizes="any">
-    <link rel="icon" type="image/png" href="public/logo.png">
+		<link rel="icon" href="public/logo.ico" sizes="any">
+		<link rel="icon" type="image/png" href="public/logo.png">
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -87,7 +88,8 @@ $homepageImages = $pdo->query("SELECT filename, mime_type, image_data FROM homep
 		<section class="index-image-section">
 			<div class="index-image-wrapper">
 				<img
-					src="data:<?php echo htmlspecialchars($homepageImages[0]['mime_type'], ENT_QUOTES, 'UTF-8'); ?>;base64,<?php echo base64_encode($homepageImages[0]['image_data']); ?>"
+					src="data:<?php echo htmlspecialchars($homepageImages[0]['mime_type'], ENT_QUOTES,
+						'UTF-8'); ?>;base64,<?php echo base64_encode($homepageImages[0]['image_data']); ?>"
 					alt="Board game session at Boardgame Hub"
 					class="index-random-image"
 					id="boardgame-slideshow"
@@ -320,8 +322,8 @@ $homepageImages = $pdo->query("SELECT filename, mime_type, image_data FROM homep
 		) ? "true" : "false";
 		?>;
 
-		window.homepageImages = <?php echo json_encode(array_map(function ($image) {
-			return "data:" . $image["mime_type"] . ";base64," . base64_encode($image["image_data"]);
+        window.homepageImages = <?php echo json_encode(array_map(function($image) {
+			return "data:".$image["mime_type"].";base64,".base64_encode($image["image_data"]);
 		}, $homepageImages), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 	</script>
 	<script src="components/homepage.js?v=<?= filemtime(__DIR__."/components/homepage.js") ?>"></script>

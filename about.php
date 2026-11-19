@@ -1,13 +1,13 @@
 <?php
 session_start();
 $isAdminAbout = ($_SESSION["logged_in"] ?? false) === true &&
-    ($_SESSION["type"] ?? null) === "admin" && isset($_SESSION["email"]);
+	($_SESSION["type"] ?? null) === "admin" && isset($_SESSION["email"]);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <link rel="icon" href="public/logo.ico" sizes="any">
-    <link rel="icon" type="image/png" href="public/logo.png">
+		<link rel="icon" href="public/logo.ico" sizes="any">
+		<link rel="icon" type="image/png" href="public/logo.png">
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,7 +18,10 @@ $isAdminAbout = ($_SESSION["logged_in"] ?? false) === true &&
 		>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 		<?php if ($isAdminAbout): ?>
-			<link rel="stylesheet" href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>">
+			<link
+				rel="stylesheet"
+				href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"
+			>
 		<?php else: ?>
 			<link rel="stylesheet" href="style/navbar.css">
 		<?php endif; ?>

@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS activity_table (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(50) NOT NULL,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    date DATE NULL,
-    time TIME NULL,
-    contact_number VARCHAR(15) NULL,
-    status VARCHAR(10) NOT NULL,
-    activity_id INT NOT NULL,
-    CONSTRAINT fk_activity_user FOREIGN KEY (email) REFERENCES user_table(email) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_activity_info FOREIGN KEY (activity_id) REFERENCES activity_info(id) ON UPDATE CASCADE ON DELETE CASCADE
-) ENGINE=InnoDB;
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	email VARCHAR(50) NOT NULL,
+	first_name VARCHAR(50) NOT NULL,
+	last_name VARCHAR(50) NOT NULL,
+	date DATE NULL,
+	time TIME NULL,
+	contact_number VARCHAR(15) NULL,
+	status VARCHAR(10) NOT NULL,
+	activity_id INT NOT NULL,
+	CONSTRAINT fk_activity_user FOREIGN KEY ( email ) REFERENCES user_table( email ) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT fk_activity_info FOREIGN KEY ( activity_id ) REFERENCES activity_info( id ) ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE = InnoDB;

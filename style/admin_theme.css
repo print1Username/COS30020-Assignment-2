@@ -399,11 +399,33 @@ main > h1 {
 }
 
 @media (max-width: 767.98px) {
-    .admin-hero { padding: 52px 0 44px; }
-    .admin-card { min-height: 0; padding: 24px; }
-    .admin-panel { padding: 20px; }
-    .admin-disclosure { padding: 0; }
-    .admin-disclosure-header { padding: 20px; }
-    .admin-disclosure-content { padding: 0 20px 20px; }
-    .admin-navbar .nav-link { padding-top: 0.65rem; padding-bottom: 0.65rem; }
+    .admin-hero {
+        padding: 52px 0 44px;
+    }
+
+    .admin-card {
+        min-height: 0;
+        padding: 24px;
+    }
+
+    .admin-panel {
+        padding: 20px;
+    }
+
+    .admin-disclosure {
+        padding: 0;
+    }
+
+    .admin-disclosure-header {
+        padding: 20px;
+    }
+
+    .admin-disclosure-content {
+        padding: 0 20px 20px;
+    }
+
+    .admin-navbar .nav-link {
+        padding-top: 0.65rem;
+        padding-bottom: 0.65rem;
+    }
 }

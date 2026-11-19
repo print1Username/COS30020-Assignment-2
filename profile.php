@@ -5,8 +5,8 @@ require_once __DIR__."/profile_db.php";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <link rel="icon" href="public/logo.ico" sizes="any">
-    <link rel="icon" type="image/png" href="public/logo.png">
+		<link rel="icon" href="public/logo.ico" sizes="any">
+		<link rel="icon" type="image/png" href="public/logo.png">
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,7 +25,9 @@ require_once __DIR__."/profile_db.php";
 		>
 
 		<link rel="stylesheet" href="style/navbar.css">
-		<?php if ($_SESSION["type"] === "admin"): ?><link rel="stylesheet" href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
+		<?php if ($_SESSION["type"] === "admin"): ?>
+			<link rel="stylesheet"
+			      href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
 		<link rel="stylesheet" href="style/profile.css?v=<?php echo filemtime(__DIR__."/style/profile.css"); ?>">
 	</head>
 
@@ -67,14 +69,32 @@ require_once __DIR__."/profile_db.php";
 
 					<div class="profile-picture-actions">
 						<form action="profile.php" method="POST" enctype="multipart/form-data">
-							<input type="hidden" name="upload_token" value="<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>">
-							<input type="file" id="profilePhotoInput" name="profile_image" accept="image/jpeg,image/png" hidden>
-							<button type="button" id="profilePhotoButton" class="btn profile-upload-button"><i class="bi bi-upload me-2"></i>Upload Profile</button>
+							<input
+								type="hidden" name="upload_token"
+								value="<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>"
+							>
+							<input
+								type="file" id="profilePhotoInput" name="profile_image" accept="image/jpeg,image/png"
+								hidden
+							>
+							<button type="button" id="profilePhotoButton" class="btn profile-upload-button"><i
+									class="bi bi-upload me-2"
+								></i>Upload Profile
+							</button>
 						</form>
 						<form action="profile.php" method="POST" enctype="multipart/form-data">
-							<input type="hidden" name="upload_token" value="<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>">
-							<input type="file" id="profileCameraInput" name="profile_image" accept="image/jpeg,image/png" capture="user" hidden>
-							<button type="button" id="profileCameraButton" class="btn profile-camera-button"><i class="bi bi-camera me-2"></i>Take from Camera</button>
+							<input
+								type="hidden" name="upload_token"
+								value="<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>"
+							>
+							<input
+								type="file" id="profileCameraInput" name="profile_image" accept="image/jpeg,image/png"
+								capture="user" hidden
+							>
+							<button type="button" id="profileCameraButton" class="btn profile-camera-button"><i
+									class="bi bi-camera me-2"
+								></i>Take from Camera
+							</button>
 						</form>
 					</div>
 				</section>
@@ -92,13 +112,13 @@ require_once __DIR__."/profile_db.php";
 
 			<section class="profile-information">
 				<div class="profile-actions">
-						<a
-							href="update_profile.php"
-							class="btn profile-edit-button"
+					<a
+						href="update_profile.php"
+						class="btn profile-edit-button"
 					>
 						<i class="bi bi-pencil me-2"></i>
 						Edit
-						</a>
+					</a>
 				</div>
 
 				<div class="profile-fixed-information">
@@ -151,19 +171,31 @@ require_once __DIR__."/profile_db.php";
 						<i class="bi bi-file-earmark-pdf" aria-hidden="true"></i>
 						<div class="profile-pdf-text">
 							<?php if ($resumeAvailable): ?>
-								<a href="<?php echo htmlspecialchars($resumePath, ENT_QUOTES); ?>" target="_blank" rel="noopener" class="profile-pdf-name"><?php echo htmlspecialchars($resumeName); ?></a>
+								<a
+									href="<?php echo htmlspecialchars($resumePath, ENT_QUOTES); ?>" target="_blank"
+									rel="noopener" class="profile-pdf-name"
+								><?php echo htmlspecialchars($resumeName); ?></a>
 							<?php else: ?>
 								<span class="profile-pdf-name">Upload PDF</span>
 							<?php endif; ?>
 							<small class="profile-pdf-requirements">PDF only, maximum 7MB</small>
 						</div>
 					</div>
-					<input type="hidden" name="upload_token" value="<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>">
+					<input
+						type="hidden" name="upload_token"
+						value="<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>"
+					>
 					<input type="file" id="profilePdfInput" name="resume_file" accept="application/pdf,.pdf" hidden>
 					<div class="profile-pdf-actions">
-						<button type="button" id="profilePdfButton" class="btn profile-pdf-button"><i class="bi bi-upload" aria-hidden="true"></i> Upload</button>
+						<button type="button" id="profilePdfButton" class="btn profile-pdf-button"><i
+								class="bi bi-upload" aria-hidden="true"
+							></i> Upload
+						</button>
 						<?php if ($resumeAvailable): ?>
-							<button type="submit" name="remove_pdf" value="1" class="btn profile-pdf-remove-button"><i class="bi bi-trash" aria-hidden="true"></i> Remove</button>
+							<button type="submit" name="remove_pdf" value="1" class="btn profile-pdf-remove-button"><i
+									class="bi bi-trash" aria-hidden="true"
+								></i> Remove
+							</button>
 						<?php endif; ?>
 					</div>
 				</form>
@@ -179,21 +211,24 @@ require_once __DIR__."/profile_db.php";
 		</div>
 	</main>
 	<script>
-		for (const [buttonId, inputId] of [["profilePhotoButton", "profilePhotoInput"], ["profileCameraButton", "profileCameraInput"]]) {
-			const button = document.getElementById(buttonId);
-			const input = document.getElementById(inputId);
-			button.addEventListener("click", () => input.click());
-			input.addEventListener("change", () => {
-				if (input.files.length) input.form.requestSubmit();
-			});
-		}
-		const uploadButton = document.getElementById("profilePdfButton");
-		const pdfInput = document.getElementById("profilePdfInput");
-		uploadButton.addEventListener("click", () => pdfInput.click());
-		pdfInput.addEventListener("change", () => {
-			if (pdfInput.files.length) pdfInput.form.requestSubmit();
-		});
+        for (const [buttonId, inputId] of [["profilePhotoButton", "profilePhotoInput"], ["profileCameraButton", "profileCameraInput"]]) {
+            const button = document.getElementById(buttonId);
+            const input = document.getElementById(inputId);
+            button.addEventListener("click", () => input.click());
+            input.addEventListener("change", () => {
+                if (input.files.length) input.form.requestSubmit();
+            });
+        }
+        const uploadButton = document.getElementById("profilePdfButton");
+        const pdfInput = document.getElementById("profilePdfInput");
+        uploadButton.addEventListener("click", () => pdfInput.click());
+        pdfInput.addEventListener("change", () => {
+            if (pdfInput.files.length) pdfInput.form.requestSubmit();
+        });
 	</script>
-	<?php if ($_SESSION["type"] === "admin"): ?><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script><?php endif; ?>
+	<?php if ($_SESSION["type"] === "admin"): ?>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+		></script><?php endif; ?>
 	</body>
 </html>

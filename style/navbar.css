@@ -51,9 +51,8 @@
     padding-left: 1rem;
     padding-right: 1rem;
 
-    transition:
-        color 0.2s ease,
-        background-color 0.2s ease;
+    transition: color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 
@@ -131,10 +130,9 @@
     border: var(--navbar-purple) !important;
     color: #ffffff !important;
     font-weight: 500;
-    transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease;
+    transition: background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 
@@ -159,9 +157,8 @@
 .custom-navbar .btn-light {
     font-weight: 500;
 
-    transition:
-        transform 0.2s ease,
-        background-color 0.2s ease;
+    transition: transform 0.2s ease,
+    background-color 0.2s ease;
 }
 
 

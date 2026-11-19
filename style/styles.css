@@ -153,10 +153,9 @@
     border: 1px solid var(--index-border);
     border-radius: 10px;
     background-color: var(--index-white);
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
+    transition: transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .index-feature-card:hover {
@@ -395,9 +394,8 @@
     text-decoration-thickness: 2px;
     text-underline-offset: 4px;
 
-    transition:
-        opacity 0.2s ease,
-        text-decoration-thickness 0.2s ease;
+    transition: opacity 0.2s ease,
+    text-decoration-thickness 0.2s ease;
 }
 
 .index-login-link:hover {

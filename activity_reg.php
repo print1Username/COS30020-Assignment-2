@@ -264,7 +264,8 @@ require_once __DIR__."/activities_db.php";
 									value="<?php echo htmlspecialchars($contactNumber); ?>"
 									placeholder="Enter your contact number"
 									required
-									<?php echo in_array($registrationStatus, ["pending", "approved"], true) ? "readonly aria-readonly=\"true\"" : ""; ?>
+									<?php echo in_array($registrationStatus, ["pending", "approved"],
+										true) ? "readonly aria-readonly=\"true\"" : ""; ?>
 								>
 							</div>
 						</div>
@@ -282,7 +283,10 @@ require_once __DIR__."/activities_db.php";
 						<?php endif; ?>
 
 						<?php if (in_array($registrationStatus, ["pending", "approved"], true)): ?>
-							<div class="alert <?php echo $registrationStatus === "pending" ? "alert-warning" : "alert-success"; ?> activity-registration-status mb-0" role="status">
+							<div
+								class="alert <?php echo $registrationStatus === "pending" ? "alert-warning" : "alert-success"; ?> activity-registration-status mb-0"
+								role="status"
+							>
 								<span>
 									<i class="bi <?php echo $registrationStatus === "pending" ? "bi-hourglass-split" : "bi-check-circle-fill"; ?> me-2"></i>
 									<?php echo $registrationStatus === "pending" ? "Your registration is pending approval." : "You have already joined this activity."; ?>

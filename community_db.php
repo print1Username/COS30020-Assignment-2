@@ -71,7 +71,8 @@ if (($communityDbPage ?? "list") === "detail") {
 							throw new RuntimeException("Description is required.");
 						}
 						if (isset($_FILES["contribution_image"]) && $_FILES["contribution_image"]["error"] !== UPLOAD_ERR_NO_FILE) {
-							$imagePath = saveValidatedUpload($_FILES["contribution_image"], "community_images", ["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"], 5 * 1024 * 1024);
+							$imagePath = saveValidatedUpload($_FILES["contribution_image"], "community_images",
+								["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"], 5 * 1024 * 1024);
 						}
 						$savePost = $pdo -> prepare("INSERT INTO community_table (community_id, email, first_name, last_name, contribution_image, related_activity, status, title, description, created_at) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, NOW())");
 						$savePost -> execute([$communityId, $_SESSION["email"], $postingUser["first_name"], $postingUser["last_name"], $imagePath, $row["title"], $title, $description]);

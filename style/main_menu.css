@@ -102,10 +102,9 @@ body {
     border: 1px solid var(--main-menu-border);
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(33, 37, 41, 0.04);
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
+    transition: transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .main-menu-card:hover {
@@ -161,10 +160,9 @@ body {
     border-radius: 6px;
     font-size: 0.9rem;
     font-weight: 500;
-    transition:
-        color 0.2s ease,
-        background-color 0.2s ease,
-        border-color 0.2s ease;
+    transition: color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .main-menu-card-button:hover,

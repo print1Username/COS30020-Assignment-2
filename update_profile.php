@@ -5,8 +5,8 @@ require_once __DIR__."/update_profile_db.php";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    <link rel="icon" href="public/logo.ico" sizes="any">
-    <link rel="icon" type="image/png" href="public/logo.png">
+		<link rel="icon" href="public/logo.ico" sizes="any">
+		<link rel="icon" type="image/png" href="public/logo.png">
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,7 +25,9 @@ require_once __DIR__."/update_profile_db.php";
 		>
 
 		<link rel="stylesheet" href="style/navbar.css">
-		<?php if ($_SESSION["type"] === "admin"): ?><link rel="stylesheet" href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
+		<?php if ($_SESSION["type"] === "admin"): ?>
+			<link rel="stylesheet"
+			      href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
 		<link rel="stylesheet" href="style/profile.css?v=<?php echo filemtime(__DIR__."/style/profile.css"); ?>">
 	</head>
 
@@ -132,8 +134,10 @@ require_once __DIR__."/update_profile_db.php";
 						<div class="profile-fixed-field">
 							<label>Student Email</label>
 							<div class="profile-fixed-value">
-								<input type="email" name="email" class="form-control"
-									value="<?php echo htmlspecialchars($userData["Email"]); ?>" required>
+								<input
+									type="email" name="email" class="form-control"
+									value="<?php echo htmlspecialchars($userData["Email"]); ?>" required
+								>
 							</div>
 						</div>
 					</div>
@@ -212,7 +216,10 @@ require_once __DIR__."/update_profile_db.php";
 
 					<div class="profile-edit-field">
 						<label for="resume_file">Supporting document (PDF, max 7MB)</label>
-						<input type="file" id="resume_file" name="resume_file" class="form-control" accept="application/pdf">
+						<input
+							type="file" id="resume_file" name="resume_file" class="form-control"
+							accept="application/pdf"
+						>
 					</div>
 				</section>
 			</div>
@@ -256,6 +263,9 @@ require_once __DIR__."/update_profile_db.php";
 	</div>
 
 	<script src="components/profile_crop.js"></script>
-	<?php if ($_SESSION["type"] === "admin"): ?><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script><?php endif; ?>
+	<?php if ($_SESSION["type"] === "admin"): ?>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+		></script><?php endif; ?>
 	</body>
 </html>

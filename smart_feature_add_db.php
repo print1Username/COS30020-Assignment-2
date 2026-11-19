@@ -37,19 +37,19 @@ if ($isUser && $_SERVER["REQUEST_METHOD"] === "POST") {
 			}
 			require_once __DIR__."/db_setup.php";
 			require_once __DIR__."/db_connect.php";
-			$insert = $pdo->prepare("INSERT INTO smart_feature_table (item_name, item_category, item_image, description_file, status) VALUES (?, ?, ?, ?, 'pending')");
-			$insert->execute([$itemName, $itemCategory, $imagePath, $pdfPath]);
+			$insert = $pdo -> prepare("INSERT INTO smart_feature_table (item_name, item_category, item_image, description_file, status) VALUES (?, ?, ?, ?, 'pending')");
+			$insert -> execute([$itemName, $itemCategory, $imagePath, $pdfPath]);
 			$success = "Your contribution has been submitted and is pending review.";
 			$itemName = "";
 			$itemCategory = "";
-		} catch (RuntimeException | PDOException $e) {
+		} catch (RuntimeException|PDOException $e) {
 			foreach ($newFiles as $path) {
 				unlink(__DIR__."/".$path);
 			}
-			error_log($e->getMessage());
+			error_log($e -> getMessage());
 			$error = $e instanceof PDOException
 				? "Your contribution could not be saved. Please try again."
-				: $e->getMessage();
+				: $e -> getMessage();
 		}
 	}
 }

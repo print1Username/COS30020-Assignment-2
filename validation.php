@@ -8,7 +8,7 @@ function isValidEmail(string $email, int $maxLength = 50): bool
 
 function isValidName(string $name, int $maxLength = 50): bool
 {
-	return preg_match('/^[A-Za-z ]{1,'. $maxLength .'}$/', $name) === 1;
+	return preg_match('/^[A-Za-z ]{1,'.$maxLength.'}$/', $name) === 1;
 }
 
 function isValidDate(string $date): bool
@@ -17,7 +17,7 @@ function isValidDate(string $date): bool
 	$errors = DateTime::getLastErrors();
 	return $parsed !== false &&
 		($errors === false || ($errors["warning_count"] === 0 && $errors["error_count"] === 0)) &&
-		$parsed->format("Y-m-d") === $date;
+		$parsed -> format("Y-m-d") === $date;
 }
 
 function isValidTime(string $time): bool

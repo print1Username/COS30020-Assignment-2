@@ -61,7 +61,9 @@ document.querySelectorAll('[data-admin-activity-picker]').forEach((picker) => {
         description.textContent = activity.activityDescription || '';
         details.append(title, summary, description);
         details.hidden = false;
-        results.forEach((result) => { result.hidden = true; });
+        results.forEach((result) => {
+            result.hidden = true;
+        });
         noResults.hidden = true;
         setExpanded(false);
     }
