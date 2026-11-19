@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__."/update_profile_db.php";
+require_once __DIR__."/file_upload.php";
 ?>
 
 <!DOCTYPE html>
@@ -29,6 +30,9 @@ require_once __DIR__."/update_profile_db.php";
 			<link rel="stylesheet"
 				  href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
 		<link rel="stylesheet" href="style/profile.css?v=<?php echo filemtime(__DIR__."/style/profile.css"); ?>">
+		<link
+			rel="stylesheet" href="style/file_upload.css?v=<?php echo filemtime(__DIR__."/style/file_upload.css"); ?>"
+		>
 	</head>
 
 	<body<?php if ($_SESSION["type"] === "admin") echo ' class="admin-profile"'; ?>>
@@ -215,11 +219,23 @@ require_once __DIR__."/update_profile_db.php";
 					</div>
 
 					<div class="profile-edit-field">
-						<label for="resume_file">Supporting document (PDF, max 7MB)</label>
-						<input
-							type="file" id="resume_file" name="resume_file" class="form-control"
-							accept="application/pdf"
-						>
+						<?php
+						$updateResumePath = $user["resume_file"] ?? "";
+						$updateResumeAvailable = is_string($updateResumePath) &&
+							preg_match('~^resume/[a-f0-9]{32}\.pdf$~', $updateResumePath) &&
+							is_file(__DIR__."/".$updateResumePath);
+						renderFileUpload([
+							"id" => "resume_file",
+							"name" => "resume_file",
+							"label" => "Supporting Document",
+							"accept" => "application/pdf,.pdf",
+							"kind" => "file",
+							"types" => "PDF files only",
+							"max_size" => "maximum 7MB",
+							"current_url" => $updateResumeAvailable ? $updateResumePath : "",
+							"current_name" => $updateResumeAvailable ? ($user["resume_filename"] ?: basename($updateResumePath)) : ""
+						]);
+						?>
 					</div>
 				</section>
 			</div>
@@ -263,6 +279,7 @@ require_once __DIR__."/update_profile_db.php";
 	</div>
 
 	<script src="components/profile_crop.js"></script>
+	<script src="components/file_upload.js?v=<?php echo filemtime(__DIR__."/components/file_upload.js"); ?>"></script>
 	<?php if ($_SESSION["type"] === "admin"): ?>
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

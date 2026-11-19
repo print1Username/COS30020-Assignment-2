@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__."/profile_db.php";
+require_once __DIR__."/file_upload.php";
 ?>
 
 <!DOCTYPE html>
@@ -29,6 +30,9 @@ require_once __DIR__."/profile_db.php";
 			<link rel="stylesheet"
 				  href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
 		<link rel="stylesheet" href="style/profile.css?v=<?php echo filemtime(__DIR__."/style/profile.css"); ?>">
+		<link
+			rel="stylesheet" href="style/file_upload.css?v=<?php echo filemtime(__DIR__."/style/file_upload.css"); ?>"
+		>
 	</head>
 
 	<body<?php if ($_SESSION["type"] === "admin") echo ' class="admin-profile"'; ?>>
@@ -166,38 +170,25 @@ require_once __DIR__."/profile_db.php";
 				</div>
 
 				<h2 class="profile-pdf-heading">Supporting Document</h2>
-				<form class="profile-pdf-box" action="profile.php" method="POST" enctype="multipart/form-data">
-					<div class="profile-pdf-info">
-						<i class="bi bi-file-earmark-pdf" aria-hidden="true"></i>
-						<div class="profile-pdf-text">
-							<?php if ($resumeAvailable): ?>
-								<a
-									href="<?php echo htmlspecialchars($resumePath, ENT_QUOTES); ?>" target="_blank"
-									rel="noopener" class="profile-pdf-name"
-								><?php echo htmlspecialchars($resumeName); ?></a>
-							<?php else: ?>
-								<span class="profile-pdf-name">Upload PDF</span>
-							<?php endif; ?>
-							<small class="profile-pdf-requirements">PDF only, maximum 7MB</small>
-						</div>
-					</div>
+				<form action="profile.php" method="POST" enctype="multipart/form-data">
 					<input
 						type="hidden" name="upload_token"
 						value="<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>"
 					>
-					<input type="file" id="profilePdfInput" name="resume_file" accept="application/pdf,.pdf" hidden>
-					<div class="profile-pdf-actions">
-						<button type="button" id="profilePdfButton" class="btn profile-pdf-button"><i
-								class="bi bi-upload" aria-hidden="true"
-							></i> Upload
-						</button>
-						<?php if ($resumeAvailable): ?>
-							<button type="submit" name="remove_pdf" value="1" class="btn profile-pdf-remove-button"><i
-									class="bi bi-trash" aria-hidden="true"
-								></i> Remove
-							</button>
-						<?php endif; ?>
-					</div>
+					<?php renderFileUpload([
+						"id" => "profilePdfInput",
+						"name" => "resume_file",
+						"label" => "Supporting Document",
+						"accept" => "application/pdf,.pdf",
+						"kind" => "file",
+						"types" => "PDF files only",
+						"max_size" => "maximum 7MB",
+						"current_url" => $resumeAvailable ? $resumePath : "",
+						"current_name" => $resumeAvailable ? $resumeName : "",
+						"auto_submit" => true,
+						"allow_remove" => true,
+						"remove_name" => "remove_pdf"
+					]); ?>
 				</form>
 
 				<section class="academic-integrity-section">
@@ -219,13 +210,8 @@ require_once __DIR__."/profile_db.php";
                 if (input.files.length) input.form.requestSubmit();
             });
         }
-        const uploadButton = document.getElementById("profilePdfButton");
-        const pdfInput = document.getElementById("profilePdfInput");
-        uploadButton.addEventListener("click", () => pdfInput.click());
-        pdfInput.addEventListener("change", () => {
-            if (pdfInput.files.length) pdfInput.form.requestSubmit();
-        });
 	</script>
+	<script src="components/file_upload.js?v=<?php echo filemtime(__DIR__."/components/file_upload.js"); ?>"></script>
 	<?php if ($_SESSION["type"] === "admin"): ?>
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

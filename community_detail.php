@@ -1,6 +1,7 @@
 <?php
 $communityDbPage = "detail";
 require_once __DIR__."/community_db.php";
+require_once __DIR__."/file_upload.php";
 ?>
 
 <!DOCTYPE html>
@@ -22,6 +23,9 @@ require_once __DIR__."/community_db.php";
 		<link
 			rel="stylesheet"
 			href="style/community_detail.css?v=<?php echo filemtime(__DIR__."/style/community_detail.css"); ?>"
+		>
+		<link
+			rel="stylesheet" href="style/file_upload.css?v=<?php echo filemtime(__DIR__."/style/file_upload.css"); ?>"
 		>
 	</head>
 	<body>
@@ -193,11 +197,15 @@ require_once __DIR__."/community_db.php";
 											<textarea
 												id="community-post-description" name="description" rows="5" required
 											><?php echo e($_POST["description"] ?? ""); ?></textarea>
-											<label for="community-post-image">Image <span>(optional, JPG/JPEG/PNG, max 5MB)</span></label>
-											<input
-												type="file" id="community-post-image" name="contribution_image"
-												accept="image/jpeg,image/png"
-											>
+											<?php renderFileUpload([
+												"id" => "community-post-image",
+												"name" => "contribution_image",
+												"label" => "Post Image",
+												"accept" => "image/jpeg,image/png",
+												"kind" => "image",
+												"types" => "JPG, JPEG and PNG images only",
+												"max_size" => "maximum 5MB"
+											]); ?>
 										</div>
 										<div class="modal-footer">
 											<button
@@ -259,7 +267,7 @@ require_once __DIR__."/community_db.php";
 										<div class="community-post-user-details">
 											<strong><?php echo e($contributor !== "" ? $contributor : "Unknown contributor"); ?></strong>
 											<?php if ($contributionDate !== ""): ?>
-												<timedatetime="<?php echo e(date("c",
+												<time datetime="<?php echo e(date("c",
 													strtotime($contributionDate))); ?>"><?php echo e(date("d M Y, g:i A",
 													strtotime($contributionDate))); ?></time><?php endif; ?>
 										</div>
@@ -285,6 +293,7 @@ require_once __DIR__."/community_db.php";
 		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		crossorigin="anonymous"
 	></script>
+	<script src="components/file_upload.js?v=<?php echo filemtime(__DIR__."/components/file_upload.js"); ?>"></script>
 	<?php if ($postError !== "" && $joinStatus === "approved"): ?>
 		<script>
             bootstrap.Modal.getOrCreateInstance(document.getElementById("communityPostModal")).show();

@@ -1,5 +1,6 @@
 <?php $reviewKind = "community";
-require_once __DIR__."/manage_review_db.php"; ?>
+require_once __DIR__."/manage_review_db.php";
+require_once __DIR__."/file_upload.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -14,6 +15,9 @@ require_once __DIR__."/manage_review_db.php"; ?>
 			rel="stylesheet" href="style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"
 		>
 		<link rel="stylesheet" href="style/admin_pagination.css?v=2">
+		<link
+			rel="stylesheet" href="style/file_upload.css?v=<?php echo filemtime(__DIR__."/style/file_upload.css"); ?>"
+		>
 	</head>
 	<body><?php include __DIR__."/admin_nav.php"; ?>
 	<main class="container py-5"><h1>Manage Community Posts</h1>
@@ -75,8 +79,8 @@ require_once __DIR__."/manage_review_db.php"; ?>
 								>
 									<?php foreach ($communities as $community): ?>
 										<button type="button" class="admin-activity-result admin-community-result"
-										        data-community-id="<?= (int)$community['id'] ?>"
-										        data-community-title="<?= adminEscape($community['title']) ?>"><?= adminEscape($community['title']) ?></button><?php
+												data-community-id="<?= (int)$community['id'] ?>"
+												data-community-title="<?= adminEscape($community['title']) ?>"><?= adminEscape($community['title']) ?></button><?php
 									endforeach; ?>
 									<p class="admin-activity-no-results text-muted" hidden>No matching communities.</p>
 								</div>
@@ -89,14 +93,22 @@ require_once __DIR__."/manage_review_db.php"; ?>
 						<div><label class="form-label" for="description">Description</label><textarea
 								class="form-control" id="description" name="description" rows="5" required
 							><?= adminEscape($edit['description'] ?? ($_POST['description'] ?? '')) ?></textarea></div>
-						<div><label class="form-label" for="contribution_image">Image <span class="text-muted">(optional, JPG/JPEG/PNG, max 5MB)</span></label><input
-								class="form-control" id="contribution_image" name="contribution_image" type="file"
-								accept="image/jpeg,image/png"
-							><?php if ($edit && $edit['contribution_image']): ?>
-								<div class="admin-current-post-image"><img
-									src="<?= adminEscape($edit['contribution_image']) ?>" alt="Current post image"
-								><small class="text-muted">Uploading a new image will replace the current image.</small>
-								</div><?php endif; ?></div>
+						<div><?php
+							$currentAdminPostImage = $edit && !empty($edit["contribution_image"]) &&
+							is_file(__DIR__."/".$edit["contribution_image"])
+								? $edit["contribution_image"] : "";
+							renderFileUpload([
+								"id" => "contribution_image",
+								"name" => "contribution_image",
+								"label" => "Post Image",
+								"accept" => "image/jpeg,image/png",
+								"kind" => "image",
+								"types" => "JPG, JPEG and PNG images only",
+								"max_size" => "maximum 5MB",
+								"current_url" => $currentAdminPostImage,
+								"current_name" => $currentAdminPostImage !== "" ? basename($currentAdminPostImage) : ""
+							]);
+							?></div>
 						<?php if ($edit): ?>
 							<div class="admin-post-status"><label class="form-label" for="status">Status</label><select
 								class="form-select" id="status" name="status"
@@ -215,6 +227,7 @@ require_once __DIR__."/manage_review_db.php"; ?>
 	<script
 		src="components/admin_community_picker.js?v=<?php echo filemtime(__DIR__.'/components/admin_community_picker.js'); ?>"
 	></script>
+	<script src="components/file_upload.js?v=<?php echo filemtime(__DIR__."/components/file_upload.js"); ?>"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 	</body>
 </html>

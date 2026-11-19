@@ -453,20 +453,6 @@ main > h1 {
     margin-top: 20px;
 }
 
-.admin-current-post-image {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.admin-current-post-image img {
-    width: 84px;
-    height: 60px;
-    border-radius: 6px;
-    object-fit: cover;
-}
-
 @media (max-width: 767.98px) {
     .admin-hero {
         padding: 52px 0 44px;
