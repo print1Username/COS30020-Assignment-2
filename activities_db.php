@@ -86,13 +86,23 @@ if (($activityDbPage ?? "list") === "registration") {
 				$error = "Please enter a valid contact number (maximum 15 characters).";
 			} else {
 				try {
-					$check = $pdo -> prepare("SELECT id FROM activity_table WHERE activity_id = ? AND email = ?");
-					$check -> execute([$activityId, $_SESSION["email"]]);
-					if ($check -> fetch()) {
-						$error = "You have already registered for this activity.";
+					if ($registrationStatus === "rejected") {
+						$retryRegistration = $pdo -> prepare("UPDATE activity_table SET contact_number = ?, status = 'pending' WHERE activity_id = ? AND email = ? AND status = 'rejected'");
+						$retryRegistration -> execute([$contactNumber, $activityId, $_SESSION["email"]]);
+						if ($retryRegistration -> rowCount() === 0) {
+							$error = "Your registration status has changed. Please refresh and try again.";
+						}
 					} else {
-						$insert = $pdo -> prepare("INSERT INTO activity_table (email, first_name, last_name, date, time, contact_number, status, activity_id) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)");
-						$insert -> execute([$_SESSION["email"], $firstName, $lastName, $activityDate, $activityStartTime, $contactNumber, $activityId]);
+						$check = $pdo -> prepare("SELECT id FROM activity_table WHERE activity_id = ? AND email = ?");
+						$check -> execute([$activityId, $_SESSION["email"]]);
+						if ($check -> fetch()) {
+							$error = "You have already registered for this activity.";
+						} else {
+							$insert = $pdo -> prepare("INSERT INTO activity_table (email, first_name, last_name, date, time, contact_number, status, activity_id) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)");
+							$insert -> execute([$_SESSION["email"], $firstName, $lastName, $activityDate, $activityStartTime, $contactNumber, $activityId]);
+						}
+					}
+					if ($error === "") {
 						$_SESSION["activity_registration_success"] = "You have successfully registered for ".$activityTitle.".";
 						$_SESSION["activity_registration_notice"] = "pending";
 						header("Location: activities.php");
