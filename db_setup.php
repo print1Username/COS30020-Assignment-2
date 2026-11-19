@@ -55,7 +55,10 @@ try {
 	}
 
 	// Add Part 3 columns to databases created by the earlier version.
-	$requiredColumns = ["user_table" => ["resume_file" => "VARCHAR(100) NULL", "resume_filename" => "VARCHAR(255) NULL", "profile_image" => "VARCHAR(255) NULL", "profile_image_data" => "LONGBLOB NULL", "profile_image_mime" => "VARCHAR(30) NULL"]];
+	$requiredColumns = [
+		"user_table" => ["resume_file" => "VARCHAR(100) NULL", "resume_filename" => "VARCHAR(255) NULL", "profile_image" => "VARCHAR(255) NULL", "profile_image_data" => "LONGBLOB NULL", "profile_image_mime" => "VARCHAR(30) NULL"],
+		"community_table" => ["email" => "VARCHAR(50) NULL"]
+	];
 	$columnCheck = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?");
 	foreach ($requiredColumns as $table => $columns) {
 		foreach ($columns as $column => $definition) {
@@ -124,6 +127,11 @@ try {
 			throw $e;
 		}
 		$pdo -> exec("DROP TABLE community_table_legacy");
+	}
+	$communityPostUserForeignKey = $pdo -> prepare("SELECT COUNT(*) FROM information_schema.referential_constraints WHERE constraint_schema = ? AND table_name = 'community_table' AND constraint_name = 'fk_community_post_user'");
+	$communityPostUserForeignKey -> execute([$dbName]);
+	if (!$communityPostUserForeignKey -> fetchColumn()) {
+		$pdo -> exec("ALTER TABLE community_table ADD CONSTRAINT fk_community_post_user FOREIGN KEY (email) REFERENCES user_table(email) ON UPDATE CASCADE ON DELETE SET NULL");
 	}
 
 	$communities = json_decode(file_get_contents(__DIR__."/data/community.json"), true);

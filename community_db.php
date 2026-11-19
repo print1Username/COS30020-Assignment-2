@@ -11,8 +11,11 @@ if (($communityDbPage ?? "list") === "detail") {
 	$joinError = "";
 	$quitNotice = $_SESSION["community_quit_notice"] ?? "";
 	$cancelNotice = $_SESSION["community_cancel_notice"] ?? "";
+	$postNotice = $_SESSION["community_post_notice"] ?? "";
+	$postError = "";
 	unset($_SESSION["community_quit_notice"]);
 	unset($_SESSION["community_cancel_notice"]);
+	unset($_SESSION["community_post_notice"]);
 
 	if ($communityId !== false && $communityId !== null) {
 		require_once __DIR__."/db_setup.php";
@@ -25,6 +28,10 @@ if (($communityDbPage ?? "list") === "detail") {
 			$joinStatement = $pdo -> prepare("SELECT status FROM community_member WHERE community_id = ? AND email = ? LIMIT 1");
 			$joinStatement -> execute([$communityId, $_SESSION["email"]]);
 			$joinStatus = $joinStatement -> fetchColumn() ?: null;
+			$_SESSION["community_post_token"] ??= bin2hex(random_bytes(32));
+			$postUserStatement = $pdo -> prepare("SELECT first_name, last_name, profile_image_data IS NOT NULL AND OCTET_LENGTH(profile_image_data) > 0 AS has_profile_image FROM user_table WHERE email = ?");
+			$postUserStatement -> execute([$_SESSION["email"]]);
+			$postingUser = $postUserStatement -> fetch();
 			if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["join_community"])) {
 				if (!hash_equals($_SESSION["community_join_token"], (string)($_POST["join_token"] ?? ""))) {
 					$joinError = "Invalid join request. Please try again.";
@@ -42,6 +49,40 @@ if (($communityDbPage ?? "list") === "detail") {
 						$joinStatus = "pending";
 					} catch (RuntimeException|PDOException $exception) {
 						$joinError = $exception instanceof PDOException ? "The join request could not be saved. Please try again." : $exception -> getMessage();
+					}
+				}
+			}
+			if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["submit_community_post"])) {
+				if (!hash_equals($_SESSION["community_post_token"], (string)($_POST["post_token"] ?? ""))) {
+					$postError = "Invalid post request. Please try again.";
+				} elseif ($joinStatus !== "approved") {
+					$postError = "You must be an approved member before posting.";
+				} elseif (!$postingUser) {
+					$postError = "Your account details could not be found.";
+				} else {
+					$title = trim($_POST["title"] ?? "");
+					$description = trim($_POST["description"] ?? "");
+					$imagePath = null;
+					try {
+						if ($title === "" || mb_strlen($title) > 100) {
+							throw new RuntimeException("Title is required and must not exceed 100 characters.");
+						}
+						if ($description === "") {
+							throw new RuntimeException("Description is required.");
+						}
+						if (isset($_FILES["contribution_image"]) && $_FILES["contribution_image"]["error"] !== UPLOAD_ERR_NO_FILE) {
+							$imagePath = saveValidatedUpload($_FILES["contribution_image"], "community_images", ["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"], 5 * 1024 * 1024);
+						}
+						$savePost = $pdo -> prepare("INSERT INTO community_table (community_id, email, first_name, last_name, contribution_image, related_activity, status, title, description, created_at) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, CURDATE())");
+						$savePost -> execute([$communityId, $_SESSION["email"], $postingUser["first_name"], $postingUser["last_name"], $imagePath, $row["title"], $title, $description]);
+						$_SESSION["community_post_notice"] = "Your post has been submitted and is waiting for admin approval.";
+						header("Location: community_detail.php?id=".urlencode((string)$communityId));
+						exit;
+					} catch (RuntimeException|PDOException $exception) {
+						if ($imagePath !== null && is_file(__DIR__."/".$imagePath)) {
+							unlink(__DIR__."/".$imagePath);
+						}
+						$postError = $exception instanceof PDOException ? "Your post could not be saved. Please try again." : $exception -> getMessage();
 					}
 				}
 			}
@@ -97,12 +138,19 @@ if (($communityDbPage ?? "list") === "detail") {
 					}
 				}
 			}
+			$contributionStatement = $pdo -> prepare("SELECT post.title, post.description, post.contribution_image AS media, post.created_at, post.first_name, post.last_name, post.email, user.profile_image_data IS NOT NULL AND OCTET_LENGTH(user.profile_image_data) > 0 AS has_profile_image
+				FROM community_table AS post
+				LEFT JOIN user_table AS user ON user.email = post.email
+				WHERE post.community_id = ? AND post.status = 'approved'
+				ORDER BY post.created_at DESC, post.id DESC");
+			$contributionStatement -> execute([$communityId]);
+			$contributions = $contributionStatement -> fetchAll();
 			$community = [
 				"title" => $row["title"],
 				"description" => $row["description"] ?? "",
 				"member_count" => $row["member_count"] ?? 0,
 				"created_at" => $row["created_at"] ?? "",
-				"contributions" => []
+				"contributions" => $contributions
 			];
 		}
 	}

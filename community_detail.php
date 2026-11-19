@@ -58,6 +58,16 @@ require_once __DIR__."/community_db.php";
 					<div
 						class="alert alert-danger" role="alert"
 					><?php echo e($joinError); ?></div><?php endif; ?>
+				<?php if ($postNotice !== ""): ?>
+					<div class="alert alert-success alert-dismissible fade show" role="status">
+						<i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+						<?php echo e($postNotice); ?>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				<?php endif; ?>
+				<?php if ($postError !== ""): ?>
+					<div class="alert alert-danger" role="alert"><?php echo e($postError); ?></div>
+				<?php endif; ?>
 				<?php if ($joinStatus === "pending"): ?>
 					<div class="alert alert-dismissible fade show community-detail-pending-alert" role="status">
 						<i class="bi bi-hourglass-split" aria-hidden="true"></i>
@@ -136,6 +146,43 @@ require_once __DIR__."/community_db.php";
 						><?php echo count($contributions); ?> item<?php echo count($contributions) === 1 ? "" : "s"; ?></span>
 					</div>
 
+					<?php if ($joinStatus === "approved"): ?>
+						<details class="community-post-composer" <?php echo $postError !== "" ? "open" : ""; ?>>
+							<summary class="community-post-composer-summary">
+								<span class="community-post-avatar">
+									<?php if (!empty($postingUser["has_profile_image"])): ?>
+										<img src="profile_image.php?email=<?php echo urlencode($_SESSION["email"]); ?>" alt="Your profile photo">
+									<?php else: ?>
+										<i class="bi bi-person-circle" aria-hidden="true"></i>
+									<?php endif; ?>
+								</span>
+								<span>Share something with this community</span>
+								<i class="bi bi-chevron-down community-post-composer-chevron" aria-hidden="true"></i>
+							</summary>
+							<form method="post" enctype="multipart/form-data" class="community-post-form">
+								<input type="hidden" name="post_token" value="<?php echo e($_SESSION["community_post_token"]); ?>">
+								<label for="community-post-title">Title</label>
+								<input type="text" id="community-post-title" name="title" maxlength="100" required value="<?php echo e($_POST["title"] ?? ""); ?>">
+								<label for="community-post-description">Description</label>
+								<textarea id="community-post-description" name="description" rows="5" required><?php echo e($_POST["description"] ?? ""); ?></textarea>
+								<label for="community-post-image">Image <span>(optional, JPG/JPEG/PNG, max 5MB)</span></label>
+								<input type="file" id="community-post-image" name="contribution_image" accept="image/jpeg,image/png">
+								<button type="submit" name="submit_community_post" value="1" class="btn community-detail-primary-button">Submit Post</button>
+							</form>
+						</details>
+					<?php else: ?>
+						<div class="community-post-composer community-post-composer-locked">
+							<span class="community-post-avatar">
+								<?php if (!empty($postingUser["has_profile_image"])): ?>
+									<img src="profile_image.php?email=<?php echo urlencode($_SESSION["email"]); ?>" alt="Your profile photo">
+								<?php else: ?>
+									<i class="bi bi-person-circle" aria-hidden="true"></i>
+								<?php endif; ?>
+							</span>
+							<p><?php echo $joinStatus === "pending" ? "Your membership request is waiting for admin approval." : "You must join this community and receive admin approval before posting."; ?></p>
+						</div>
+					<?php endif; ?>
+
 					<?php if (empty($contributions)): ?>
 						<div class="community-detail-no-contributions"><i class="bi bi-image"></i>
 							<p>No contributions have been shared yet.</p></div>
@@ -143,55 +190,29 @@ require_once __DIR__."/community_db.php";
 						<div class="community-detail-contribution-grid">
 							<?php foreach ($contributions as $contribution): ?>
 								<?php
-								$mediaType = $contribution["media_type"] ?? "image";
 								$media = $contribution["media"] ?? "";
-								$mediaExists = $media !== "" && file_exists($media);
+								$mediaExists = $media !== "" && is_file(__DIR__."/".$media);
 								$title = $contribution["title"] ?? "Untitled contribution";
 								$description = $contribution["description"] ?? "No description available.";
-								$contributor = $contribution["contributor"] ?? "Unknown contributor";
-								$activity = $contribution["activity"] ?? "Not specified";
+								$contributor = trim(($contribution["first_name"] ?? "")." ".($contribution["last_name"] ?? ""));
 								$contributionDate = $contribution["created_at"] ?? "";
 								?>
 								<article class="community-detail-card">
-									<div class="community-detail-media">
-										<?php if ($mediaType === "video" && $mediaExists): ?>
-											<video controls>
-												<source src="<?php echo e($media); ?>">
-												Your browser does not support video playback.
-											</video>
-										<?php elseif ($mediaExists): ?>
-											<img
-												src="<?php echo e($media); ?>"
-												alt="<?php echo e($title); ?>"
-											>
-										<?php else: ?>
-											<div
-												class="community-detail-media-placeholder"
-												aria-label="Contribution media unavailable"
-											><i
-													class="bi bi-image"
-												></i><span>Media unavailable</span></div>
-										<?php endif; ?>
+									<div class="community-post-user">
+										<span class="community-post-avatar">
+											<?php if (!empty($contribution["email"]) && !empty($contribution["has_profile_image"])): ?>
+												<img src="profile_image.php?email=<?php echo urlencode($contribution["email"]); ?>" alt="<?php echo e($contributor); ?> profile photo">
+											<?php else: ?>
+												<i class="bi bi-person-circle" aria-hidden="true"></i>
+											<?php endif; ?>
+										</span>
+										<strong><?php echo e($contributor !== "" ? $contributor : "Unknown contributor"); ?></strong>
+										<?php if ($contributionDate !== ""): ?><time datetime="<?php echo e($contributionDate); ?>"><?php echo e(date("d M Y", strtotime($contributionDate))); ?></time><?php endif; ?>
 									</div>
-									<div class="community-detail-card-body">
-										<div class="community-detail-card-title-row">
-											<h3><?php echo e($title); ?></h3>
-											<?php if ($contributionDate !== ""): ?>
-												<time
-												datetime="<?php echo e($contributionDate); ?>"><?php echo e(date("d M Y",
-													strtotime($contributionDate))); ?></time><?php endif; ?>
-										</div>
+									<div class="community-post-content">
+										<h3><?php echo e($title); ?></h3>
 										<p class="community-detail-description"><?php echo e($description); ?></p>
-										<dl class="community-detail-information">
-											<div>
-												<dt><i class="bi bi-person-fill"></i> Contributor</dt>
-												<dd><?php echo e($contributor); ?></dd>
-											</div>
-											<div>
-												<dt><i class="bi bi-controller"></i> Related activity</dt>
-												<dd><?php echo e($activity); ?></dd>
-											</div>
-										</dl>
+										<?php if ($mediaExists): ?><img class="community-post-image" src="<?php echo e($media); ?>" alt="<?php echo e($title); ?>"><?php endif; ?>
 									</div>
 								</article>
 							<?php endforeach; ?>

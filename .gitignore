@@ -63,6 +63,7 @@ Thumbs.db
 # ==========================================
 /uploads/
 /public/uploads/
+/community_images/
 
 # File
 *.pdf
