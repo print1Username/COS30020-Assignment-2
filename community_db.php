@@ -9,6 +9,8 @@ if (($communityDbPage ?? "list") === "detail") {
 	$community = null;
 	$joinStatus = null;
 	$joinError = "";
+	$quitNotice = $_SESSION["community_quit_notice"] ?? "";
+	unset($_SESSION["community_quit_notice"]);
 
 	if ($communityId !== false && $communityId !== null) {
 		require_once __DIR__."/db_setup.php";
@@ -44,6 +46,42 @@ if (($communityDbPage ?? "list") === "detail") {
 						$joinStatus = "pending";
 					} catch (RuntimeException|PDOException $exception) {
 						$joinError = $exception instanceof PDOException ? "The join request could not be saved. Please try again." : $exception -> getMessage();
+					}
+				}
+			}
+			if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["quit_community"])) {
+				if (!hash_equals($_SESSION["community_join_token"], (string)($_POST["join_token"] ?? ""))) {
+					$joinError = "Invalid quit request. Please try again.";
+				} else {
+					try {
+						$pdo -> beginTransaction();
+						$membershipStatement = $pdo -> prepare("SELECT id, member_counted FROM community_table WHERE community_id = ? AND email = ? AND record_type = 'join' AND status = 'approved' FOR UPDATE");
+						$membershipStatement -> execute([$communityId, $_SESSION["email"]]);
+						$membership = $membershipStatement -> fetch();
+						if (!$membership) {
+							throw new RuntimeException("Your community membership could not be found.");
+						}
+						if ((int)$membership["member_counted"] === 1) {
+							$decrementStatement = $pdo -> prepare("UPDATE community_table SET member_count = GREATEST(COALESCE(member_count, 0) - 1, 0) WHERE id = ? AND record_type = 'community'");
+							$decrementStatement -> execute([$communityId]);
+							if ($decrementStatement -> rowCount() !== 1) {
+								throw new RuntimeException("The selected community could not be found.");
+							}
+						}
+						$deleteStatement = $pdo -> prepare("DELETE FROM community_table WHERE id = ? AND community_id = ? AND email = ? AND record_type = 'join'");
+						$deleteStatement -> execute([$membership["id"], $communityId, $_SESSION["email"]]);
+						if ($deleteStatement -> rowCount() !== 1) {
+							throw new RuntimeException("Your community membership could not be removed.");
+						}
+						$pdo -> commit();
+						$_SESSION["community_quit_notice"] = "You have successfully left this community.";
+						header("Location: community_detail.php?id=".urlencode((string)$communityId));
+						exit;
+					} catch (RuntimeException|PDOException $exception) {
+						if ($pdo -> inTransaction()) {
+							$pdo -> rollBack();
+						}
+						$joinError = $exception instanceof PDOException ? "The quit request could not be completed. Please try again." : $exception -> getMessage();
 					}
 				}
 			}

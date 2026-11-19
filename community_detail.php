@@ -40,6 +40,13 @@ require_once __DIR__."/community_db.php";
 					<a href="community.php" class="btn community-detail-primary-button">View all communities</a>
 				</section>
 			<?php else: ?>
+				<?php if ($quitNotice !== ""): ?>
+					<div class="alert alert-success alert-dismissible fade show" role="status">
+						<i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+						<?php echo e($quitNotice); ?>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				<?php endif; ?>
 				<?php if ($joinError !== ""): ?>
 					<div
 						class="alert alert-danger" role="alert"
@@ -83,12 +90,15 @@ require_once __DIR__."/community_db.php";
 							</button>
 						</form>
 						<?php if ($joinStatus === "approved"): ?>
-							<button
-								type="button" class="btn community-detail-quit-button" disabled
-								title="Quit function is not available yet"
-							>
-								<i class="bi bi-box-arrow-right" aria-hidden="true"></i> Quit
-							</button>
+							<form method="post" class="community-detail-quit-form">
+								<input
+									type="hidden" name="join_token"
+									value="<?php echo e($_SESSION["community_join_token"]); ?>"
+								>
+								<button type="submit" name="quit_community" value="1" class="btn community-detail-quit-button">
+									<i class="bi bi-box-arrow-right" aria-hidden="true"></i> Quit
+								</button>
+							</form>
 						<?php endif; ?>
 					</div>
 				</header>

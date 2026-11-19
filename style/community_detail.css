@@ -270,6 +270,10 @@
     margin: 0;
 }
 
+.community-detail-quit-form {
+    margin: 0;
+}
+
 .community-detail-primary-button:disabled {
     border-color: var(--community-detail-border);
     background: var(--community-detail-purple-soft);
@@ -311,6 +315,8 @@
     background: #b02a37;
     color: #fff;
     font-weight: 600;
+	padding: 12px 28px;
+	font-size: 1.05rem;
 }
 
 .community-detail-quit-button:disabled {
@@ -318,6 +324,12 @@
     background: #b02a37;
     color: #fff;
     opacity: 1;
+}
+
+.community-detail-quit-button:hover {
+	border-color: #8d202b;
+	background: #8d202b;
+	color: #fff;
 }
 
 @media (max-width: 767.98px) {
