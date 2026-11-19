@@ -398,6 +398,27 @@ main > h1 {
     opacity: 0.45;
 }
 
+.admin-post-table {
+    min-width: 1320px;
+}
+
+.admin-post-description {
+    min-width: 220px;
+    white-space: normal;
+}
+
+.admin-post-thumbnail {
+    width: 72px;
+    height: 52px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.admin-post-actions {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
 @media (max-width: 767.98px) {
     .admin-hero {
         padding: 52px 0 44px;

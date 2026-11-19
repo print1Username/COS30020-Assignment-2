@@ -19,29 +19,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			adminRedirect($page, "Entry deleted.");
 		}
 		if (in_array($action, ["approved", "rejected"], true) && $id) {
-			if ($community) {
-				$pdo -> beginTransaction();
-				$lookup = $pdo -> prepare("SELECT record_type, community_id, member_counted FROM community_table WHERE id=? FOR UPDATE");
-				$lookup -> execute([$id]);
-				$reviewRow = $lookup -> fetch();
-				if (!$reviewRow) throw new RuntimeException("The community entry could not be found.");
-				if ($reviewRow["record_type"] === "join" && $action === "approved" && !(int)$reviewRow["member_counted"]) {
-					$increment = $pdo -> prepare("UPDATE community_table SET member_count = COALESCE(member_count, 0) + 1 WHERE id=? AND record_type='community'");
-					$increment -> execute([$reviewRow["community_id"]]);
-					if ($increment -> rowCount() !== 1) throw new RuntimeException("The selected community could not be found.");
-					$statement = $pdo -> prepare("UPDATE community_table SET status='approved', member_counted=1 WHERE id=? AND record_type='join'");
-					$statement -> execute([$id]);
-				} else {
-					$statement = $pdo -> prepare("UPDATE community_table SET status=? WHERE id=?");
-					$statement -> execute([$action, $id]);
-				}
-				$pdo -> commit();
-				adminRedirect($page, "Status updated.");
-			}
-			$pendingOnly = $community ? "" : " AND status='pending'";
-			$statement = $pdo -> prepare("UPDATE $table SET status=? WHERE id=?".$pendingOnly);
+			$statement = $pdo -> prepare("UPDATE $table SET status=? WHERE id=? AND status='pending'");
 			$statement -> execute([$action, $id]);
-			if (!$community && $statement -> rowCount() === 0) throw new RuntimeException("Only pending registrations can be approved or rejected. Use Edit to change a reviewed registration.");
+			if ($statement -> rowCount() === 0) {
+				throw new RuntimeException($community
+					? "Only pending posts can be approved or rejected. Use Edit to change a reviewed post."
+					: "Only pending registrations can be approved or rejected. Use Edit to change a reviewed registration.");
+			}
 			adminRedirect($page, "Status updated.");
 		}
 		if (!in_array($action, ["add", "edit"],
@@ -52,17 +36,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		if (!isValidName($first) || !isValidName($last) || !in_array($status, ["pending", "approved", "rejected"],
 				true)) throw new RuntimeException("Enter valid names and status.");
 		if ($community) {
-			$related = trim($_POST["related_activity"] ?? "");
+			$communityId = filter_var($_POST["community_id"] ?? null, FILTER_VALIDATE_INT);
+			$email = trim($_POST["email"] ?? "");
 			$image = trim($_POST["contribution_image"] ?? "");
-			$title = trim($_POST["contribution_title"] ?? "");
-			$description = trim($_POST["contribution_description"] ?? "");
-			if ($related === "" || strlen($related) > 50 || strlen($image) > 100 || strlen($title) > 100) throw new RuntimeException("Enter valid contribution details.");
+			$title = trim($_POST["title"] ?? "");
+			$description = trim($_POST["description"] ?? "");
+			$communityLookup = $pdo -> prepare("SELECT title FROM community_info WHERE id=?");
+			$communityLookup -> execute([$communityId ?: 0]);
+			$selectedCommunity = $communityLookup -> fetch();
+			if (!$selectedCommunity || ($email !== "" && !isValidEmail($email)) || $title === "" ||
+				strlen($title) > 100 || $description === "" || strlen($image) > 100) {
+				throw new RuntimeException("Enter valid post and community details.");
+			}
 			if ($action === "add") {
-				$statement = $pdo -> prepare("INSERT INTO community_table (first_name,last_name,related_activity,contribution_image,contribution_title,contribution_description,status) VALUES (?,?,?,?,?,?,?)");
-				$statement -> execute([$first, $last, $related, $image ?: null, $title ?: null, $description ?: null, $status]);
+				$statement = $pdo -> prepare("INSERT INTO community_table (community_id,email,first_name,last_name,related_activity,contribution_image,status,title,description,created_at) VALUES (?,?,?,?,?,?,?,?,?,NOW())");
+				$statement -> execute([$communityId, $email ?: null, $first, $last, $selectedCommunity["title"], $image ?: null, $status, $title, $description]);
 			} else {
-				$statement = $pdo -> prepare("UPDATE community_table SET first_name=?,last_name=?,related_activity=?,contribution_image=?,contribution_title=?,contribution_description=?,status=? WHERE id=?");
-				$statement -> execute([$first, $last, $related, $image ?: null, $title ?: null, $description ?: null, $status, $id]);
+				$statement = $pdo -> prepare("UPDATE community_table SET community_id=?,email=?,first_name=?,last_name=?,related_activity=?,contribution_image=?,status=?,title=?,description=? WHERE id=?");
+				$statement -> execute([$communityId, $email ?: null, $first, $last, $selectedCommunity["title"], $image ?: null, $status, $title, $description, $id]);
 			}
 		} else {
 			$email = trim($_POST["email"] ?? "");
@@ -97,7 +88,9 @@ if (isset($_GET["edit"])) {
 	$edit = $statement -> fetch() ?: null;
 }
 if ($community) {
-	$rows = $pdo -> query("SELECT * FROM community_table ORDER BY id DESC") -> fetchAll();
+	$communities = $pdo -> query("SELECT id, title FROM community_info ORDER BY title") -> fetchAll();
+	$rows = $pdo -> query("SELECT post.*, community.title AS community_title FROM community_table AS post LEFT JOIN community_info AS community ON community.id=post.community_id ORDER BY post.id DESC")
+		-> fetchAll();
 } else {
 	$events = $pdo -> query("SELECT id, title, activity_type, description, date, time, end_time, price, venue, table_name, status FROM activity_info ORDER BY date, time")
 		-> fetchAll();
