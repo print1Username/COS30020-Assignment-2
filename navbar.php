@@ -11,11 +11,11 @@ if (session_status() === PHP_SESSION_NONE) {
 $isLoggedIn = isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true;
 ?>
 
-<div id="navbar-container"></div>
+<div id = "navbar-container"></div >
 
-<script>
+<script >
     // Pass PHP Session login status to navbar.js
     window.isLoggedIn = <?= $isLoggedIn ? "true" : "false" ?>;
-</script>
+</script >
 
-<script src="components/navbar.js?v=<?= filemtime(__DIR__."/components/navbar.js") ?>"></script>
+<script src = "components/navbar.js?v=<?= filemtime(__DIR__."/components/navbar.js") ?>"></script >

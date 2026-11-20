@@ -6,257 +6,271 @@ $homepageImages = $pdo -> query("SELECT filename, mime_type, image_data FROM hom
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<link rel="icon" href="img/logo/logo.ico" sizes="any">
-		<link rel="icon" type="image/png" href="img/logo/logo.png">
+<html lang = "en">
+	<head >
+		<link
+			rel = "icon"
+			href = "img/logo/logo.ico"
+			sizes = "any"
+		>
+		<link
+			rel = "icon"
+			type = "image/png"
+			href = "img/logo/logo.png"
+		>
 
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>My Website</title>
+		<meta charset = "utf-8">
+		<meta
+			name = "viewport"
+			content = "width=device-width, initial-scale=1"
+		>
+		<title >My Website</title >
 
 		<!-- Bootstrap 5.3.8 -->
 		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-			crossorigin="anonymous"
+			href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+			rel = "stylesheet"
+			integrity = "sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+			crossorigin = "anonymous"
 		>
 
 		<!-- Bootstrap Icons -->
 		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+			rel = "stylesheet"
+			href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 		>
 
 		<!-- Custom Navbar CSS -->
 		<link
-			rel="stylesheet"
-			href="style/navbar.css"
+			rel = "stylesheet"
+			href = "style/navbar.css"
 		>
 
 		<link
-			rel="stylesheet"
-			href="style/styles.css"
+			rel = "stylesheet"
+			href = "style/styles.css"
 		>
-	</head>
+	</head >
 
-	<body>
+	<body >
 	<!-- Navbar will be inserted here -->
-	<div id="navbar-container"></div>
+	<div id = "navbar-container"></div >
 
 	<?php include "navbar.php"; ?>
 
 	<!-- Page Content -->
-	<main class="container py-5">
+	<main class = "container py-5">
 
 		<!-- Hero Section -->
-		<section class="index-hero text-center">
+		<section class = "index-hero text-center">
 
-			<div class="index-hero-content">
+			<div class = "index-hero-content">
 
-                    <span class="badge index-badge mb-3">
+                    <span class = "badge index-badge mb-3">
                         BOARD GAME VENUE
-                    </span>
+                    </span >
 
-				<h1 class="display-4 fw-bold">
+				<h1 class = "display-4 fw-bold">
 					Welcome to Boardgame Hub
-				</h1>
+				</h1 >
 
-				<p class="lead index-hero-text">
+				<p class = "lead index-hero-text">
 					Discover board games, book a table,
 					and enjoy your next game session.
-				</p>
+				</p >
 
-				<p class="index-description mx-auto">
+				<p class = "index-description mx-auto">
 					Boardgame Hub makes it easier for board game players
 					to discover games, check table availability, and
 					reserve a suitable time at our venue.
-				</p>
+				</p >
 
-				<div class="index-hero-buttons mt-4">
+				<div class = "index-hero-buttons mt-4">
 
-					<a href="main_menu.php" class="btn btn-primary btn-lg">
+					<a
+						href = "main_menu.php"
+						class = "btn btn-primary btn-lg"
+					>
 						Explore Board Games
-					</a>
-				</div>
-			</div>
-		</section>
+					</a >
+				</div >
+			</div >
+		</section >
 
 
 		<!-- Random Image -->
-		<section class="index-image-section">
-			<div class="index-image-wrapper">
+		<section class = "index-image-section">
+			<div class = "index-image-wrapper">
 				<img
-					src="data:<?php echo htmlspecialchars($homepageImages[0]['mime_type'], ENT_QUOTES,
+					src = "data:<?php echo htmlspecialchars($homepageImages[0]['mime_type'], ENT_QUOTES,
 						'UTF-8'); ?>;base64,<?php echo base64_encode($homepageImages[0]['image_data']); ?>"
-					alt="Board game session at Boardgame Hub"
-					class="index-random-image"
-					id="boardgame-slideshow"
+					alt = "Board game session at Boardgame Hub"
+					class = "index-random-image"
+					id = "boardgame-slideshow"
 				>
 
-			</div>
+			</div >
 
-		</section>
+		</section >
 
 
 		<!-- Features -->
-		<section class="index-features">
+		<section class = "index-features">
 
-			<div class="text-center mb-4">
+			<div class = "text-center mb-4">
 
-				<h2 class="fw-bold">
+				<h2 class = "fw-bold">
 					Everything You Need to Play
-				</h2>
+				</h2 >
 
-				<p class="text-muted">
+				<p class = "text-muted">
 					Explore games, book your table, and connect with
 					fellow board game players.
-				</p>
+				</p >
 
-			</div>
+			</div >
 
 
-			<div class="row g-4">
+			<div class = "row g-4">
 
 				<!-- Catalogue -->
-				<div class="col-md-4">
+				<div class = "col-md-4">
 
-					<div class="card index-feature-card h-100">
+					<div class = "card index-feature-card h-100">
 
-						<div class="card-body text-center">
+						<div class = "card-body text-center">
 
-							<div class="index-feature-icon">
-								<i class="bi bi-grid-3x3-gap-fill"></i>
-							</div>
+							<div class = "index-feature-icon">
+								<i class = "bi bi-grid-3x3-gap-fill"></i >
+							</div >
 
-							<h3 class="h5 fw-bold">
+							<h3 class = "h5 fw-bold">
 								Discover Games
-							</h3>
+							</h3 >
 
-							<p class="text-muted">
+							<p class = "text-muted">
 								Browse our collection of board games and
 								discover something new to play.
-							</p>
+							</p >
 
 							<a
-								href="catalog.php"
-								class="btn btn-outline-primary"
+								href = "catalog.php"
+								class = "btn btn-outline-primary"
 							>
 								View Games
-							</a>
+							</a >
 
-						</div>
+						</div >
 
-					</div>
+					</div >
 
-				</div>
+				</div >
 
 
 				<!-- Activities -->
-				<div class="col-md-4">
+				<div class = "col-md-4">
 
-					<div class="card index-feature-card h-100">
+					<div class = "card index-feature-card h-100">
 
-						<div class="card-body text-center">
+						<div class = "card-body text-center">
 
-							<div class="index-feature-icon">
-								<i class="bi bi-calendar-check-fill"></i>
-							</div>
+							<div class = "index-feature-icon">
+								<i class = "bi bi-calendar-check-fill"></i >
+							</div >
 
-							<h3 class="h5 fw-bold">
+							<h3 class = "h5 fw-bold">
 								Book a Table
-							</h3>
+							</h3 >
 
-							<p class="text-muted">
+							<p class = "text-muted">
 								Check available dates and times and
 								reserve a table for your next session.
-							</p>
+							</p >
 
 							<a
-								href="activities.php"
-								class="btn btn-outline-primary"
+								href = "activities.php"
+								class = "btn btn-outline-primary"
 							>
 								View Activities
-							</a>
+							</a >
 
-						</div>
+						</div >
 
-					</div>
+					</div >
 
-				</div>
+				</div >
 
 
 				<!-- Community -->
-				<div class="col-md-4">
+				<div class = "col-md-4">
 
-					<div class="card index-feature-card h-100">
+					<div class = "card index-feature-card h-100">
 
-						<div class="card-body text-center">
+						<div class = "card-body text-center">
 
-							<div class="index-feature-icon">
-								<i class="bi bi-people-fill"></i>
-							</div>
+							<div class = "index-feature-icon">
+								<i class = "bi bi-people-fill"></i >
+							</div >
 
-							<h3 class="h5 fw-bold">
+							<h3 class = "h5 fw-bold">
 								Join the Community
-							</h3>
+							</h3 >
 
-							<p class="text-muted">
+							<p class = "text-muted">
 								Explore board game discussions and
 								stories shared by other players.
-							</p>
+							</p >
 
 							<a
-								href="community.php"
-								class="btn btn-outline-primary"
+								href = "community.php"
+								class = "btn btn-outline-primary"
 							>
 								Visit Community
-							</a>
+							</a >
 
-						</div>
+						</div >
 
-					</div>
+					</div >
 
-				</div>
+				</div >
 
-			</div>
+			</div >
 
-		</section>
+		</section >
 
 
 		<!-- Why Boardgame Hub -->
-		<section class="index-about-section">
+		<section class = "index-about-section">
 
-			<div class="row align-items-center g-5">
+			<div class = "row align-items-center g-5">
 
-				<div class="col-md-6">
+				<div class = "col-md-6">
 
-                        <span class="index-section-label">
+                        <span class = "index-section-label">
                             WHY BOARDGAME HUB?
-                        </span>
+                        </span >
 
-					<h2 class="fw-bold mt-2">
+					<h2 class = "fw-bold mt-2">
 						Make your next game night easier.
-					</h2>
+					</h2 >
 
-				</div>
+				</div >
 
-				<div class="col-md-6">
+				<div class = "col-md-6">
 
-					<p class="text-muted mb-0">
+					<p class = "text-muted mb-0">
 						Planning a board game session can be difficult when
 						players need to coordinate their schedules and find
 						an available table. Boardgame Hub provides a simple
 						way to check available sessions and reserve a suitable
 						time before visiting the venue.
-					</p>
+					</p >
 
-				</div>
+				</div >
 
-			</div>
+			</div >
 
-		</section>
+		</section >
 
 
 		<?php
@@ -277,44 +291,47 @@ $homepageImages = $pdo -> query("SELECT filename, mime_type, image_data FROM hom
 		}
 		?>
 		<!-- Account CTA -->
-		<section class="index-cta text-center">
+		<section class = "index-cta text-center">
 
-			<h2 class="fw-bold">
+			<h2 class = "fw-bold">
 				Ready for your next game?
-			</h2>
+			</h2 >
 
-			<p class="mb-4">
+			<p class = "mb-4">
 				<?php echo $ctaSubtitle; ?>
-			</p>
+			</p >
 
-			<a href="<?php echo $ctaLink; ?>" class="index-login-link">
+			<a
+				href = "<?php echo $ctaLink; ?>"
+				class = "index-login-link"
+			>
 				<?php echo $ctaLabel; ?>
-			</a>
+			</a >
 
-		</section>
+		</section >
 
 
 		<!-- About -->
-		<section class="text-center index-about-link">
+		<section class = "text-center index-about-link">
 
-			<a href="about.php">
+			<a href = "about.php">
 				About Boardgame Hub
-			</a>
+			</a >
 
-		</section>
+		</section >
 
-	</main>
+	</main >
 
 
 	<!-- Bootstrap JavaScript -->
 	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-		crossorigin="anonymous"
-	></script>
+		src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+		integrity = "sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+		crossorigin = "anonymous"
+	></script >
 
 	<!-- Pass PHP Session Login Status to JavaScript -->
-	<script>
+	<script >
         window.isLoggedIn = <?php
 		echo (
 			isset($_SESSION["logged_in"]) &&
@@ -325,8 +342,8 @@ $homepageImages = $pdo -> query("SELECT filename, mime_type, image_data FROM hom
         window.homepageImages = <?php echo json_encode(array_map(function($image) {
 			return "data:".$image["mime_type"].";base64,".base64_encode($image["image_data"]);
 		}, $homepageImages), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-	</script>
-	<script src="components/homepage.js?v=<?= filemtime(__DIR__."/components/homepage.js") ?>"></script>
-	</body>
+	</script >
+	<script src = "components/homepage.js?v=<?= filemtime(__DIR__."/components/homepage.js") ?>"></script >
+	</body >
 
-</html>
+</html >

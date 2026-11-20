@@ -11,178 +11,204 @@ if (($_SESSION["logged_in"] ?? false) !== true ||
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<link rel="icon" href="img/logo/logo.ico" sizes="any">
-		<link rel="icon" type="image/png" href="img/logo/logo.png">
+<html lang = "en">
+	<head >
+		<link
+			rel = "icon"
+			href = "img/logo/logo.ico"
+			sizes = "any"
+		>
+		<link
+			rel = "icon"
+			type = "image/png"
+			href = "img/logo/logo.png"
+		>
 
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Welcome to Boardgame Hub</title>
+		<meta charset = "utf-8">
+		<meta
+			name = "viewport"
+			content = "width=device-width, initial-scale=1"
+		>
+		<title >Welcome to Boardgame Hub</title >
 
 		<!-- Bootstrap 5.3.8 -->
 		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-			crossorigin="anonymous"
+			href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+			rel = "stylesheet"
+			integrity = "sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+			crossorigin = "anonymous"
 		>
 
 		<!-- Bootstrap Icons -->
 		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+			rel = "stylesheet"
+			href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 		>
 
 		<!-- Navbar CSS -->
 		<link
-			rel="stylesheet"
-			href="style/navbar.css"
+			rel = "stylesheet"
+			href = "style/navbar.css"
 		>
 
 		<!-- Main Menu CSS -->
 		<link
-			rel="stylesheet"
-			href="style/main_menu.css"
+			rel = "stylesheet"
+			href = "style/main_menu.css"
 		>
-	</head>
+	</head >
 
-	<body>
+	<body >
 	<!-- Navbar -->
 	<?php include "navbar.php"; ?>
 
-	<main>
+	<main >
 		<!-- Hero Section -->
-		<section class="main-menu-hero">
-			<div class="container">
-				<div class="main-menu-hero-content">
-					<span class="main-menu-eyebrow">BOARDGAME HUB</span>
-					<h1>Welcome to Boardgame Hub</h1>
-					<p>
+		<section class = "main-menu-hero">
+			<div class = "container">
+				<div class = "main-menu-hero-content">
+					<span class = "main-menu-eyebrow">BOARDGAME HUB</span >
+					<h1 >Welcome to Boardgame Hub</h1 >
+					<p >
 						Discover board games, join activities, connect with
 						the community, and enjoy your next game session.
-					</p>
-				</div>
-			</div>
-		</section>
+					</p >
+				</div >
+			</div >
+		</section >
 
 		<!-- Main Menu Cards -->
-		<section class="main-menu-section">
-			<div class="container">
-				<div class="main-menu-grid">
+		<section class = "main-menu-section">
+			<div class = "container">
+				<div class = "main-menu-grid">
 					<!-- Catalogue Card -->
-					<article class="main-menu-card">
-						<div class="main-menu-card-icon">
-							<i class="bi bi-grid-3x3-gap-fill"></i>
-						</div>
-						<div class="main-menu-card-content">
-							<h2>Catalogue</h2>
-							<p>
+					<article class = "main-menu-card">
+						<div class = "main-menu-card-icon">
+							<i class = "bi bi-grid-3x3-gap-fill"></i >
+						</div >
+						<div class = "main-menu-card-content">
+							<h2 >Catalogue</h2 >
+							<p >
 								Explore our collection of board games and
 								discover something new to play.
-							</p>
+							</p >
 							<a
-								href="catalog.php"
-								class="btn main-menu-card-button"
+								href = "catalog.php"
+								class = "btn main-menu-card-button"
 							>
 								View Catalogue
-								<i class="bi bi-arrow-right"></i>
-							</a>
-						</div>
-					</article>
+								<i class = "bi bi-arrow-right"></i >
+							</a >
+						</div >
+					</article >
 
 					<!-- Activities Card -->
-					<article class="main-menu-card">
-						<div class="main-menu-card-icon">
-							<i class="bi bi-calendar-event-fill"></i>
-						</div>
-						<div class="main-menu-card-content">
-							<h2>Activities</h2>
-							<p>
+					<article class = "main-menu-card">
+						<div class = "main-menu-card-icon">
+							<i class = "bi bi-calendar-event-fill"></i >
+						</div >
+						<div class = "main-menu-card-content">
+							<h2 >Activities</h2 >
+							<p >
 								Find upcoming board game activities,
 								sessions, and events you can join.
-							</p>
+							</p >
 							<a
-								href="activities.php"
-								class="btn main-menu-card-button"
+								href = "activities.php"
+								class = "btn main-menu-card-button"
 							>
 								View Activities
-								<i class="bi bi-arrow-right"></i>
-							</a>
-						</div>
-					</article>
+								<i class = "bi bi-arrow-right"></i >
+							</a >
+						</div >
+					</article >
 
 					<!-- Community Card -->
-					<article class="main-menu-card">
-						<div class="main-menu-card-icon">
-							<i class="bi bi-people-fill"></i>
-						</div>
-						<div class="main-menu-card-content">
-							<h2>Community</h2>
-							<p>
+					<article class = "main-menu-card">
+						<div class = "main-menu-card-icon">
+							<i class = "bi bi-people-fill"></i >
+						</div >
+						<div class = "main-menu-card-content">
+							<h2 >Community</h2 >
+							<p >
 								Explore contributions and see what other
 								board game players are sharing.
-							</p>
+							</p >
 							<a
-								href="community.php"
-								class="btn main-menu-card-button"
+								href = "community.php"
+								class = "btn main-menu-card-button"
 							>
 								View Community
-								<i class="bi bi-arrow-right"></i>
-							</a>
-							<a href="smart_feature_add.php" class="btn main-menu-card-button">
+								<i class = "bi bi-arrow-right"></i >
+							</a >
+							<a
+								href = "smart_feature_add.php"
+								class = "btn main-menu-card-button"
+							>
 								Contribute a Board Game
-							</a>
-						</div>
-					</article>
+							</a >
+						</div >
+					</article >
 
 					<!-- Smart Feature Card -->
-					<article class="main-menu-card">
-						<div class="main-menu-card-icon">
-							<i class="bi bi-search"></i>
-						</div>
-						<div class="main-menu-card-content">
-							<h2>Find a Board Game</h2>
-							<p>Search approved board games by name or category.</p>
-							<a href="smart_feature.php" class="btn main-menu-card-button">
+					<article class = "main-menu-card">
+						<div class = "main-menu-card-icon">
+							<i class = "bi bi-search"></i >
+						</div >
+						<div class = "main-menu-card-content">
+							<h2 >Find a Board Game</h2 >
+							<p >Search approved board games by name or category.</p >
+							<a
+								href = "smart_feature.php"
+								class = "btn main-menu-card-button"
+							>
 								Find a Game
-								<i class="bi bi-arrow-right"></i>
-							</a>
-						</div>
-					</article>
+								<i class = "bi bi-arrow-right"></i >
+							</a >
+						</div >
+					</article >
 
-				</div>
+				</div >
 
 				<!-- About Card -->
-				<a href="about.php" class="main-menu-about-card">
-					<div class="main-menu-about-content">
-						<i class="bi bi-info-circle-fill" aria-hidden="true"></i>
-						<div>
-							<h2>About</h2>
-							<p>
+				<a
+					href = "about.php"
+					class = "main-menu-about-card"
+				>
+					<div class = "main-menu-about-content">
+						<i
+							class = "bi bi-info-circle-fill"
+							aria-hidden = "true"
+						></i >
+						<div >
+							<h2 >About</h2 >
+							<p >
 								Learn more about Boardgame Hub, its purpose,
 								features, and project information.
-							</p>
-						</div>
-					</div>
-					<span class="btn main-menu-about-button">
+							</p >
+						</div >
+					</div >
+					<span class = "btn main-menu-about-button">
 						Learn More
-						<i class="bi bi-arrow-right" aria-hidden="true"></i>
-					</span>
-				</a>
-			</div>
-		</section>
+						<i
+							class = "bi bi-arrow-right"
+							aria-hidden = "true"
+						></i >
+					</span >
+				</a >
+			</div >
+		</section >
 
-	</main>
+	</main >
 
 	<!-- Bootstrap JavaScript -->
 	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-		crossorigin="anonymous"
-	></script>
+		src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+		integrity = "sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+		crossorigin = "anonymous"
+	></script >
 
 	<!-- Main Menu JavaScript -->
-	<script src="components/main_menu.js"></script>
-	</body>
-</html>
+	<script src = "components/main_menu.js"></script >
+	</body >
+</html >

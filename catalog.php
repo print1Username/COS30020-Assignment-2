@@ -30,117 +30,137 @@ $categories = [
 ];
 ?>
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<link rel="icon" href="img/logo/logo.ico" sizes="any">
-		<link rel="icon" type="image/png" href="img/logo/logo.png">
+<html lang = "en">
+	<head >
+		<link
+			rel = "icon"
+			href = "img/logo/logo.ico"
+			sizes = "any"
+		>
+		<link
+			rel = "icon"
+			type = "image/png"
+			href = "img/logo/logo.png"
+		>
 
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Catalogue | Boardgame Hub</title>
+		<meta charset = "utf-8">
+		<meta
+			name = "viewport"
+			content = "width=device-width, initial-scale=1"
+		>
+		<title >Catalogue | Boardgame Hub</title >
 
 		<!-- Bootstrap 5.3.8 -->
 		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-			crossorigin="anonymous"
+			href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+			rel = "stylesheet"
+			integrity = "sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+			crossorigin = "anonymous"
 		>
 
 		<!-- Bootstrap Icons -->
 		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+			rel = "stylesheet"
+			href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 		>
 
 		<!-- Custom Navbar CSS -->
-		<link rel="stylesheet" href="style/navbar.css">
+		<link
+			rel = "stylesheet"
+			href = "style/navbar.css"
+		>
 
 		<!-- Catalogue CSS -->
-		<link rel="stylesheet" href="style/catalog.css?v=<?php echo filemtime(__DIR__."/style/catalog.css"); ?>">
-		<link rel="stylesheet" href="style/pagination.css">
+		<link
+			rel = "stylesheet"
+			href = "style/catalog.css?v=<?php echo filemtime(__DIR__."/style/catalog.css"); ?>"
+		>
+		<link
+			rel = "stylesheet"
+			href = "style/pagination.css"
+		>
 
-	</head>
-	<body>
+	</head >
+	<body >
 
 	<!-- Navigation -->
 	<?php include "navbar.php"; ?>
 
-	<main>
+	<main >
 
 		<!-- Catalogue Header -->
-		<section class="catalog-header">
-			<div class="container">
-				<div class="catalog-header-content">
-                    <span class="catalog-eyebrow">
-                        <i class="bi bi-dice-5"></i>
+		<section class = "catalog-header">
+			<div class = "container">
+				<div class = "catalog-header-content">
+                    <span class = "catalog-eyebrow">
+                        <i class = "bi bi-dice-5"></i >
                         Explore Our Collection
-                    </span>
+                    </span >
 
-					<h1>Boardgame Catalogue</h1>
+					<h1 >Boardgame Catalogue</h1 >
 
-					<p>
+					<p >
 						Discover your next favourite boardgame.
 						From strategic adventures to fun-filled party games,
 						there is something for everyone.
-					</p>
-				</div>
-			</div>
-		</section>
+					</p >
+				</div >
+			</div >
+		</section >
 
 		<!-- Catalogue Content -->
-		<section class="catalog-section">
-			<div class="container">
+		<section class = "catalog-section">
+			<div class = "container">
 
 				<!-- Section Heading -->
-				<div class="catalog-section-heading">
-					<div>
-						<h2>Explore Boardgames</h2>
-						<p>
+				<div class = "catalog-section-heading">
+					<div >
+						<h2 >Explore Boardgames</h2 >
+						<p >
 							Browse our collection and find
 							the perfect game for your next session.
-						</p>
-					</div>
+						</p >
+					</div >
 
-					<div class="catalog-total">
-						<i class="bi bi-collection"></i>
-						<span id="catalog-game-count">
+					<div class = "catalog-total">
+						<i class = "bi bi-collection"></i >
+						<span id = "catalog-game-count">
                             <?php echo count($games); ?> Games
-                        </span>
-					</div>
-				</div>
+                        </span >
+					</div >
+				</div >
 
 				<!-- Category Filters -->
 				<div
-					class="catalog-filter-wrapper"
-					role="group"
-					aria-label="Filter boardgames by category"
+					class = "catalog-filter-wrapper"
+					role = "group"
+					aria-label = "Filter boardgames by category"
 				>
 					<button
-						type="button"
-						class="catalog-filter-btn active"
-						data-category="all"
-						aria-pressed="true"
+						type = "button"
+						class = "catalog-filter-btn active"
+						data-category = "all"
+						aria-pressed = "true"
 					>
 						All Games
-					</button>
+					</button >
 
 					<?php foreach ($categories as $category): ?>
 						<button
-							type="button"
-							class="catalog-filter-btn"
-							data-category="<?php echo escapeHTML($category); ?>"
-							aria-pressed="false"
+							type = "button"
+							class = "catalog-filter-btn"
+							data-category = "<?php echo escapeHTML($category); ?>"
+							aria-pressed = "false"
 						>
 							<?php echo escapeHTML($category); ?>
-						</button>
+						</button >
 					<?php endforeach; ?>
-				</div>
+				</div >
 
 				<!-- Game Grid -->
 				<div
-					class="row g-4 catalog-game-grid"
-					id="catalog-game-grid"
+					class = "row g-4 catalog-game-grid"
+					id = "catalog-game-grid"
 				>
 					<?php foreach ($games as $game): ?>
 
@@ -155,125 +175,129 @@ $categories = [
 						?>
 
 						<div
-							class="col-12 col-sm-6 col-lg-4 col-xl-3 catalog-game-item"
-							data-categories="<?php echo escapeHTML($categoryAttributes); ?>"
+							class = "col-12 col-sm-6 col-lg-4 col-xl-3 catalog-game-item"
+							data-categories = "<?php echo escapeHTML($categoryAttributes); ?>"
 						>
-							<article class="catalog-game-card position-relative">
+							<article class = "catalog-game-card position-relative">
 
 								<!-- Game Image -->
-								<div class="catalog-game-image-wrapper">
+								<div class = "catalog-game-image-wrapper">
 									<img
-										src="<?php echo escapeHTML($game["has_image_data"] ? "catalog_image.php?id=".(int)$game["id"] : ($game["image"] ?? "img/boardgames/placeholder.svg")); ?>"
-										alt=""
-										aria-hidden="true"
-										class="catalog-game-image"
-										loading="lazy"
-										onerror="this.style.display='none'"
+										src = "<?php echo escapeHTML($game["has_image_data"] ? "catalog_image.php?id=".(int)$game["id"] : ($game["image"] ?? "img/boardgames/placeholder.svg")); ?>"
+										alt = ""
+										aria-hidden = "true"
+										class = "catalog-game-image"
+										loading = "lazy"
+										onerror = "this.style.display='none'"
 									>
 
-									<span class="catalog-image-overlay">
-                                        <i class="bi bi-dice-5"></i>
-                                    </span>
-								</div>
+									<span class = "catalog-image-overlay">
+                                        <i class = "bi bi-dice-5"></i >
+                                    </span >
+								</div >
 
 								<!-- Game Information -->
-								<div class="catalog-game-body">
+								<div class = "catalog-game-body">
 
-									<h3 class="catalog-game-title">
+									<h3 class = "catalog-game-title">
 										<?php echo escapeHTML($game["name"] ?? "Untitled Game"); ?>
-									</h3>
+									</h3 >
 
 									<!-- Categories -->
-									<div class="catalog-game-categories">
+									<div class = "catalog-game-categories">
 										<?php foreach ($gameCategories as $gameCategory): ?>
-											<span class="catalog-category-tag">
+											<span class = "catalog-category-tag">
                                                 <?php echo escapeHTML($gameCategory); ?>
-                                            </span>
+                                            </span >
 										<?php endforeach; ?>
-									</div>
+									</div >
 
 									<!-- Description -->
-									<p class="catalog-game-description">
+									<p class = "catalog-game-description">
 										<?php echo escapeHTML($game["description"] ?? "Game description coming soon."); ?>
-									</p>
+									</p >
 
 									<!-- Game Details -->
-									<div class="catalog-game-details">
-										<div class="catalog-detail-item">
-											<i class="bi bi-people"></i>
-											<span>
+									<div class = "catalog-game-details">
+										<div class = "catalog-detail-item">
+											<i class = "bi bi-people"></i >
+											<span >
                                                 <?php echo escapeHTML($game["players"] ?? "N/A"); ?>
-                                            </span>
-										</div>
+                                            </span >
+										</div >
 
-										<div class="catalog-detail-item">
-											<i class="bi bi-clock"></i>
-											<span>
+										<div class = "catalog-detail-item">
+											<i class = "bi bi-clock"></i >
+											<span >
                                                 <?php echo escapeHTML($game["duration"] ?? "N/A"); ?>
-                                            </span>
-										</div>
-									</div>
+                                            </span >
+										</div >
+									</div >
 
-									<div class="catalog-detail-label"><i
-											class="bi bi-info-circle" aria-hidden="true"
-										></i><span>View Details</span></div>
+									<div class = "catalog-detail-label">
+										<i
+											class = "bi bi-info-circle"
+											aria-hidden = "true"
+										></i >
+										<span >View Details</span >
+									</div >
 
-								</div>
+								</div >
 								<a
-									href="catalog_detail.php?id=<?php echo (int)$game["id"]; ?>"
-									class="catalog-card-link stretched-link"
-									aria-label="View <?php echo escapeHTML($game["name"] ?? "boardgame"); ?> details"
-								></a>
-							</article>
-						</div>
+									href = "catalog_detail.php?id=<?php echo (int)$game["id"]; ?>"
+									class = "catalog-card-link stretched-link"
+									aria-label = "View <?php echo escapeHTML($game["name"] ?? "boardgame"); ?> details"
+								></a >
+							</article >
+						</div >
 
 					<?php endforeach; ?>
-				</div>
+				</div >
 
 				<!-- Pagination -->
 				<nav
-					class="catalog-pagination"
-					aria-label="Boardgame pagination"
+					class = "catalog-pagination"
+					aria-label = "Boardgame pagination"
 				>
 					<ul
-						class="pagination justify-content-center"
-						id="catalog-pagination"
-					></ul>
-				</nav>
+						class = "pagination justify-content-center"
+						id = "catalog-pagination"
+					></ul >
+				</nav >
 
 				<!-- Empty State -->
 				<div
-					class="catalog-empty-state"
-					id="catalog-empty-state"
+					class = "catalog-empty-state"
+					id = "catalog-empty-state"
 					hidden
 				>
-					<i class="bi bi-search"></i>
+					<i class = "bi bi-search"></i >
 
-					<h3>No Games Found</h3>
+					<h3 >No Games Found</h3 >
 
-					<p>
+					<p >
 						There are currently no boardgames
 						available in this category.
-					</p>
-				</div>
+					</p >
+				</div >
 
-			</div>
-		</section>
+			</div >
+		</section >
 
-	</main>
+	</main >
 
 	<!-- Bootstrap JavaScript -->
 	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-		crossorigin="anonymous"
-	></script>
+		src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+		integrity = "sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+		crossorigin = "anonymous"
+	></script >
 
 	<!-- Pagination Component -->
-	<script src="components/pagination.js"></script>
+	<script src = "components/pagination.js"></script >
 
 	<!-- Catalogue JavaScript -->
-	<script src="components/catalog.js?v=<?= filemtime(__DIR__."/components/catalog.js") ?>"></script>
+	<script src = "components/catalog.js?v=<?= filemtime(__DIR__."/components/catalog.js") ?>"></script >
 
-	</body>
-</html>
+	</body >
+</html >

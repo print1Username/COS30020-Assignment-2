@@ -7,88 +7,107 @@ unset($_SESSION["activity_registration_notice"]);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<link rel="icon" href="img/logo/logo.ico" sizes="any">
-		<link rel="icon" type="image/png" href="img/logo/logo.png">
+<html lang = "en">
+	<head >
+		<link
+			rel = "icon"
+			href = "img/logo/logo.ico"
+			sizes = "any"
+		>
+		<link
+			rel = "icon"
+			type = "image/png"
+			href = "img/logo/logo.png"
+		>
 
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Activities | Boardgame Hub</title>
+		<meta charset = "utf-8">
+		<meta
+			name = "viewport"
+			content = "width=device-width, initial-scale=1"
+		>
+		<title >Activities | Boardgame Hub</title >
 
 		<!-- Bootstrap 5.3.8 -->
 		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-			crossorigin="anonymous"
+			href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+			rel = "stylesheet"
+			integrity = "sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+			crossorigin = "anonymous"
 		>
 
 		<!-- Bootstrap Icons -->
 		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+			rel = "stylesheet"
+			href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 		>
 
 		<!-- Custom Navbar CSS -->
 		<link
-			rel="stylesheet"
-			href="style/navbar.css"
+			rel = "stylesheet"
+			href = "style/navbar.css"
 		>
 
 		<!-- Activities CSS -->
 		<link
-			rel="stylesheet"
-			href="style/activities.css?v=4"
+			rel = "stylesheet"
+			href = "style/activities.css?v=4"
 		>
 
 		<!-- Pagination CSS -->
 		<link
-			rel="stylesheet"
-			href="style/pagination.css"
+			rel = "stylesheet"
+			href = "style/pagination.css"
 		>
-	</head>
+	</head >
 
-	<body>
+	<body >
 	<?php include "navbar.php"; ?>
 
-	<main class="container py-5">
+	<main class = "container py-5">
 		<?php if ($activityRegistrationSuccess !== ""): ?>
 			<div
-				class="alert <?php echo $activityRegistrationNotice === "pending" ? "alert-warning" : "alert-success"; ?> alert-dismissible fade show"
-				role="alert"
+				class = "alert <?php echo $activityRegistrationNotice === "pending" ? "alert-warning" : "alert-success"; ?> alert-dismissible fade show"
+				role = "alert"
 			>
 				<i
-					class="bi <?php echo $activityRegistrationNotice === "pending" ? "bi-hourglass-split" : "bi-check-circle-fill"; ?> me-2"
-					aria-hidden="true"
-				></i>
+					class = "bi <?php echo $activityRegistrationNotice === "pending" ? "bi-hourglass-split" : "bi-check-circle-fill"; ?> me-2"
+					aria-hidden = "true"
+				></i >
 				<?php echo htmlspecialchars($activityRegistrationSuccess, ENT_QUOTES, "UTF-8"); ?>
 				<?php if ($activityRegistrationNotice === "pending"): ?>
 					Your registration is pending admin approval.
 				<?php endif; ?>
-				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
+				<button
+					type = "button"
+					class = "btn-close"
+					data-bs-dismiss = "alert"
+					aria-label = "Close"
+				></button >
+			</div >
 		<?php endif; ?>
-		<div class="activities-header">
-			<div>
-				<span class="activities-eyebrow">BOARDGAME HUB</span>
-				<h1 class="activities-title">Activities</h1>
-				<p class="activities-subtitle">
+		<div class = "activities-header">
+			<div >
+				<span class = "activities-eyebrow">BOARDGAME HUB</span >
+				<h1 class = "activities-title">Activities</h1 >
+				<p class = "activities-subtitle">
 					Discover upcoming board game sessions, meet other players and join the community.
-				</p>
-			</div>
+				</p >
+			</div >
 
-		</div>
+		</div >
 
 		<?php if (empty($activities)): ?>
-			<div class="alert alert-light border activities-empty-alert" role="alert">
-				<i class="bi bi-calendar-x me-2"></i>
+			<div
+				class = "alert alert-light border activities-empty-alert"
+				role = "alert"
+			>
+				<i class = "bi bi-calendar-x me-2"></i >
 				No activities are currently available.
-			</div>
+			</div >
 		<?php else: ?>
 			<div
-				id="activity-list"
-				class="activities-list"
+				id = "activity-list"
+				class = "activities-list"
 			>
 				<?php foreach ($activities as $activity): ?>
 					<?php
@@ -97,7 +116,7 @@ unset($_SESSION["activity_registration_notice"]);
 					?>
 
 					<article
-						class="activity-card"
+						class = "activity-card"
 						hidden
 					>
 						<?php
@@ -108,65 +127,65 @@ unset($_SESSION["activity_registration_notice"]);
 						?>
 
 						<a
-							href="<?php echo htmlspecialchars($activityRegisterLink); ?>"
-							class="activity-card-link"
-							aria-label="Register for <?php echo htmlspecialchars($activity["title"]); ?>"
+							href = "<?php echo htmlspecialchars($activityRegisterLink); ?>"
+							class = "activity-card-link"
+							aria-label = "Register for <?php echo htmlspecialchars($activity["title"]); ?>"
 						>
-							<div class="activity-card-image">
+							<div class = "activity-card-image">
 								<?php if ($hasImage): ?>
 									<img
-										src="<?php echo htmlspecialchars($image); ?>"
-										alt="<?php echo htmlspecialchars($activity["title"]); ?>"
-										class="activity-image"
+										src = "<?php echo htmlspecialchars($image); ?>"
+										alt = "<?php echo htmlspecialchars($activity["title"]); ?>"
+										class = "activity-image"
 									>
 								<?php else: ?>
 									<div
-										class="activity-default-image"
-										aria-label="Default activity image"
+										class = "activity-default-image"
+										aria-label = "Default activity image"
 									>
-										<i class="bi bi-image"></i>
-										<span>Boardgame Hub</span>
-									</div>
+										<i class = "bi bi-image"></i >
+										<span >Boardgame Hub</span >
+									</div >
 								<?php endif; ?>
-							</div>
+							</div >
 
-							<div class="activity-card-content">
-								<div class="activity-card-top">
-                                        <span class="activity-type">
+							<div class = "activity-card-content">
+								<div class = "activity-card-top">
+                                        <span class = "activity-type">
                                             <?php echo htmlspecialchars($activity["type"]); ?>
-                                        </span>
+                                        </span >
 
-									<span class="activity-price">
+									<span class = "activity-price">
                                             RM <?php echo number_format((float)$activity["price"], 2); ?>
-                                        </span>
-								</div>
+                                        </span >
+								</div >
 
-								<h2 class="activity-card-title">
+								<h2 class = "activity-card-title">
 									<?php echo htmlspecialchars($activity["title"]); ?>
-								</h2>
+								</h2 >
 
-								<p class="activity-description">
+								<p class = "activity-description">
 									<?php echo htmlspecialchars($activity["description"]); ?>
-								</p>
+								</p >
 
-								<div class="activity-details">
-									<div class="activity-detail-item">
-										<i class="bi bi-calendar-event-fill"></i>
-										<div>
-											<span class="activity-detail-label">Date</span>
-											<span class="activity-detail-value">
+								<div class = "activity-details">
+									<div class = "activity-detail-item">
+										<i class = "bi bi-calendar-event-fill"></i >
+										<div >
+											<span class = "activity-detail-label">Date</span >
+											<span class = "activity-detail-value">
                                                     <?php
 													echo htmlspecialchars(date("d M Y", strtotime($activity["date"])));
 													?>
-                                                </span>
-										</div>
-									</div>
+                                                </span >
+										</div >
+									</div >
 
-									<div class="activity-detail-item">
-										<i class="bi bi-clock-fill"></i>
-										<div>
-											<span class="activity-detail-label">Time</span>
-											<span class="activity-detail-value">
+									<div class = "activity-detail-item">
+										<i class = "bi bi-clock-fill"></i >
+										<div >
+											<span class = "activity-detail-label">Time</span >
+											<span class = "activity-detail-value">
                                                     <?php
 													echo htmlspecialchars(date("g:i A",
 														strtotime($activity["start_time"])));
@@ -176,93 +195,93 @@ unset($_SESSION["activity_registration_notice"]);
 													echo htmlspecialchars(date("g:i A",
 														strtotime($activity["end_time"])));
 													?>
-                                                </span>
-										</div>
-									</div>
+                                                </span >
+										</div >
+									</div >
 
-									<div class="activity-detail-item">
-										<i class="bi bi-dice-5-fill"></i>
-										<div>
-											<span class="activity-detail-label">Table</span>
-											<span class="activity-detail-value">
+									<div class = "activity-detail-item">
+										<i class = "bi bi-dice-5-fill"></i >
+										<div >
+											<span class = "activity-detail-label">Table</span >
+											<span class = "activity-detail-value">
                                                     <?php echo htmlspecialchars($activity["table"]); ?>
-                                                </span>
-										</div>
-									</div>
+                                                </span >
+										</div >
+									</div >
 
-									<div class="activity-detail-item">
-										<i class="bi bi-geo-alt-fill"></i>
-										<div>
-											<span class="activity-detail-label">Venue</span>
-											<span class="activity-detail-value">
+									<div class = "activity-detail-item">
+										<i class = "bi bi-geo-alt-fill"></i >
+										<div >
+											<span class = "activity-detail-label">Venue</span >
+											<span class = "activity-detail-value">
                                                     <?php echo htmlspecialchars($activity["venue"]); ?>
-                                                </span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</a>
+                                                </span >
+										</div >
+									</div >
+								</div >
+							</div >
+						</a >
 
-						<div class="activity-card-footer">
-                                <span class="activity-footer-info">
-                                    <i class="bi bi-people-fill me-1"></i>
+						<div class = "activity-card-footer">
+                                <span class = "activity-footer-info">
+                                    <i class = "bi bi-people-fill me-1"></i >
                                     Join the Boardgame Hub community
-                                </span>
+                                </span >
 							<?php if ($registrationStatus === "pending"): ?>
 								<a
-									href="<?php echo htmlspecialchars($activityRegisterLink); ?>"
-									class="btn activity-register-card-btn activity-registration-status-icon activity-registration-pending-icon"
-									aria-label="Registration pending approval"
-									title="Registration pending approval"
+									href = "<?php echo htmlspecialchars($activityRegisterLink); ?>"
+									class = "btn activity-register-card-btn activity-registration-status-icon activity-registration-pending-icon"
+									aria-label = "Registration pending approval"
+									title = "Registration pending approval"
 								>
-									<i class="bi bi-hourglass-split"></i>
-								</a>
+									<i class = "bi bi-hourglass-split"></i >
+								</a >
 							<?php elseif ($registrationStatus === "approved"): ?>
 								<a
-									href="<?php echo htmlspecialchars($activityRegisterLink); ?>"
-									class="btn activity-register-card-btn activity-registration-status-icon activity-registration-approved-icon"
-									aria-label="Registration approved"
-									title="Registration approved"
+									href = "<?php echo htmlspecialchars($activityRegisterLink); ?>"
+									class = "btn activity-register-card-btn activity-registration-status-icon activity-registration-approved-icon"
+									aria-label = "Registration approved"
+									title = "Registration approved"
 								>
-									<i class="bi bi-check-circle"></i>
-								</a>
+									<i class = "bi bi-check-circle"></i >
+								</a >
 							<?php else: ?>
 								<a
-									href="<?php echo htmlspecialchars($activityRegisterLink); ?>"
-									class="btn activity-register-card-btn"
+									href = "<?php echo htmlspecialchars($activityRegisterLink); ?>"
+									class = "btn activity-register-card-btn"
 								>
-									<i class="bi bi-calendar-check me-2"></i>
+									<i class = "bi bi-calendar-check me-2"></i >
 									Register
-								</a>
+								</a >
 							<?php endif; ?>
-						</div>
-					</article>
+						</div >
+					</article >
 				<?php endforeach; ?>
-			</div>
+			</div >
 
 			<nav
-				class="activity-pagination-wrapper"
-				aria-label="Activities pagination"
+				class = "activity-pagination-wrapper"
+				aria-label = "Activities pagination"
 			>
 				<ul
-					id="activity-pagination"
-					class="pagination justify-content-center mb-0"
-				></ul>
-			</nav>
+					id = "activity-pagination"
+					class = "pagination justify-content-center mb-0"
+				></ul >
+			</nav >
 		<?php endif; ?>
-	</main>
+	</main >
 
 	<!-- Bootstrap JavaScript -->
 	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-		crossorigin="anonymous"
-	></script>
+		src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+		integrity = "sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+		crossorigin = "anonymous"
+	></script >
 
 	<!-- Pagination Component -->
-	<script src="components/pagination.js"></script>
+	<script src = "components/pagination.js"></script >
 
-	<script>
+	<script >
         document.addEventListener("DOMContentLoaded", function () {
             const activityItems = document.querySelectorAll(".activity-card");
 
@@ -273,6 +292,6 @@ unset($_SESSION["activity_registration_notice"]);
                 }).setItems(activityItems);
             }
         });
-	</script>
-	</body>
-</html>
+	</script >
+	</body >
+</html >
