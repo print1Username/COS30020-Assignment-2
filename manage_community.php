@@ -1,7 +1,9 @@
 <?php $reviewKind = "community";
 require_once __DIR__."/manage_review_db.php";
 require_once __DIR__."/manage_community_info_db.php";
-require_once __DIR__."/file_upload.php"; ?>
+require_once __DIR__."/file_upload.php";
+require_once __DIR__."/admin_disclosure.php";
+require_once __DIR__."/admin_review_actions.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -45,113 +47,110 @@ require_once __DIR__."/file_upload.php"; ?>
 		<?php if ($joinError): ?>
 			<div class="alert alert-danger"><?= adminEscape($joinError) ?></div><?php endif; ?>
 		<div <?= $communityTab !== 'post' ? 'hidden' : '' ?>>
-			<details class="admin-panel admin-disclosure mb-4" <?= $edit || $error ? 'open' : '' ?>>
-				<summary class="admin-disclosure-header"><span><span
-							class="admin-disclosure-title"
-						><?= $edit ? 'Edit Post' : 'Create Post' ?></span><span class="admin-disclosure-subtitle">Enter author and post content details</span></span>
-				</summary>
-				<form method="post" enctype="multipart/form-data" class="admin-disclosure-content"><input
-						type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>"
-					><input type="hidden" name="action" value="<?= $edit ? 'edit' : 'add' ?>"><input
-						type="hidden" name="id" value="<?= (int)($edit['id'] ?? 0) ?>"
-					>
-					<div class="admin-post-form-grid">
-						<section class="admin-post-form-section" aria-labelledby="post-user-title">
-							<h3 id="post-user-title">User Details</h3>
-							<?php foreach (['first_name' => 'First Name', 'last_name' => 'Last Name'] as $field =>
-							               $label):
-								?>
-								<div><label class="form-label" for="<?= $field ?>"><?= $label ?></label><input
-										class="form-control" id="<?= $field ?>" name="<?= $field ?>" maxlength="50"
-										required
-										value="<?= adminEscape($edit[$field] ?? ($_POST[$field] ?? $adminUser[$field])) ?>"
-									></div>
-							<?php endforeach; ?>
-							<div><label class="form-label" for="email">Email <span
-										class="text-muted"
-									>(optional)</span></label><input
-									class="form-control" id="email" name="email" type="email" maxlength="50"
-									value="<?= adminEscape($edit['email'] ?? ($_POST['email'] ?? $adminUser['email'])) ?>"
+			<?php adminDisclosureStart($edit ? 'Edit Post' : 'Create Post', 'Enter author and post content details',
+				(bool)($edit || $error)); ?>
+			<form method="post" enctype="multipart/form-data" class="admin-disclosure-content"><input
+					type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>"
+				><input type="hidden" name="action" value="<?= $edit ? 'edit' : 'add' ?>"><input
+					type="hidden" name="id" value="<?= (int)($edit['id'] ?? 0) ?>"
+				>
+				<div class="admin-post-form-grid">
+					<section class="admin-post-form-section" aria-labelledby="post-user-title">
+						<h3 id="post-user-title">User Details</h3>
+						<?php foreach (['first_name' => 'First Name', 'last_name' => 'Last Name'] as $field =>
+						               $label):
+							?>
+							<div><label class="form-label" for="<?= $field ?>"><?= $label ?></label><input
+									class="form-control" id="<?= $field ?>" name="<?= $field ?>" maxlength="50"
+									required
+									value="<?= adminEscape($edit[$field] ?? ($_POST[$field] ?? $adminUser[$field])) ?>"
 								></div>
-						</section>
-						<section class="admin-post-form-section" aria-labelledby="post-content-title">
-							<h3 id="post-content-title">Post Content</h3>
-							<div class="admin-community-picker" data-admin-community-picker>
-								<label class="form-label" for="community-search">Community</label>
-								<div class="admin-activity-search-menu">
-									<div class="input-group admin-activity-search-group">
-										<input
-											class="form-control" id="community-search" type="search"
-											placeholder="Search communities by name" autocomplete="off" required
-											aria-controls="admin-community-results" aria-expanded="false"
-										>
-										<button
-											type="button" class="btn admin-activity-toggle"
-											aria-label="Show community options" aria-controls="admin-community-results"
-											aria-expanded="false"
-										><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
-									</div>
+						<?php endforeach; ?>
+						<div><label class="form-label" for="email">Email <span
+									class="text-muted"
+								>(optional)</span></label><input
+								class="form-control" id="email" name="email" type="email" maxlength="50"
+								value="<?= adminEscape($edit['email'] ?? ($_POST['email'] ?? $adminUser['email'])) ?>"
+							></div>
+					</section>
+					<section class="admin-post-form-section" aria-labelledby="post-content-title">
+						<h3 id="post-content-title">Post Content</h3>
+						<div class="admin-community-picker" data-admin-community-picker>
+							<label class="form-label" for="community-search">Community</label>
+							<div class="admin-activity-search-menu">
+								<div class="input-group admin-activity-search-group">
 									<input
-										type="hidden" name="community_id"
-										value="<?= (int)($edit['community_id'] ?? ($_POST['community_id'] ?? 0)) ?>"
+										class="form-control" id="community-search" type="search"
+										placeholder="Search communities by name" autocomplete="off" required
+										aria-controls="admin-community-results" aria-expanded="false"
 									>
-									<div
-										class="admin-activity-results" id="admin-community-results"
-										aria-label="Matching communities" hidden
-									>
-										<?php foreach ($communities as $community): ?>
-											<button type="button" class="admin-activity-result admin-community-result"
-													data-community-id="<?= (int)$community['id'] ?>"
-													data-community-title="<?= adminEscape($community['title']) ?>"><?= adminEscape($community['title']) ?></button><?php
-										endforeach; ?>
-										<p class="admin-activity-no-results text-muted" hidden>No matching
-											communities.</p>
-									</div>
+									<button
+										type="button" class="btn admin-activity-toggle"
+										aria-label="Show community options" aria-controls="admin-community-results"
+										aria-expanded="false"
+									><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
+								</div>
+								<input
+									type="hidden" name="community_id"
+									value="<?= (int)($edit['community_id'] ?? ($_POST['community_id'] ?? 0)) ?>"
+								>
+								<div
+									class="admin-activity-results" id="admin-community-results"
+									aria-label="Matching communities" hidden
+								>
+									<?php foreach ($communities as $community): ?>
+										<button type="button" class="admin-activity-result admin-community-result"
+												data-community-id="<?= (int)$community['id'] ?>"
+												data-community-title="<?= adminEscape($community['title']) ?>"><?= adminEscape($community['title']) ?></button><?php
+									endforeach; ?>
+									<p class="admin-activity-no-results text-muted" hidden>No matching
+										communities.</p>
 								</div>
 							</div>
-							<div><label class="form-label" for="title">Title</label><input
-									class="form-control" id="title" name="title" maxlength="100" required
-									value="<?= adminEscape($edit['title'] ?? ($_POST['title'] ?? '')) ?>"
-								></div>
-							<div><label class="form-label" for="description">Description</label><textarea
-									class="form-control" id="description" name="description" rows="5" required
-								><?= adminEscape($edit['description'] ?? ($_POST['description'] ?? '')) ?></textarea>
-							</div>
-							<div><?php
-								$currentAdminPostImage = $edit && !empty($edit["contribution_image"]) &&
-								is_file(__DIR__."/".$edit["contribution_image"])
-									? $edit["contribution_image"] : "";
-								renderFileUpload([
-									"id" => "contribution_image",
-									"name" => "contribution_image",
-									"label" => "Post Image",
-									"accept" => "image/jpeg,image/png",
-									"kind" => "image",
-									"types" => "JPG, JPEG and PNG images only",
-									"max_size" => "maximum 5MB",
-									"current_url" => $currentAdminPostImage,
-									"current_name" => $currentAdminPostImage !== "" ? basename($currentAdminPostImage) : ""
-								]);
-								?></div>
-							<?php if ($edit): ?>
-								<div class="admin-post-status"><label
-									class="form-label" for="status"
-								>Status</label><select
-									class="form-select" id="status" name="status"
-								><?php foreach (['pending', 'approved', 'rejected'] as $status): ?>
-										<option
-										value="<?= $status ?>" <?= ($edit['status'] ?? 'pending') === $status ? 'selected' : '' ?>><?= ucfirst($status) ?></option><?php
-									endforeach; ?></select></div><?php endif; ?>
-						</section>
-					</div>
-					<div class="admin-post-form-actions">
-						<button
-							class="btn btn-primary"
-						><?= $edit ? 'Save Post' : 'Create Post' ?></button><?php if ($edit): ?><a
-							class="btn btn-outline-secondary" href="manage_community.php?tab=post"
-						>Cancel</a><?php endif; ?></div>
-				</form>
-			</details>
+						</div>
+						<div><label class="form-label" for="title">Title</label><input
+								class="form-control" id="title" name="title" maxlength="100" required
+								value="<?= adminEscape($edit['title'] ?? ($_POST['title'] ?? '')) ?>"
+							></div>
+						<div><label class="form-label" for="description">Description</label><textarea
+								class="form-control" id="description" name="description" rows="5" required
+							><?= adminEscape($edit['description'] ?? ($_POST['description'] ?? '')) ?></textarea>
+						</div>
+						<div><?php
+							$currentAdminPostImage = $edit && !empty($edit["contribution_image"]) &&
+							is_file(__DIR__."/".$edit["contribution_image"])
+								? $edit["contribution_image"] : "";
+							renderFileUpload([
+								"id" => "contribution_image",
+								"name" => "contribution_image",
+								"label" => "Post Image",
+								"accept" => "image/jpeg,image/png",
+								"kind" => "image",
+								"types" => "JPG, JPEG and PNG images only",
+								"max_size" => "maximum 5MB",
+								"current_url" => $currentAdminPostImage,
+								"current_name" => $currentAdminPostImage !== "" ? basename($currentAdminPostImage) : ""
+							]);
+							?></div>
+						<?php if ($edit): ?>
+							<div class="admin-post-status"><label
+								class="form-label" for="status"
+							>Status</label><select
+								class="form-select" id="status" name="status"
+							><?php foreach (['pending', 'approved', 'rejected'] as $status): ?>
+									<option
+									value="<?= $status ?>" <?= ($edit['status'] ?? 'pending') === $status ? 'selected' : '' ?>><?= ucfirst($status) ?></option><?php
+								endforeach; ?></select></div><?php endif; ?>
+					</section>
+				</div>
+				<div class="admin-post-form-actions">
+					<button
+						class="btn btn-primary"
+					><?= $edit ? 'Save Post' : 'Create Post' ?></button><?php if ($edit): ?><a
+						class="btn btn-outline-secondary" href="manage_community.php?tab=post"
+					>Cancel</a><?php endif; ?></div>
+			</form>
+			<?php adminDisclosureEnd(); ?>
 			<?php
 			$pendingRows = array_values(array_filter($rows, fn($row) => $row['status'] === 'pending'));
 			$reviewedRows = array_values(array_filter($rows,
@@ -202,26 +201,7 @@ require_once __DIR__."/file_upload.php"; ?>
 										<td><?= adminEscape(adminFormatDateTime($row['created_at'])) ?></td>
 										<td>
 											<div class="admin-actions admin-post-actions">
-												<?php if ($row['status'] === 'pending'): ?>
-													<?php
-													foreach (['approved' => ['Approve', 'bi-check-lg', 'btn-success'], 'rejected' => ['Reject', 'bi-x-lg', 'btn-danger']]
-													         as $action => [$label, $icon, $buttonClass]): ?>
-														<form method="post"><input
-																type="hidden" name="token"
-																value="<?= adminEscape(adminToken()) ?>"
-															><input
-																type="hidden" name="action" value="<?= $action ?>"
-															><input
-																type="hidden" name="id" value="<?= (int)$row['id'] ?>"
-															>
-															<button
-																type="submit" class="btn btn-sm <?= $buttonClass ?>"
-																title="<?= $label ?>"
-																aria-label="<?= $label ?> post <?= (int)$row['id'] ?>"
-															><i class="bi <?= $icon ?>" aria-hidden="true"></i></button>
-														</form>
-													<?php endforeach; ?>
-												<?php endif; ?>
+												<?php adminReviewActions((int)$row['id'], $row['status'], 'post'); ?>
 												<a
 													class="btn btn-sm btn-outline-primary<?= $row['status'] === 'pending' ? ' ms-2' : '' ?>"
 													href="manage_community.php?edit=<?= (int)$row['id'] ?>"
@@ -251,38 +231,34 @@ require_once __DIR__."/file_upload.php"; ?>
 			</section>
 		</div>
 		<div <?= $communityTab !== 'create' ? 'hidden' : '' ?>>
-			<details
-				class="admin-panel admin-disclosure mb-4" <?= $communityEdit || ($communityError && ($_POST['action'] ?? '') !== 'community_delete') ? 'open' : '' ?>>
-				<summary class="admin-disclosure-header"><span><span
-							class="admin-disclosure-title"
-						><?= $communityEdit ? 'Edit Community' : 'Create Community' ?></span><span
-							class="admin-disclosure-subtitle"
-						>Enter community details</span></span></summary>
-				<form method="post" class="admin-disclosure-content">
-					<input type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>">
-					<input
-						type="hidden" name="action" value="<?= $communityEdit ? 'community_edit' : 'community_add' ?>"
-					>
-					<input type="hidden" name="community_id" value="<?= (int)($communityEdit['id'] ?? 0) ?>">
-					<div class="admin-post-form-section">
-						<div><label class="form-label" for="community-title">Name</label><input
-								class="form-control" id="community-title" name="community_title" maxlength="100"
-								required
-								value="<?= adminEscape($communityEdit['title'] ?? ($_POST['community_title'] ?? '')) ?>"
-							></div>
-						<div><label class="form-label" for="community-description">Description <span class="text-muted">(optional)</span></label><textarea
-								class="form-control" id="community-description" name="community_description" rows="4"
-							><?= adminEscape($communityEdit['description'] ?? ($_POST['community_description'] ?? '')) ?></textarea>
-						</div>
+			<?php adminDisclosureStart($communityEdit ? 'Edit Community' : 'Create Community',
+				'Enter community details',
+				(bool)($communityEdit || ($communityError && ($_POST['action'] ?? '') !== 'community_delete'))); ?>
+			<form method="post" class="admin-disclosure-content">
+				<input type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>">
+				<input
+					type="hidden" name="action" value="<?= $communityEdit ? 'community_edit' : 'community_add' ?>"
+				>
+				<input type="hidden" name="community_id" value="<?= (int)($communityEdit['id'] ?? 0) ?>">
+				<div class="admin-post-form-section">
+					<div><label class="form-label" for="community-title">Name</label><input
+							class="form-control" id="community-title" name="community_title" maxlength="100"
+							required
+							value="<?= adminEscape($communityEdit['title'] ?? ($_POST['community_title'] ?? '')) ?>"
+						></div>
+					<div><label class="form-label" for="community-description">Description <span class="text-muted">(optional)</span></label><textarea
+							class="form-control" id="community-description" name="community_description" rows="4"
+						><?= adminEscape($communityEdit['description'] ?? ($_POST['community_description'] ?? '')) ?></textarea>
 					</div>
-					<div class="admin-post-form-actions">
-						<button
-							class="btn btn-primary"
-						><?= $communityEdit ? 'Save Community' : 'Create Community' ?></button><?php if ($communityEdit): ?>
-							<a class="btn btn-outline-secondary" href="manage_community.php">Cancel</a><?php endif; ?>
-					</div>
-				</form>
-			</details>
+				</div>
+				<div class="admin-post-form-actions">
+					<button
+						class="btn btn-primary"
+					><?= $communityEdit ? 'Save Community' : 'Create Community' ?></button><?php if ($communityEdit): ?>
+						<a class="btn btn-outline-secondary" href="manage_community.php">Cancel</a><?php endif; ?>
+				</div>
+			</form>
+			<?php adminDisclosureEnd(); ?>
 			<section class="admin-panel"><h2 class="h4">Manage Community</h2>
 				<?php if (!$communityRows): ?><p class="mb-0">No communities are available.</p><?php else: ?>
 					<div class="table-responsive">
@@ -359,21 +335,8 @@ require_once __DIR__."/file_upload.php"; ?>
 								<td>Pending</td>
 								<td>
 									<div class="admin-actions admin-post-actions">
-										<?php
-										foreach (['join_approve' => ['Approve', 'bi-check-lg', 'btn-success'], 'join_reject' => ['Reject', 'bi-x-lg', 'btn-danger']]
-										         as $action => [$label, $icon, $buttonClass]): ?>
-											<form method="post"><input
-													type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>"
-												><input type="hidden" name="action" value="<?= $action ?>"><input
-													type="hidden" name="join_id" value="<?= (int)$joinRow['id'] ?>"
-												>
-												<button
-													type="submit" class="btn btn-sm <?= $buttonClass ?>"
-													title="<?= $label ?>"
-													aria-label="<?= $label ?> join request <?= (int)$joinRow['id'] ?>"
-												><i class="bi <?= $icon ?>" aria-hidden="true"></i></button>
-											</form>
-										<?php endforeach; ?>
+										<?php adminReviewActions((int)$joinRow['id'], 'pending', 'join request',
+											true); ?>
 									</div>
 								</td>
 								</tr><?php endforeach; ?>

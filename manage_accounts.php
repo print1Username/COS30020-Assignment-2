@@ -1,4 +1,5 @@
-<?php require_once __DIR__."/manage_accounts_db.php"; ?>
+<?php require_once __DIR__."/manage_accounts_db.php";
+require_once __DIR__."/admin_disclosure.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -20,48 +21,45 @@
 		<?php if ($error): ?>
 			<div class="alert alert-danger"><?= adminEscape($error) ?></div><?php endif; ?><?php if ($notice): ?>
 			<div class="alert alert-success"><?= adminEscape($notice) ?></div><?php endif; ?>
-		<details class="admin-panel admin-disclosure mb-4" <?= $edit || $error ? 'open' : '' ?>>
-			<summary class="admin-disclosure-header"><span><span
-						class="admin-disclosure-title"
-					><?= $edit ? "Edit Account" : "Add Account" ?></span><span class="admin-disclosure-subtitle">Enter user details and account credentials</span></span>
-			</summary>
-			<form method="post" class="row g-3 admin-disclosure-content"><input
-					type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>"
-				><input type="hidden" name="action" value="<?= $edit ? 'edit' : 'add' ?>"><input
-					type="hidden" name="original_email" value="<?= adminEscape($edit['email'] ?? '') ?>"
+		<?php adminDisclosureStart($edit ? "Edit Account" : "Add Account", "Enter user details and account credentials",
+			(bool)($edit || $error)); ?>
+		<form method="post" class="row g-3 admin-disclosure-content"><input
+				type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>"
+			><input type="hidden" name="action" value="<?= $edit ? 'edit' : 'add' ?>"><input
+				type="hidden" name="original_email" value="<?= adminEscape($edit['email'] ?? '') ?>"
+			>
+			<?php
+			foreach (['email' => 'Email', 'first_name' => 'First Name', 'last_name' => 'Last Name', 'dob' => 'Date of Birth', 'hometown' => 'Hometown']
+			         as $field => $label): ?>
+				<div class="col-md-4"><label class="form-label" for="<?= $field ?>"><?= $label ?></label><input
+					class="form-control" id="<?= $field ?>" name="<?= $field ?>"
+					type="<?= $field === 'dob' ? 'date' : ($field === 'email' ? 'email' : 'text') ?>" maxlength="50"
+					value="<?= adminEscape($edit[$field] ?? '') ?>" <?= $field === 'dob' ? '' : 'required' ?>>
+				</div><?php endforeach; ?>
+			<div class="col-md-4"><label class="form-label" for="gender">Gender</label><select
+					class="form-select" id="gender" name="gender" required
 				>
-				<?php
-				foreach (['email' => 'Email', 'first_name' => 'First Name', 'last_name' => 'Last Name', 'dob' => 'Date of Birth', 'hometown' => 'Hometown']
-				         as $field => $label): ?>
-					<div class="col-md-4"><label class="form-label" for="<?= $field ?>"><?= $label ?></label><input
-						class="form-control" id="<?= $field ?>" name="<?= $field ?>"
-						type="<?= $field === 'dob' ? 'date' : ($field === 'email' ? 'email' : 'text') ?>" maxlength="50"
-						value="<?= adminEscape($edit[$field] ?? '') ?>" <?= $field === 'dob' ? '' : 'required' ?>>
-					</div><?php endforeach; ?>
-				<div class="col-md-4"><label class="form-label" for="gender">Gender</label><select
-						class="form-select" id="gender" name="gender" required
-					>
-						<option value="">Select</option><?php foreach (['Male', 'Female'] as $option): ?>
-							<option
-							value="<?= $option ?>" <?= ($edit['gender'] ?? '') === $option ? 'selected' : '' ?>><?= $option ?></option><?php
-						endforeach; ?></select></div>
-				<div class="col-md-4"><label class="form-label" for="type">Account Type</label><select
-						class="form-select" id="type" name="type" required
-					><?php foreach (['user', 'admin'] as $option): ?>
-							<option
-							value="<?= $option ?>" <?= ($edit['type'] ?? 'user') === $option ? 'selected' : '' ?>><?= ucfirst($option) ?></option><?php
-						endforeach; ?></select></div>
-				<div class="col-md-4"><label
-						class="form-label" for="password"
-					>Password <?= $edit ? '(leave blank to keep)' : '' ?></label><input
-						class="form-control" id="password" name="password"
-						type="password" <?= $edit ? '' : 'required' ?>></div>
-				<div class="col-12">
-					<button class="btn btn-primary" type="submit">Save Account</button> <?php if ($edit): ?><a
-						class="btn btn-outline-secondary" href="manage_accounts.php"
-					>Cancel</a><?php endif; ?></div>
-			</form>
-		</details>
+					<option value="">Select</option><?php foreach (['Male', 'Female'] as $option): ?>
+						<option
+						value="<?= $option ?>" <?= ($edit['gender'] ?? '') === $option ? 'selected' : '' ?>><?= $option ?></option><?php
+					endforeach; ?></select></div>
+			<div class="col-md-4"><label class="form-label" for="type">Account Type</label><select
+					class="form-select" id="type" name="type" required
+				><?php foreach (['user', 'admin'] as $option): ?>
+						<option
+						value="<?= $option ?>" <?= ($edit['type'] ?? 'user') === $option ? 'selected' : '' ?>><?= ucfirst($option) ?></option><?php
+					endforeach; ?></select></div>
+			<div class="col-md-4"><label
+					class="form-label" for="password"
+				>Password <?= $edit ? '(leave blank to keep)' : '' ?></label><input
+					class="form-control" id="password" name="password"
+					type="password" <?= $edit ? '' : 'required' ?>></div>
+			<div class="col-12">
+				<button class="btn btn-primary" type="submit">Save Account</button> <?php if ($edit): ?><a
+					class="btn btn-outline-secondary" href="manage_accounts.php"
+				>Cancel</a><?php endif; ?></div>
+		</form>
+		<?php adminDisclosureEnd(); ?>
 		<section class="admin-panel"><h2 class="h4">Accounts</h2>
 			<div class="table-responsive">
 				<table class="table table-striped align-middle">

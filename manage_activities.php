@@ -1,5 +1,7 @@
 <?php $reviewKind = "activities";
-require_once __DIR__."/manage_review_db.php"; ?>
+require_once __DIR__."/manage_review_db.php";
+require_once __DIR__."/admin_disclosure.php";
+require_once __DIR__."/admin_review_actions.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -21,78 +23,75 @@ require_once __DIR__."/manage_review_db.php"; ?>
 		<?php if ($error): ?>
 			<div class="alert alert-danger"><?= adminEscape($error) ?></div><?php endif; ?><?php if ($notice): ?>
 			<div class="alert alert-success"><?= adminEscape($notice) ?></div><?php endif; ?>
-		<details class="admin-panel admin-disclosure mb-4" <?= $edit || $error ? 'open' : '' ?>>
-			<summary class="admin-disclosure-header"><span><span
-						class="admin-disclosure-title"
-					><?= $edit ? 'Edit' : 'Add' ?> Registration</span><span class="admin-disclosure-subtitle">Enter participant and activity registration details</span></span>
-			</summary>
-			<form method="post" class="row g-3 admin-disclosure-content"><input
-					type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>"
-				><input type="hidden" name="action" value="<?= $edit ? 'edit' : 'add' ?>"><input
-					type="hidden" name="id" value="<?= (int)($edit['id'] ?? 0) ?>"
-				>
-				<?php if (!$edit): ?>
-					<div class="col-12 admin-activity-picker" data-admin-activity-picker>
-						<label class="form-label" for="activity-search">Activity</label>
-						<div class="admin-activity-search-menu">
-							<div class="input-group admin-activity-search-group">
-								<input
-									class="form-control" id="activity-search" type="search"
-									placeholder="Search activities by name" autocomplete="off" required
-									aria-controls="admin-activity-results" aria-expanded="false"
-								>
-								<button
-									type="button" class="btn admin-activity-toggle" aria-label="Show activity options"
-									aria-controls="admin-activity-results" aria-expanded="false"
-								><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
-							</div>
-							<div
-								class="admin-activity-results" id="admin-activity-results"
-								aria-label="Matching activities" hidden
+		<?php adminDisclosureStart(($edit ? 'Edit' : 'Add')." Registration",
+			"Enter participant and activity registration details", (bool)($edit || $error)); ?>
+		<form method="post" class="row g-3 admin-disclosure-content"><input
+				type="hidden" name="token" value="<?= adminEscape(adminToken()) ?>"
+			><input type="hidden" name="action" value="<?= $edit ? 'edit' : 'add' ?>"><input
+				type="hidden" name="id" value="<?= (int)($edit['id'] ?? 0) ?>"
+			>
+			<?php if (!$edit): ?>
+				<div class="col-12 admin-activity-picker" data-admin-activity-picker>
+					<label class="form-label" for="activity-search">Activity</label>
+					<div class="admin-activity-search-menu">
+						<div class="input-group admin-activity-search-group">
+							<input
+								class="form-control" id="activity-search" type="search"
+								placeholder="Search activities by name" autocomplete="off" required
+								aria-controls="admin-activity-results" aria-expanded="false"
 							>
-								<?php foreach ($events as $event): ?><?php if ($event['status'] === 'approved'): ?>
-									<button
-										type="button" class="admin-activity-result"
-										data-activity-id="<?= (int)$event['id'] ?>"
-										data-activity-title="<?= adminEscape($event['title']) ?>"
-										data-activity-category="<?= adminEscape($event['activity_type']) ?>"
-										data-activity-date="<?= adminEscape($event['date']) ?>"
-										data-activity-time="<?= adminEscape($event['time']) ?>"
-										data-activity-end-time="<?= adminEscape($event['end_time']) ?>"
-										data-activity-venue="<?= adminEscape($event['venue']) ?>"
-										data-activity-table="<?= adminEscape($event['table_name']) ?>"
-										data-activity-price="<?= adminEscape($event['price']) ?>"
-										data-activity-description="<?= adminEscape($event['description']) ?>"
-									><?= adminEscape($event['title']) ?></button>
-								<?php endif; ?><?php endforeach; ?>
-								<p class="admin-activity-no-results" hidden>No matching activities.</p>
-							</div>
+							<button
+								type="button" class="btn admin-activity-toggle" aria-label="Show activity options"
+								aria-controls="admin-activity-results" aria-expanded="false"
+							><i class="bi bi-chevron-down" aria-hidden="true"></i></button>
 						</div>
-						<input type="hidden" name="activity_id" value="<?= (int)($_POST['activity_id'] ?? 0) ?>">
-						<div class="admin-activity-details" hidden aria-live="polite"></div>
+						<div
+							class="admin-activity-results" id="admin-activity-results"
+							aria-label="Matching activities" hidden
+						>
+							<?php foreach ($events as $event): ?><?php if ($event['status'] === 'approved'): ?>
+								<button
+									type="button" class="admin-activity-result"
+									data-activity-id="<?= (int)$event['id'] ?>"
+									data-activity-title="<?= adminEscape($event['title']) ?>"
+									data-activity-category="<?= adminEscape($event['activity_type']) ?>"
+									data-activity-date="<?= adminEscape($event['date']) ?>"
+									data-activity-time="<?= adminEscape($event['time']) ?>"
+									data-activity-end-time="<?= adminEscape($event['end_time']) ?>"
+									data-activity-venue="<?= adminEscape($event['venue']) ?>"
+									data-activity-table="<?= adminEscape($event['table_name']) ?>"
+									data-activity-price="<?= adminEscape($event['price']) ?>"
+									data-activity-description="<?= adminEscape($event['description']) ?>"
+								><?= adminEscape($event['title']) ?></button>
+							<?php endif; ?><?php endforeach; ?>
+							<p class="admin-activity-no-results" hidden>No matching activities.</p>
+						</div>
 					</div>
-				<?php endif; ?>
-				<?php
-				foreach ($edit ? ['first_name' => 'First Name', 'last_name' => 'Last Name', 'email' => 'Email', 'contact_number' => 'Contact Number', 'date' => 'Date', 'time' => 'Time'] : ['first_name' => 'First Name', 'last_name' => 'Last Name', 'email' => 'Email', 'contact_number' => 'Contact Number']
-				         as $field => $label): ?>
-					<div class="col-md-4"><label class="form-label" for="<?= $field ?>"><?= $label ?></label><input
-						class="form-control" id="<?= $field ?>" name="<?= $field ?>"
-						type="<?= in_array($field, ['email', 'date', 'time'], true) ? $field : 'text' ?>"
-						value="<?= adminEscape($edit[$field] ?? ($_POST[$field] ?? '')) ?>" <?= in_array($field,
-						['email', 'first_name', 'last_name', 'contact_number'], true) ? 'required' : '' ?>></div><?php
-				endforeach; ?><?php if ($edit): ?>
-					<div class="col-md-4"><label class="form-label" for="status">Status</label><select
-						class="form-select" id="status" name="status"
-					><?php foreach (['pending', 'approved', 'rejected'] as $status): ?>
-							<option
-							value="<?= $status ?>" <?= ($edit['status'] ?? 'pending') === $status ? 'selected' : '' ?>><?= ucfirst($status) ?></option><?php
-						endforeach; ?></select></div><?php endif; ?>
-				<div class="col-12">
-					<button class="btn btn-primary">Save Registration</button> <?php if ($edit): ?><a
-						class="btn btn-outline-secondary" href="manage_activities.php"
-					>Cancel</a><?php endif; ?></div>
-			</form>
-		</details>
+					<input type="hidden" name="activity_id" value="<?= (int)($_POST['activity_id'] ?? 0) ?>">
+					<div class="admin-activity-details" hidden aria-live="polite"></div>
+				</div>
+			<?php endif; ?>
+			<?php
+			foreach ($edit ? ['first_name' => 'First Name', 'last_name' => 'Last Name', 'email' => 'Email', 'contact_number' => 'Contact Number', 'date' => 'Date', 'time' => 'Time'] : ['first_name' => 'First Name', 'last_name' => 'Last Name', 'email' => 'Email', 'contact_number' => 'Contact Number']
+			         as $field => $label): ?>
+				<div class="col-md-4"><label class="form-label" for="<?= $field ?>"><?= $label ?></label><input
+					class="form-control" id="<?= $field ?>" name="<?= $field ?>"
+					type="<?= in_array($field, ['email', 'date', 'time'], true) ? $field : 'text' ?>"
+					value="<?= adminEscape($edit[$field] ?? ($_POST[$field] ?? '')) ?>" <?= in_array($field,
+					['email', 'first_name', 'last_name', 'contact_number'], true) ? 'required' : '' ?>></div><?php
+			endforeach; ?><?php if ($edit): ?>
+				<div class="col-md-4"><label class="form-label" for="status">Status</label><select
+					class="form-select" id="status" name="status"
+				><?php foreach (['pending', 'approved', 'rejected'] as $status): ?>
+						<option
+						value="<?= $status ?>" <?= ($edit['status'] ?? 'pending') === $status ? 'selected' : '' ?>><?= ucfirst($status) ?></option><?php
+					endforeach; ?></select></div><?php endif; ?>
+			<div class="col-12">
+				<button class="btn btn-primary">Save Registration</button> <?php if ($edit): ?><a
+					class="btn btn-outline-secondary" href="manage_activities.php"
+				>Cancel</a><?php endif; ?></div>
+		</form>
+		<?php adminDisclosureEnd(); ?>
 		<?php
 		$pendingRows = array_values(array_filter($rows, fn($row) => $row['status'] === 'pending'));
 		$reviewedRows = array_values(array_filter($rows,
@@ -136,24 +135,8 @@ require_once __DIR__."/manage_review_db.php"; ?>
 									<td><?= adminEscape($row['status']) ?></td>
 									<td>
 										<div class="admin-actions">
-											<?php if ($row['status'] === 'pending'): ?>
-												<?php
-												foreach (['approved' => ['Approve', 'bi-check-lg', 'btn-success'], 'rejected' => ['Reject', 'bi-x-lg', 'btn-danger']]
-												         as $action => [$label, $icon, $buttonClass]): ?>
-													<form method="post"><input
-															type="hidden" name="token"
-															value="<?= adminEscape(adminToken()) ?>"
-														><input
-															type="hidden" name="action" value="<?= $action ?>"
-														><input type="hidden" name="id" value="<?= (int)$row['id'] ?>">
-														<button
-															type="submit" class="btn btn-sm <?= $buttonClass ?>"
-															title="<?= $label ?>"
-															aria-label="<?= $label ?> registration <?= (int)$row['id'] ?>"
-														><i class="bi <?= $icon ?>" aria-hidden="true"></i></button>
-													</form>
-												<?php endforeach; ?>
-											<?php endif; ?>
+											<?php adminReviewActions((int)$row['id'], $row['status'],
+												'registration'); ?>
 											<a
 												class="btn btn-sm btn-outline-primary<?= $row['status'] === 'pending' ? ' ms-2' : '' ?>"
 												href="manage_activities.php?edit=<?= (int)$row['id'] ?>"
