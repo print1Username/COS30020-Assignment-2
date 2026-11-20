@@ -33,12 +33,12 @@
 		<div class = "container">
 			<p class = "text-uppercase text-secondary fw-bold">Boardgame Hub</p >
 			<h1 >Admin Main Menu</h1 >
-			<p class = "text-secondary">Manage accounts, community contributions and activity registrations.</p >
+			<p class = "text-secondary">Manage accounts, catalog, community contributions and activity registrations.</p >
 		</div >
 	</header >
 	<main class = "container py-5">
 		<div class = "row g-4">
-			<div class = "col-md-4">
+			<div class = "col-md-6">
 				<article class = "admin-card">
 					<h2 >Manage User Accounts</h2 >
 					<p >Add, edit or delete user accounts.</p >
@@ -50,7 +50,14 @@
 					</a >
 				</article >
 			</div >
-			<div class = "col-md-4">
+			<div class = "col-md-6">
+                <article class = "admin-card">
+                    <h2 >Manage Catalog</h2 >
+                    <p >Create, edit or delete board games in the catalog.</p >
+                    <a class = "btn admin-action" href = "manage_catalog.php">Manage Catalog</a >
+                </article >
+            </div >
+			<div class = "col-md-6">
 				<article class = "admin-card">
 					<h2 >Manage Communities</h2 >
 					<p >Manage communities, membership requests and posts.</p >
@@ -73,7 +80,7 @@
 					</div >
 				</article >
 			</div >
-			<div class = "col-md-4">
+			<div class = "col-md-6">
 				<article class = "admin-card">
 					<h2 >Manage Activities</h2 >
 					<p >Add, edit, delete or review activity registrations.</p >
@@ -92,7 +99,11 @@
 				</article >
 			</div >
 		</div >
-	</main >
+        <a class = "admin-card admin-about-card mt-4" href = "about.php">
+            <div><h2 >About Us</h2 ><p class = "mb-0">Learn more about Boardgame Hub, its purpose, features, and project information.</p ></div>
+            <span class = "btn admin-action">Learn More &rarr;</span >
+        </a >
+    </main >
 	<script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script >
 	</body >
 </html >

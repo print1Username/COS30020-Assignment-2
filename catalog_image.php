@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__."/auth.php";
-requireUser();
+requireUser(true);
 require_once __DIR__."/db_connect.php";
 
 $gameId = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);

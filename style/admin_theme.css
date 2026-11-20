@@ -522,3 +522,28 @@ main > h1 {
         padding-bottom: 0.65rem;
     }
 }
+
+.admin-about-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: auto;
+    min-height: 150px;
+    text-decoration: none;
+    color: var(--admin-white);
+    background: var(--admin-purple-dark);
+    border: 1px solid var(--admin-purple-dark);
+}
+.admin-about-card p { color: #e9e1f4; }
+.admin-about-card:hover { color: var(--admin-white); border-color: var(--admin-purple-light); }
+.admin-about-card .btn {
+    margin-top: 0;
+    color: var(--admin-purple-dark);
+    background: var(--admin-white);
+    border-color: var(--admin-white);
+}
+.admin-about-card .btn:hover { color: var(--admin-purple-dark); }
+@media (max-width: 575px) {
+    .admin-about-card { flex-direction: column; align-items: flex-start; }
+}

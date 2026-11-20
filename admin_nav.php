@@ -21,7 +21,7 @@
 		>
 			<div class = "navbar-nav me-auto">
 				<?php
-				foreach ( [ "main_menu_admin.php" => "Admin Menu", "manage_accounts.php" => "Accounts", "manage_community.php" => "Community", "manage_activities.php" => "Activities", "about.php" => "About" ]
+				foreach ( [ "main_menu_admin.php" => "Admin Menu", "manage_accounts.php" => "Accounts", "manage_catalog.php" => "Catalog", "manage_community.php" => "Community", "manage_activities.php" => "Activities", "about.php" => "About" ]
 					as $adminPage => $adminLabel
 				): ?>
 					<a
