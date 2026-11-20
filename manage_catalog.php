@@ -128,43 +128,48 @@ require_once __DIR__."/file_upload.php";
 		</form >
 		<?php adminDisclosureEnd(); ?>
 		<section class = "admin-panel">
-			<h2 >Manage Catalog</h2 >
-			<div class = "table-responsive">
-				<table class = "table align-middle">
-					<thead >
-					<tr >
-						<th >ID</th >
-						<th >Name</th >
-						<th >Categories</th >
-						<th >Players</th >
-						<th >Duration</th >
-						<th >Actions</th >
-					</tr >
-					</thead >
-					<tbody data-admin-pagination = "catalog-pagination" data-admin-page-size = "5">
-					<?php foreach ( $games as $game ): ?>
-						<tr >
-							<td ><?= (int)$game['id'] ?></td >
-							<td ><?= adminEscape($game['name']) ?></td >
-							<td ><?= adminEscape(implode(', ', json_decode($game['categories'], true) ?? [])) ?></td >
-							<td ><?= adminEscape($game['players']) ?></td >
-							<td ><?= adminEscape($game['duration']) ?></td >
-							<td >
-								<div class = "d-flex gap-2"><?php adminTableActions(
-										'edit_delete',
-										[ 'edit_url' => 'manage_catalog.php?edit='.$game['id'], 'confirm' => 'Delete this catalog entry?', 'delete_action' => 'delete', 'id_field' => 'id', 'id' => $game['id'] ]
-									); ?></div >
-							</td >
-						</tr >
-					<?php endforeach; ?>
-					</tbody >
-				</table >
-			</div >
+			<h2 class = "h4">Manage Catalog</h2 >
 			<?php if ( !$games ): ?>
-				<p class = "mb-0">No catalog entries yet.</p ><?php endif; ?>
-			<nav class = "admin-pagination" aria-label = "Catalog pagination">
-				<ul id = "catalog-pagination" class = "pagination justify-content-center mb-0"></ul >
-			</nav >
+				<p class = "mb-0">No catalog entries yet.</p ><?php else: ?>
+				<div class = "table-responsive">
+					<table class = "table table-striped align-middle">
+						<thead >
+						<tr >
+							<th >ID</th >
+							<th >Name</th >
+							<th >Categories</th >
+							<th >Players</th >
+							<th >Duration</th >
+							<th >Actions</th >
+						</tr >
+						</thead >
+						<tbody data-admin-pagination = "catalog-pagination" data-admin-page-size = "5">
+						<?php foreach ( $games as $game ): ?>
+							<tr >
+								<td ><?= (int)$game['id'] ?></td >
+								<td >
+									<strong ><?= adminEscape($game['name']) ?></strong >
+								</td >
+								<td ><?= adminEscape(
+										implode(', ', json_decode($game['categories'], true) ?? [])
+									) ?></td >
+								<td ><?= adminEscape($game['players']) ?></td >
+								<td ><?= adminEscape($game['duration']) ?></td >
+								<td >
+									<div class = "admin-actions admin-post-actions"><?php adminTableActions(
+											'edit_delete',
+											[ 'edit_url' => 'manage_catalog.php?edit='.$game['id'], 'confirm' => 'Delete this catalog entry?', 'delete_action' => 'delete', 'id_field' => 'id', 'id' => $game['id'] ]
+										); ?></div >
+								</td >
+							</tr >
+						<?php endforeach; ?>
+						</tbody >
+					</table >
+				</div >
+				<nav class = "admin-pagination" aria-label = "Catalog pagination">
+					<ul id = "catalog-pagination" class = "pagination justify-content-center mb-0"></ul >
+				</nav >
+			<?php endif; ?>
 		</section >
 	</main >
 	<script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script >
