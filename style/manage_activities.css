@@ -1,0 +1,14 @@
+.admin-activity-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-activity-table {
+    min-width: 1180px;
+}
+
+.admin-activity-table .admin-activity-description {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

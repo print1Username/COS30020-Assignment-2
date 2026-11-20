@@ -77,11 +77,18 @@
 				<article class = "admin-card">
 					<h2 >Manage Activities</h2 >
 					<p >Add, edit, delete or review activity registrations.</p >
-					<a
-						class = "btn admin-action"
-						href = "manage_activities.php"
-					>Manage Activities
-					</a >
+					<div class = "admin-community-actions">
+						<a
+							class = "btn admin-action"
+							href = "manage_activities.php?tab=activities"
+						>Manage Activities
+						</a >
+						<a
+							class = "btn admin-action"
+							href = "manage_activities.php?tab=registrations"
+						>Manage Registrations
+						</a >
+					</div >
 				</article >
 			</div >
 		</div >

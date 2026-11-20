@@ -411,12 +411,12 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 											); ?>
 											<?php adminTableActions(
 												'edit_delete', [
-												'id' => (int)$row['id'],
-												'edit_url' => 'manage_community.php?edit='.(int)$row['id'],
-												'confirm' => 'Delete this post?',
-												'delete_action' => 'delete',
-												'id_field' => 'id'
-											]
+													'id' => (int)$row['id'],
+													'edit_url' => 'manage_community.php?edit='.(int)$row['id'],
+													'confirm' => 'Delete this post?',
+													'delete_action' => 'delete',
+													'id_field' => 'id'
+												]
 											); ?>
 										</div >
 									</td >
