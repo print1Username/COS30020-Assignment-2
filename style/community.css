@@ -110,6 +110,20 @@
     gap: 10px;
 }
 
+.community-control-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.community-control-divider {
+    align-self: stretch;
+    width: 1px;
+    min-height: 28px;
+    background-color: var(--community-border);
+}
+
 /* ==========================
    Sorting Dropdown
 ========================== */
@@ -521,7 +535,7 @@
         width: 100%;
     }
 
-    .community-sort-group {
+    .community-control-group {
         width: 100%;
         gap: 8px;
     }

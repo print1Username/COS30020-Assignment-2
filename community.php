@@ -24,7 +24,7 @@ require_once __DIR__."/community_db.php";
 		<link rel="stylesheet" href="style/navbar.css">
 
 		<!-- Community CSS -->
-		<link rel="stylesheet" href="style/community.css?v=3">
+		<link rel="stylesheet" href="style/community.css?v=4">
 
 		<link rel="stylesheet" href="style/pagination.css">
 
@@ -60,19 +60,24 @@ require_once __DIR__."/community_db.php";
 		</section>
 
 		<!-- ==========================
-			 Sorting Toolbar
+			 Filter and Sorting Toolbar
 		=========================== -->
 
 		<section class="community-toolbar">
 
-			<div class="community-sort-group">
+			<div class="community-control-group">
 
-				<!-- Sorting Type -->
+				<!-- Membership Filter -->
 				<details class="community-sort-dropdown">
 
 					<summary class="community-sort-trigger">
 						<i class="bi bi-funnel"></i>
-						<span>Sorting Type: <?php echo $sortType === "alphabetical" ? "Alphabetical" : "Time"; ?></span>
+						<span>Filter: <?php echo match ($membershipFilter) {
+								"joined" => "Joined",
+								"pending" => "Pending",
+								"not_joined" => "Not Joined",
+								default => "All"
+							}; ?></span>
 						<i class="bi bi-chevron-down community-sort-chevron"></i>
 					</summary>
 
@@ -80,33 +85,23 @@ require_once __DIR__."/community_db.php";
 
 						<form method="GET" action="community.php">
 
-							<input
-								type="hidden"
-								name="sort_order"
-								value="<?php echo e($sortOrder); ?>"
-							>
+							<input type="hidden" name="sort_type" value="<?php echo e($sortType); ?>">
+							<input type="hidden" name="sort_order" value="<?php echo e($sortOrder); ?>">
 
-							<label class="community-sort-option">
-								<input
-									type="radio"
-									name="sort_type"
-									value="time"
-									<?php echo communitySelected($sortType, "time"); ?>
-									onchange="this.form.submit()"
-								>
-								<span>Time</span>
-							</label>
-
-							<label class="community-sort-option">
-								<input
-									type="radio"
-									name="sort_type"
-									value="alphabetical"
-									<?php echo communitySelected($sortType, "alphabetical"); ?>
-									onchange="this.form.submit()"
-								>
-								<span>Alphabetical</span>
-							</label>
+							<?php
+							foreach (["all" => "All", "joined" => "Joined", "pending" => "Pending", "not_joined" => "Not Joined"]
+							         as $filterValue => $filterLabel): ?>
+								<label class="community-sort-option">
+									<input
+										type="radio"
+										name="membership_filter"
+										value="<?php echo e($filterValue); ?>"
+										<?php echo communitySelected($membershipFilter, $filterValue); ?>
+										onchange="this.form.submit()"
+									>
+									<span><?php echo e($filterLabel); ?></span>
+								</label>
+							<?php endforeach; ?>
 
 						</form>
 
@@ -114,52 +109,116 @@ require_once __DIR__."/community_db.php";
 
 				</details>
 
-				<!-- Sorting Order -->
-				<details class="community-sort-dropdown">
+				<span class="community-control-divider" aria-hidden="true"></span>
 
-					<summary class="community-sort-trigger">
-						<i class="bi bi-sort-down"></i>
-						<span>Sorting Order: <?php echo $sortOrder === "descending" ? "Descending" : "Ascending"; ?></span>
-						<i class="bi bi-chevron-down community-sort-chevron"></i>
-					</summary>
+				<div class="community-sort-group">
 
-					<div class="community-sort-options">
+					<!-- Sorting Type -->
+					<details class="community-sort-dropdown">
 
-						<form method="GET" action="community.php">
+						<summary class="community-sort-trigger">
+							<i class="bi bi-clock-history"></i>
+							<span>Sorting Type: <?php echo $sortType === "alphabetical" ? "Alphabetical" : "Time"; ?></span>
+							<i class="bi bi-chevron-down community-sort-chevron"></i>
+						</summary>
 
-							<input
-								type="hidden"
-								name="sort_type"
-								value="<?php echo e($sortType); ?>"
-							>
+						<div class="community-sort-options">
 
-							<label class="community-sort-option">
+							<form method="GET" action="community.php">
+
 								<input
-									type="radio"
-									name="sort_order"
-									value="ascending"
-									<?php echo communitySelected($sortOrder, "ascending"); ?>
-									onchange="this.form.submit()"
+									type="hidden"
+									name="membership_filter"
+									value="<?php echo e($membershipFilter); ?>"
 								>
-								<span>Ascending</span>
-							</label>
 
-							<label class="community-sort-option">
 								<input
-									type="radio"
+									type="hidden"
 									name="sort_order"
-									value="descending"
-									<?php echo communitySelected($sortOrder, "descending"); ?>
-									onchange="this.form.submit()"
+									value="<?php echo e($sortOrder); ?>"
 								>
-								<span>Descending</span>
-							</label>
 
-						</form>
+								<label class="community-sort-option">
+									<input
+										type="radio"
+										name="sort_type"
+										value="time"
+										<?php echo communitySelected($sortType, "time"); ?>
+										onchange="this.form.submit()"
+									>
+									<span>Time</span>
+								</label>
 
-					</div>
+								<label class="community-sort-option">
+									<input
+										type="radio"
+										name="sort_type"
+										value="alphabetical"
+										<?php echo communitySelected($sortType, "alphabetical"); ?>
+										onchange="this.form.submit()"
+									>
+									<span>Alphabetical</span>
+								</label>
 
-				</details>
+							</form>
+
+						</div>
+
+					</details>
+
+					<!-- Sorting Order -->
+					<details class="community-sort-dropdown">
+
+						<summary class="community-sort-trigger">
+							<i class="bi bi-sort-down"></i>
+							<span>Sorting Order: <?php echo $sortOrder === "descending" ? "Descending" : "Ascending"; ?></span>
+							<i class="bi bi-chevron-down community-sort-chevron"></i>
+						</summary>
+
+						<div class="community-sort-options">
+
+							<form method="GET" action="community.php">
+
+								<input
+									type="hidden"
+									name="membership_filter"
+									value="<?php echo e($membershipFilter); ?>"
+								>
+
+								<input
+									type="hidden"
+									name="sort_type"
+									value="<?php echo e($sortType); ?>"
+								>
+
+								<label class="community-sort-option">
+									<input
+										type="radio"
+										name="sort_order"
+										value="ascending"
+										<?php echo communitySelected($sortOrder, "ascending"); ?>
+										onchange="this.form.submit()"
+									>
+									<span>Ascending</span>
+								</label>
+
+								<label class="community-sort-option">
+									<input
+										type="radio"
+										name="sort_order"
+										value="descending"
+										<?php echo communitySelected($sortOrder, "descending"); ?>
+										onchange="this.form.submit()"
+									>
+									<span>Descending</span>
+								</label>
+
+							</form>
+
+						</div>
+
+					</details>
+				</div>
 
 			</div>
 

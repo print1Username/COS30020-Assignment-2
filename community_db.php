@@ -182,19 +182,42 @@ if (($communityDbPage ?? "list") === "detail") {
 	 * ==========================
 	 */
 
-	$sortType = $_GET["sort_type"] ?? "time";
+	$membershipFilter = $_GET["membership_filter"] ?? "all";
+	$sortType = $_GET["sort_type"] ?? "alphabetical";
 	$sortOrder = $_GET["sort_order"] ?? "ascending";
 
+	$allowedMembershipFilters = ["all", "joined", "pending", "not_joined"];
 	$allowedSortTypes = ["time", "alphabetical"];
 	$allowedSortOrders = ["ascending", "descending"];
 
+	if (!in_array($membershipFilter, $allowedMembershipFilters, true)) {
+		$membershipFilter = "all";
+	}
+
 	if (!in_array($sortType, $allowedSortTypes, true)) {
-		$sortType = "time";
+		$sortType = "alphabetical";
 	}
 
 	if (!in_array($sortOrder, $allowedSortOrders, true)) {
 		$sortOrder = "ascending";
 	}
+
+	/*
+	 * ==========================
+	 * Filtering Logic
+	 * ==========================
+	 */
+
+	$communities = array_values(array_filter($communities, function($community) use ($membershipFilter) {
+		$joinStatus = $community["join_status"] ?? null;
+
+		return match ($membershipFilter) {
+			"joined" => $joinStatus === "approved",
+			"pending" => $joinStatus === "pending",
+			"not_joined" => !in_array($joinStatus, ["approved", "pending"], true),
+			default => true
+		};
+	}));
 
 	/*
 	 * ==========================
