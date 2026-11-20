@@ -5,7 +5,7 @@ $kind = $reviewKind ?? "";
 if (!in_array($kind, ["community", "activities"], true)) exit("Invalid management page.");
 $community = $kind === "community";
 $table = $community ? "community_table" : "activity_table";
-$page = $community ? "manage_community.php" : "manage_activities.php";
+$page = $community ? "manage_community.php?tab=post" : "manage_activities.php";
 $error = "";
 $edit = null;
 
@@ -25,7 +25,7 @@ function removeCommunityPostImage(?string $path): void
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && !in_array($_POST["action"] ?? "",
-		["community_add", "community_edit", "community_delete"], true)) {
+		["community_add", "community_edit", "community_delete", "join_approve", "join_reject"], true)) {
 	adminCheckPost();
 	$action = $_POST["action"] ?? "";
 	$id = filter_var($_POST["id"] ?? null, FILTER_VALIDATE_INT);

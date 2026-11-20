@@ -28,9 +28,13 @@
 			</div>
 			<div class="col-md-4">
 				<article class="admin-card"><h2>Manage Communities</h2>
-					<p>Add, edit, delete or review community contributions.</p><a
-						class="btn admin-action" href="manage_community.php"
-					>Manage Communities</a></article>
+					<p>Manage communities, membership requests and posts.</p>
+					<div class="admin-community-actions">
+						<a class="btn admin-action" href="manage_community.php?tab=create">Manage Communities</a>
+						<a class="btn admin-action" href="manage_community.php?tab=join">Review Join Requests</a>
+						<a class="btn admin-action" href="manage_community.php?tab=post">Manage Community Posts</a>
+					</div>
+				</article>
 			</div>
 			<div class="col-md-4">
 				<article class="admin-card"><h2>Manage Activities</h2>

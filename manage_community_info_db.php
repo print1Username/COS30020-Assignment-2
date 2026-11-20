@@ -2,6 +2,32 @@
 require_once __DIR__."/admin_db.php";
 $communityError = "";
 $communityEdit = null;
+$joinError = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && in_array($_POST["action"] ?? "", ["join_approve", "join_reject"], true)) {
+	adminCheckPost();
+	$joinId = filter_var($_POST["join_id"] ?? null, FILTER_VALIDATE_INT);
+	try {
+		if (!$joinId) throw new RuntimeException("Invalid join request.");
+		$pdo -> beginTransaction();
+		$findJoin = $pdo -> prepare("SELECT community_id FROM community_member WHERE id=? AND status='pending' FOR UPDATE");
+		$findJoin -> execute([$joinId]);
+		$join = $findJoin -> fetch();
+		if (!$join) throw new RuntimeException("Only pending join requests can be reviewed.");
+		$status = $_POST["action"] === "join_approve" ? "approved" : "rejected";
+		$updateJoin = $pdo -> prepare("UPDATE community_member SET status=? WHERE id=? AND status='pending'");
+		$updateJoin -> execute([$status, $joinId]);
+		if ($status === "approved") {
+			$increaseCount = $pdo -> prepare("UPDATE community_info SET member_count=member_count+1 WHERE id=?");
+			$increaseCount -> execute([$join["community_id"]]);
+		}
+		$pdo -> commit();
+		adminRedirect("manage_community.php?tab=join", "Join request ".$status.".");
+	} catch (RuntimeException|PDOException $exception) {
+		if ($pdo -> inTransaction()) $pdo -> rollBack();
+		$joinError = $exception instanceof PDOException ? "Unable to review join request." : $exception -> getMessage();
+	}
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && in_array($_POST["action"] ?? "",
 		["community_add", "community_edit", "community_delete"], true)) {
@@ -22,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && in_array($_POST["action"] ?? "",
 			$delete = $pdo -> prepare("DELETE FROM community_info WHERE id=?");
 			$delete -> execute([$communityId]);
 			$pdo -> commit();
-			adminRedirect("manage_community.php", "Community deleted.");
+			adminRedirect("manage_community.php?tab=create", "Community deleted.");
 		}
 		$title = trim($_POST["community_title"] ?? "");
 		$description = trim($_POST["community_description"] ?? "");
@@ -38,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && in_array($_POST["action"] ?? "",
 			$save = $pdo -> prepare("UPDATE community_info SET title=?,description=? WHERE id=?");
 			$save -> execute([$title, $description ?: null, $communityId]);
 		}
-		adminRedirect("manage_community.php", "Community saved.");
+		adminRedirect("manage_community.php?tab=create", "Community saved.");
 	} catch (RuntimeException|PDOException $exception) {
 		if ($pdo -> inTransaction()) $pdo -> rollBack();
 		$communityError = $exception instanceof PDOException ? "Unable to save community. Please check the details." : $exception -> getMessage();
@@ -50,4 +76,6 @@ if (isset($_GET["community_edit"])) {
 	$communityEdit = $editStatement -> fetch() ?: null;
 }
 $communityRows = $pdo -> query("SELECT community.id,community.title,community.description,community.member_count,community.created_at,(SELECT COUNT(*) FROM community_table AS post WHERE post.community_id=community.id) AS post_count,(SELECT COUNT(*) FROM community_member AS member WHERE member.community_id=community.id) AS membership_count FROM community_info AS community ORDER BY community.id DESC")
+	-> fetchAll();
+$joinRows = $pdo -> query("SELECT member.id,member.email,member.community_id,community.title AS community_title,user.first_name,user.last_name FROM community_member AS member JOIN community_info AS community ON community.id=member.community_id JOIN user_table AS user ON user.email=member.email WHERE member.status='pending' ORDER BY member.id DESC")
 	-> fetchAll();
