@@ -1,0 +1,13 @@
+.admin-post-form-section .form-control {
+    background-color: #fff;
+}
+
+.admin-post-form-section .form-check-input:checked {
+    background-color: var(--admin-purple-dark);
+    border-color: var(--admin-purple-dark);
+}
+
+.admin-post-form-section .form-check-input:focus {
+    border-color: var(--admin-purple-dark);
+    box-shadow: 0 0 0 0.25rem rgba(50, 32, 82, 0.18);
+}

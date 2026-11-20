@@ -30,10 +30,17 @@ if ( $_SERVER["REQUEST_METHOD"] === "POST" ) {
         $selectedCategories = $_POST["categories"] ?? [];
         if ( !is_array($selectedCategories) || !$selectedCategories || array_diff($selectedCategories, $catalogCategories) ) throw new RuntimeException("Select valid categories.");
         $values = [];
-        foreach ( [ "name" => 100, "description" => 65535, "players" => 50, "duration" => 50 ] as $field => $limit ) {
+        foreach ( [ "name" => 100, "description" => 65535 ] as $field => $limit ) {
             $value = trim((string)($_POST[$field] ?? ""));
-            if ( $value === "" || strlen($value) > $limit ) throw new RuntimeException("Enter valid name, description, players and duration.");
+            if ( $value === "" || strlen($value) > $limit ) throw new RuntimeException("Enter a valid name and description.");
             $values[] = $value;
+        }
+        foreach ( [ "players" => " Players", "duration" => " Minutes" ] as $field => $suffix ) {
+            $value = trim((string)($_POST[$field] ?? ""));
+            if ( !preg_match('/^[1-9][0-9]*$/', $value) || strlen($value.$suffix) > 50 ) {
+                throw new RuntimeException("Enter a positive whole number for players and duration in minutes.");
+            }
+            $values[] = $value.$suffix;
         }
         $values[] = json_encode(array_values(array_unique($selectedCategories)));
         $imageData = null;

@@ -70,6 +70,9 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 				name = "original_email"
 				value = "<?= adminEscape($edit['email'] ?? '') ?>"
 			>
+			<div class = "col-12">
+				<div class = "admin-post-form-section">
+					<div class = "row g-3">
 			<?php
 			foreach ( [ 'email' => 'Email', 'first_name' => 'First Name', 'last_name' => 'Last Name', 'dob' => 'Date of Birth', 'hometown' => 'Hometown' ]
 				as $field => $label
@@ -132,6 +135,9 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 					id = "password"
 					name = "password"
 					type = "password" <?= $edit ? '' : 'required' ?>>
+			</div >
+					</div >
+				</div >
 			</div >
 			<div class = "col-12">
 				<button

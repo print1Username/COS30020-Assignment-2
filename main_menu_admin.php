@@ -22,6 +22,7 @@
 			href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
 			rel = "stylesheet"
 		>
+		<link rel = "stylesheet" href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 		<link
 			rel = "stylesheet"
 			href = "style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"
@@ -99,10 +100,16 @@
 				</article >
 			</div >
 		</div >
-        <a class = "admin-card admin-about-card mt-4" href = "about.php">
-            <div><h2 >About Us</h2 ><p class = "mb-0">Learn more about Boardgame Hub, its purpose, features, and project information.</p ></div>
-            <span class = "btn admin-action">Learn More &rarr;</span >
-        </a >
+		<a class = "admin-about-card" href = "about.php">
+			<div class = "admin-about-content">
+				<i class = "bi bi-info-circle-fill" aria-hidden = "true"></i >
+				<div >
+					<h2 >About Us</h2 >
+					<p >Learn more about Boardgame Hub, its purpose, features, and project information.</p >
+				</div >
+			</div >
+			<span class = "btn admin-about-button">Learn More <i class = "bi bi-arrow-right" aria-hidden = "true"></i ></span >
+		</a >
     </main >
 	<script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script >
 	</body >

@@ -527,23 +527,61 @@ main > h1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
-    height: auto;
-    min-height: 150px;
+    gap: 24px;
+    margin-top: 24px;
+    padding: 28px 32px;
     text-decoration: none;
+    background-color: var(--admin-purple-dark);
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(50, 32, 82, 0.18);
+}
+.admin-about-content {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+.admin-about-content > i {
+    flex-shrink: 0;
     color: var(--admin-white);
-    background: var(--admin-purple-dark);
-    border: 1px solid var(--admin-purple-dark);
+    font-size: 2.25rem;
 }
-.admin-about-card p { color: #e9e1f4; }
-.admin-about-card:hover { color: var(--admin-white); border-color: var(--admin-purple-light); }
-.admin-about-card .btn {
-    margin-top: 0;
+.admin-about-content h2 {
+    margin-bottom: 5px;
+    color: var(--admin-white);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+.admin-about-content p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+.admin-about-button {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 110px;
+    padding: 10px 20px;
     color: var(--admin-purple-dark);
-    background: var(--admin-white);
-    border-color: var(--admin-white);
+    background-color: var(--admin-white);
+    border: 1px solid var(--admin-white);
+    border-radius: 6px;
+    font-weight: 600;
 }
-.admin-about-card .btn:hover { color: var(--admin-purple-dark); }
-@media (max-width: 575px) {
-    .admin-about-card { flex-direction: column; align-items: flex-start; }
+.admin-about-button:hover,
+.admin-about-card:focus-visible .admin-about-button {
+    color: var(--admin-purple-dark);
+    background-color: #f3f0f8;
+    border-color: #f3f0f8;
+}
+@media (max-width: 767.98px) {
+    .admin-about-card { flex-direction: column; align-items: stretch; padding: 24px; }
+    .admin-about-button { width: 100%; }
+}
+@media (max-width: 575.98px) {
+    .admin-about-content { align-items: flex-start; gap: 14px; }
+    .admin-about-content > i { font-size: 1.9rem; }
 }

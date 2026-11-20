@@ -14,6 +14,8 @@ require_once __DIR__."/file_upload.php";
     <link rel = "stylesheet" href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel = "stylesheet" href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel = "stylesheet" href = "style/admin_theme.css?v=<?= filemtime(__DIR__."/style/admin_theme.css") ?>">
+    <link rel = "stylesheet" href = "style/admin_pagination.css?v=2">
+    <link rel = "stylesheet" href = "style/manage_catalog.css?v=<?= filemtime(__DIR__."/style/manage_catalog.css") ?>">
     <link rel = "stylesheet" href = "style/file_upload.css">
 </head>
 <body>
@@ -28,13 +30,25 @@ require_once __DIR__."/file_upload.php";
         <input type = "hidden" name = "token" value = "<?= adminEscape(adminToken()) ?>">
         <input type = "hidden" name = "action" value = "<?= $edit ? 'edit' : 'create' ?>">
         <input type = "hidden" name = "id" value = "<?= (int)($edit['id'] ?? 0) ?>">
+        <div class = "admin-post-form-section">
         <div class = "row g-3">
-        <?php foreach ( [ 'name' => 100, 'players' => 50, 'duration' => 50 ] as $field => $limit ): ?>
             <div class = "col-md-4">
-                <label class = "form-label" for = "catalog-<?= $field ?>"><?= ucfirst($field) ?></label>
-                <input class = "form-control" id = "catalog-<?= $field ?>" name = "<?= $field ?>" maxlength = "<?= $limit ?>" required value = "<?= adminEscape($form[$field] ?? '') ?>">
+                <label class = "form-label" for = "catalog-name">Name</label>
+                <input class = "form-control" id = "catalog-name" name = "name" maxlength = "100" required value = "<?= adminEscape($form['name'] ?? '') ?>">
             </div>
-        <?php endforeach; ?>
+            <?php foreach ( [ 'players' => 'Players', 'duration' => 'Duration (minutes)' ] as $field => $label ):
+                $currentValue = (string)($form[$field] ?? '');
+                $numericValue = preg_match('/^([1-9][0-9]*) (?:Players|Minutes)$/', $currentValue, $matches) ? $matches[1] : '';
+                if ( isset($_POST[$field]) ) $numericValue = (string)$_POST[$field];
+            ?>
+                <div class = "col-md-4">
+                    <label class = "form-label" for = "catalog-<?= $field ?>"><?= $label ?></label>
+                    <input class = "form-control" id = "catalog-<?= $field ?>" name = "<?= $field ?>" type = "number" min = "1" step = "1" required value = "<?= adminEscape($numericValue) ?>">
+                    <?php if ( $numericValue === '' && $currentValue !== '' ): ?>
+                        <small class = "form-text">Current: <?= adminEscape($currentValue) ?>. Enter one number to replace it.</small>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
             <div class = "col-12">
                 <label class = "form-label" for = "catalog-description">Description</label>
                 <textarea class = "form-control" id = "catalog-description" name = "description" rows = "4" required><?= adminEscape($form['description'] ?? '') ?></textarea>
@@ -53,6 +67,7 @@ require_once __DIR__."/file_upload.php";
                 <p class = "form-text">Optional. Leave unchanged to keep the current image.</p>
             </div>
         </div>
+        </div>
         <button class = "btn admin-action mt-3" type = "submit"><?= $edit ? 'Save Changes' : 'Create Catalog' ?></button>
         <?php if ( $edit ): ?><a class = "btn btn-outline-secondary mt-3" href = "manage_catalog.php">Cancel</a><?php endif; ?>
     </form>
@@ -62,7 +77,7 @@ require_once __DIR__."/file_upload.php";
         <div class = "table-responsive">
             <table class = "table align-middle">
                 <thead><tr><th>ID</th><th>Name</th><th>Categories</th><th>Players</th><th>Duration</th><th>Actions</th></tr></thead>
-                <tbody>
+                <tbody data-admin-pagination = "catalog-pagination" data-admin-page-size = "5">
                 <?php foreach ( $games as $game ): ?>
                     <tr>
                         <td><?= (int)$game['id'] ?></td>
@@ -73,13 +88,18 @@ require_once __DIR__."/file_upload.php";
                         <td><div class = "d-flex gap-2"><?php adminTableActions('edit_delete', [ 'edit_url' => 'manage_catalog.php?edit='.$game['id'], 'confirm' => 'Delete this catalog entry?', 'delete_action' => 'delete', 'id_field' => 'id', 'id' => $game['id'] ]); ?></div></td>
                     </tr>
                 <?php endforeach; ?>
-                <?php if ( !$games ): ?><tr><td colspan = "6">No catalog entries yet.</td></tr><?php endif; ?>
                 </tbody>
             </table>
         </div>
+        <?php if ( !$games ): ?><p class = "mb-0">No catalog entries yet.</p><?php endif; ?>
+        <nav class = "admin-pagination" aria-label = "Catalog pagination">
+            <ul id = "catalog-pagination" class = "pagination justify-content-center mb-0"></ul>
+        </nav>
     </section>
 </main>
 <script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src = "components/file_upload.js"></script>
+<script src = "components/pagination.js?v=<?= filemtime(__DIR__."/components/pagination.js") ?>"></script>
+<script src = "components/admin_pagination.js?v=<?= filemtime(__DIR__."/components/admin_pagination.js") ?>"></script>
 </body>
 </html>
