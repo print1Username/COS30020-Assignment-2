@@ -1,8 +1,9 @@
 <?php
 function adminReviewActions(int $id, string $status, string $subject, bool $joinRequest = false): void
 {
-	foreach (['approved' => ['Approve', 'bi-check-lg', 'btn-success'], 'rejected' => ['Reject', 'bi-x-lg', 'btn-danger']]
-	         as $action => [$label, $icon, $buttonClass]): ?>
+	foreach ( [ 'approved' => [ 'Approve', 'bi-check-lg', 'btn-success' ], 'rejected' => [ 'Reject', 'bi-x-lg', 'btn-danger' ] ]
+		as $action => [$label, $icon, $buttonClass]
+	): ?>
 		<form method = "post">
 			<input
 				type = "hidden"
@@ -23,7 +24,9 @@ function adminReviewActions(int $id, string $status, string $subject, bool $join
 				type = "submit"
 				class = "btn btn-sm <?= $buttonClass ?>"
 				title = "<?= $label ?>"
-				aria-label = "<?= $label ?> <?= adminEscape($subject) ?> <?= $id ?>" <?= $status === $action ? 'disabled' : '' ?>
+				aria-label = "<?= $label ?> <?= adminEscape(
+					$subject
+				) ?> <?= $id ?>" <?= $status === $action ? 'disabled' : '' ?>
 			>
 				<i
 					class = "bi <?= $icon ?>"

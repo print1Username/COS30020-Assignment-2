@@ -20,7 +20,7 @@
  *
  * ============================================================
  */
-if (PHP_SAPI !== 'cli') {
+if ( PHP_SAPI !== 'cli' ) {
 	http_response_code(403);
 	exit('CLI only.');
 }
@@ -29,7 +29,7 @@ $pdo = new PDO(
 	'mysql:host=localhost;charset=utf8mb4',
 	'root',
 	'',
-	[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+	[ PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION ]
 );
 $pdo -> exec('CREATE DATABASE IF NOT EXISTS cos30020a2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
 $pdo -> exec('USE cos30020a2');
@@ -37,7 +37,7 @@ $pdo -> exec('USE cos30020a2');
 $tables = $pdo -> query('SHOW FULL TABLES WHERE Table_type = \'BASE TABLE\'') -> fetchAll(PDO::FETCH_NUM);
 $pdo -> exec('SET FOREIGN_KEY_CHECKS = 0');
 try {
-	foreach ($tables as $table) {
+	foreach ( $tables as $table ) {
 		$name = str_replace('`', '``', $table[0]);
 		$pdo -> exec("DROP TABLE IF EXISTS `$name`");
 		echo "Dropped: $name\n";

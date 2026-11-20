@@ -44,11 +44,13 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 			>Back to Admin Menu
 			</a >
 		</p >
-		<?php if ($error): ?>
-			<div class = "alert alert-danger"><?= adminEscape($error) ?></div ><?php endif; ?><?php if ($notice): ?>
+		<?php if ( $error ): ?>
+			<div class = "alert alert-danger"><?= adminEscape($error) ?></div ><?php endif; ?><?php if ( $notice ): ?>
 			<div class = "alert alert-success"><?= adminEscape($notice) ?></div ><?php endif; ?>
-		<?php adminDisclosureStart($edit ? "Edit Account" : "Add Account", "Enter user details and account credentials",
-			(bool)($edit || $error)); ?>
+		<?php adminDisclosureStart(
+			$edit ? "Edit Account" : "Add Account", "Enter user details and account credentials",
+			(bool)($edit || $error)
+		); ?>
 		<form
 			method = "post"
 			class = "row g-3 admin-disclosure-content"
@@ -69,8 +71,9 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 				value = "<?= adminEscape($edit['email'] ?? '') ?>"
 			>
 			<?php
-			foreach (['email' => 'Email', 'first_name' => 'First Name', 'last_name' => 'Last Name', 'dob' => 'Date of Birth', 'hometown' => 'Hometown']
-			         as $field => $label): ?>
+			foreach ( [ 'email' => 'Email', 'first_name' => 'First Name', 'last_name' => 'Last Name', 'dob' => 'Date of Birth', 'hometown' => 'Hometown' ]
+				as $field => $label
+			): ?>
 				<div class = "col-md-4">
 				<label
 					class = "form-label"
@@ -96,7 +99,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 					name = "gender"
 					required
 				>
-					<option value = "">Select</option ><?php foreach (['Male', 'Female'] as $option): ?>
+					<option value = "">Select</option ><?php foreach ( [ 'Male', 'Female' ] as $option ): ?>
 						<option
 						value = "<?= $option ?>" <?= ($edit['gender'] ?? '') === $option ? 'selected' : '' ?>><?= $option ?></option ><?php
 					endforeach; ?></select >
@@ -112,9 +115,11 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 					id = "type"
 					name = "type"
 					required
-				><?php foreach (['user', 'admin'] as $option): ?>
+				><?php foreach ( [ 'user', 'admin' ] as $option ): ?>
 						<option
-						value = "<?= $option ?>" <?= ($edit['type'] ?? 'user') === $option ? 'selected' : '' ?>><?= ucfirst($option) ?></option ><?php
+						value = "<?= $option ?>" <?= ($edit['type'] ?? 'user') === $option ? 'selected' : '' ?>><?= ucfirst(
+						$option
+					) ?></option ><?php
 					endforeach; ?></select >
 			</div >
 			<div class = "col-md-4">
@@ -133,7 +138,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 					class = "btn btn-primary"
 					type = "submit"
 				>Save Account
-				</button > <?php if ($edit): ?>
+				</button > <?php if ( $edit ): ?>
 					<a
 						class = "btn btn-outline-secondary"
 						href = "manage_accounts.php"
@@ -153,21 +158,23 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 						<th >Actions</th >
 					</tr >
 					</thead >
-					<tbody data-admin-pagination = "accounts-pagination"><?php foreach ($accounts as $account): ?>
+					<tbody data-admin-pagination = "accounts-pagination"><?php foreach ( $accounts as $account ): ?>
 						<tr >
 						<td ><?= adminEscape($account['email']) ?></td >
 						<td ><?= adminEscape($account['first_name'].' '.$account['last_name']) ?></td >
 						<td ><?= adminEscape($account['type']) ?></td >
 						<td >
 							<div class = "admin-actions">
-								<?php adminTableActions('edit_delete', [
+								<?php adminTableActions(
+									'edit_delete', [
 									'id' => $account['email'],
 									'edit_url' => 'manage_accounts.php?edit='.urlencode($account['email']),
 									'confirm' => 'Delete this account?',
 									'delete_action' => 'delete',
 									'id_field' => 'email',
 									'disable_delete' => $account['email'] === $_SESSION['email']
-								]); ?>
+								]
+								); ?>
 							</div >
 						</td ></tr ><?php endforeach; ?></tbody >
 				</table >
@@ -184,7 +191,11 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 		</section >
 	</main >
 	<script src = "components/pagination.js?v=<?= filemtime(__DIR__."/components/pagination.js") ?>"></script >
-	<script src = "components/admin_pagination.js?v=<?= filemtime(__DIR__."/components/admin_pagination.js") ?>"></script >
+	<script
+		src = "components/admin_pagination.js?v=<?= filemtime(
+			__DIR__."/components/admin_pagination.js"
+		) ?>"
+	></script >
 	<script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script >
 	</body >
 </html >

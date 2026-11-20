@@ -31,7 +31,7 @@ function renderFileUpload(array $config): void
 				class = "file-upload__visual"
 				data-file-upload-visual
 			>
-				<?php if ($kind === "image" && $hasCurrent): ?>
+				<?php if ( $kind === "image" && $hasCurrent ): ?>
 					<img
 						src = "<?php echo $escape($currentUrl); ?>"
 						alt = "Current uploaded image"
@@ -44,7 +44,7 @@ function renderFileUpload(array $config): void
 				<?php endif; ?>
 			</div >
 			<div class = "file-upload__details">
-				<?php if ($hasCurrent && $kind !== "image"): ?>
+				<?php if ( $hasCurrent && $kind !== "image" ): ?>
 					<a
 						class = "file-upload__name"
 						href = "<?php echo $escape($currentUrl); ?>"
@@ -81,7 +81,7 @@ function renderFileUpload(array $config): void
 					></i >
 					<?php echo $hasCurrent ? "Replace" : "Upload"; ?>
 				</button >
-				<?php if ($allowRemove): ?>
+				<?php if ( $allowRemove ): ?>
 					<button
 						type = "submit"
 						name = "<?php echo $escape($removeName); ?>"

@@ -83,13 +83,13 @@ unset($_SESSION["registration_old"]);
 			<h1 class = "signup-title">Sign Up</h1 >
 
 			<!-- Error messages -->
-			<?php if (!empty($errors)): ?>
+			<?php if ( !empty($errors) ): ?>
 				<div
 					class = "alert alert-danger signup-error"
 					role = "alert"
 				>
 					<ul class = "mb-0 ps-3">
-						<?php foreach ($errors as $error): ?>
+						<?php foreach ( $errors as $error ): ?>
 							<li ><?= htmlspecialchars($error) ?></li >
 						<?php endforeach; ?>
 					</ul >
@@ -332,7 +332,11 @@ unset($_SESSION["registration_old"]);
 	<!-- Navbar JavaScript -->
 	<script src = "components/navbar.js?v=<?= filemtime(__DIR__."/components/navbar.js") ?>"></script >
 
-	<script src = "components/password_toggle.js?v=<?= filemtime(__DIR__."/components/password_toggle.js") ?>"></script >
+	<script
+		src = "components/password_toggle.js?v=<?= filemtime(
+			__DIR__."/components/password_toggle.js"
+		) ?>"
+	></script >
 
 	</body >
 </html >

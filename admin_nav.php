@@ -21,8 +21,9 @@
 		>
 			<div class = "navbar-nav me-auto">
 				<?php
-				foreach (["main_menu_admin.php" => "Admin Menu", "manage_accounts.php" => "Accounts", "manage_community.php" => "Community", "manage_activities.php" => "Activities", "about.php" => "About"]
-				         as $adminPage => $adminLabel): ?>
+				foreach ( [ "main_menu_admin.php" => "Admin Menu", "manage_accounts.php" => "Accounts", "manage_community.php" => "Community", "manage_activities.php" => "Activities", "about.php" => "About" ]
+					as $adminPage => $adminLabel
+				): ?>
 					<a
 						class = "nav-link<?php echo $adminCurrentPage === $adminPage ? ' active' : ''; ?>"
 						href = "<?php echo $adminPage; ?>"<?php echo $adminCurrentPage === $adminPage ? ' aria-current="page"' : ''; ?>><?php echo $adminLabel; ?></a >

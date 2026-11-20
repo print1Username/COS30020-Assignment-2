@@ -102,8 +102,10 @@ $homepageImages = $pdo -> query("SELECT filename, mime_type, image_data FROM hom
 		<section class = "index-image-section">
 			<div class = "index-image-wrapper">
 				<img
-					src = "data:<?php echo htmlspecialchars($homepageImages[0]['mime_type'], ENT_QUOTES,
-						'UTF-8'); ?>;base64,<?php echo base64_encode($homepageImages[0]['image_data']); ?>"
+					src = "data:<?php echo htmlspecialchars(
+						$homepageImages[0]['mime_type'], ENT_QUOTES,
+						'UTF-8'
+					); ?>;base64,<?php echo base64_encode($homepageImages[0]['image_data']); ?>"
 					alt = "Board game session at Boardgame Hub"
 					class = "index-random-image"
 					id = "boardgame-slideshow"
@@ -276,11 +278,11 @@ $homepageImages = $pdo -> query("SELECT filename, mime_type, image_data FROM hom
 		<?php
 		$accountType = ($_SESSION["logged_in"] ?? false) === true && isset($_SESSION["email"])
 			? ($_SESSION["type"] ?? null) : null;
-		if ($accountType === "user") {
+		if ( $accountType === "user" ) {
 			$ctaSubtitle = "View your profile and manage your Boardgame Hub activities.";
 			$ctaLink = "profile.php";
 			$ctaLabel = "View Profile";
-		} elseif ($accountType === "admin") {
+		} elseif ( $accountType === "admin" ) {
 			$ctaSubtitle = "Manage accounts, communities, and activities from the admin menu.";
 			$ctaLink = "main_menu_admin.php";
 			$ctaLabel = "Admin Menu";
@@ -339,9 +341,13 @@ $homepageImages = $pdo -> query("SELECT filename, mime_type, image_data FROM hom
 		) ? "true" : "false";
 		?>;
 
-        window.homepageImages = <?php echo json_encode(array_map(function($image) {
-			return "data:".$image["mime_type"].";base64,".base64_encode($image["image_data"]);
-		}, $homepageImages), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        window.homepageImages = <?php echo json_encode(
+			array_map(
+				function($image) {
+					return "data:".$image["mime_type"].";base64,".base64_encode($image["image_data"]);
+				}, $homepageImages
+			), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+		); ?>;
 	</script >
 	<script src = "components/homepage.js?v=<?= filemtime(__DIR__."/components/homepage.js") ?>"></script >
 	</body >

@@ -1,17 +1,19 @@
 <?php
 session_start();
 
-if (($_SESSION["logged_in"] ?? false) !== true ||
+if ( ($_SESSION["logged_in"] ?? false) !== true ||
 	($_SESSION["type"] ?? null) !== "user" ||
-	!isset($_SESSION["email"])) {
+	!isset($_SESSION["email"]) ) {
 	header("Location: login.php");
 	exit;
 }
 
 require_once __DIR__."/db_connect.php";
-$games = $pdo -> query("SELECT id,name,categories,description,players,duration,image,image_data IS NOT NULL AS has_image_data FROM catalog_info ORDER BY id")
+$games = $pdo -> query(
+	"SELECT id,name,categories,description,players,duration,image,image_data IS NOT NULL AS has_image_data FROM catalog_info ORDER BY id"
+)
 	-> fetchAll();
-foreach ($games as &$game) $game["categories"] = json_decode($game["categories"], true) ?? [];
+foreach ( $games as &$game ) $game["categories"] = json_decode($game["categories"], true) ?? [];
 unset($game);
 
 // Escape output safely
@@ -145,7 +147,7 @@ $categories = [
 						All Games
 					</button >
 
-					<?php foreach ($categories as $category): ?>
+					<?php foreach ( $categories as $category ): ?>
 						<button
 							type = "button"
 							class = "catalog-filter-btn"
@@ -162,7 +164,7 @@ $categories = [
 					class = "row g-4 catalog-game-grid"
 					id = "catalog-game-grid"
 				>
-					<?php foreach ($games as $game): ?>
+					<?php foreach ( $games as $game ): ?>
 
 						<?php
 						$gameCategories = $game["categories"] ?? [];
@@ -183,7 +185,9 @@ $categories = [
 								<!-- Game Image -->
 								<div class = "catalog-game-image-wrapper">
 									<img
-										src = "<?php echo escapeHTML($game["has_image_data"] ? "catalog_image.php?id=".(int)$game["id"] : ($game["image"] ?? "img/boardgames/placeholder.svg")); ?>"
+										src = "<?php echo escapeHTML(
+											$game["has_image_data"] ? "catalog_image.php?id=".(int)$game["id"] : ($game["image"] ?? "img/boardgames/placeholder.svg")
+										); ?>"
 										alt = ""
 										aria-hidden = "true"
 										class = "catalog-game-image"
@@ -205,7 +209,7 @@ $categories = [
 
 									<!-- Categories -->
 									<div class = "catalog-game-categories">
-										<?php foreach ($gameCategories as $gameCategory): ?>
+										<?php foreach ( $gameCategories as $gameCategory ): ?>
 											<span class = "catalog-category-tag">
                                                 <?php echo escapeHTML($gameCategory); ?>
                                             </span >
@@ -214,7 +218,9 @@ $categories = [
 
 									<!-- Description -->
 									<p class = "catalog-game-description">
-										<?php echo escapeHTML($game["description"] ?? "Game description coming soon."); ?>
+										<?php echo escapeHTML(
+											$game["description"] ?? "Game description coming soon."
+										); ?>
 									</p >
 
 									<!-- Game Details -->

@@ -78,7 +78,7 @@ require_once __DIR__."/login_db.php";
 
 
 			<!-- Error -->
-			<?php if ($error !== ""): ?>
+			<?php if ( $error !== "" ): ?>
 
 				<div
 					class = "alert alert-danger login-alert"
@@ -213,7 +213,11 @@ require_once __DIR__."/login_db.php";
 	<script src = "components/navbar.js?v=<?= filemtime(__DIR__."/components/navbar.js") ?>"></script >
 
 
-	<script src = "components/password_toggle.js?v=<?= filemtime(__DIR__."/components/password_toggle.js") ?>"></script >
+	<script
+		src = "components/password_toggle.js?v=<?= filemtime(
+			__DIR__."/components/password_toggle.js"
+		) ?>"
+	></script >
 
 	</body >
 </html >

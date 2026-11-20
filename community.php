@@ -127,8 +127,9 @@ require_once __DIR__."/community_db.php";
 							>
 
 							<?php
-							foreach (["all" => "All", "joined" => "Joined", "pending" => "Pending", "not_joined" => "Not Joined"]
-							         as $filterValue => $filterLabel): ?>
+							foreach ( [ "all" => "All", "joined" => "Joined", "pending" => "Pending", "not_joined" => "Not Joined" ]
+								as $filterValue => $filterLabel
+							): ?>
 								<label class = "community-sort-option">
 									<input
 										type = "radio"
@@ -286,7 +287,7 @@ require_once __DIR__."/community_db.php";
 
 		<section class = "community-grid">
 
-			<?php if (empty($communities)): ?>
+			<?php if ( empty($communities) ): ?>
 
 				<div class = "community-empty">
 					<i class = "bi bi-people"></i >
@@ -296,7 +297,7 @@ require_once __DIR__."/community_db.php";
 
 			<?php else: ?>
 
-				<?php foreach ($communities as $community): ?>
+				<?php foreach ( $communities as $community ): ?>
 
 					<?php
 					$communityId = $community["id"] ?? "";
@@ -333,7 +334,7 @@ require_once __DIR__."/community_db.php";
                                     </span >
 								</div >
 
-								<?php if ($joinStatus === "pending"): ?>
+								<?php if ( $joinStatus === "pending" ): ?>
 									<span
 										class = "community-membership-icon community-membership-pending"
 										role = "img"
@@ -345,7 +346,7 @@ require_once __DIR__."/community_db.php";
 											aria-hidden = "true"
 										></i >
 									</span >
-								<?php elseif ($joinStatus === "approved"): ?>
+								<?php elseif ( $joinStatus === "approved" ): ?>
 									<span
 										class = "community-membership-icon community-membership-approved"
 										role = "img"

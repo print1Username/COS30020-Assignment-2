@@ -49,18 +49,18 @@ require_once __DIR__."/smart_feature_add_db.php";
 		</header >
 		<section class = "smart-feature-section">
 			<div class = "container">
-				<?php if (!$isUser): ?>
+				<?php if ( !$isUser ): ?>
 					<p class = "smart-feature-panel smart-feature-message">Please
 						<a href = "login.php">log in as a user</a >
 						to submit a contribution.
 					</p >
 				<?php else: ?>
-					<?php if ($error !== ""): ?>
+					<?php if ( $error !== "" ): ?>
 						<div
 							class = "alert alert-danger"
 							role = "alert"
 						><?php echo htmlspecialchars($error); ?></div ><?php endif; ?>
-					<?php if ($success !== ""): ?>
+					<?php if ( $success !== "" ): ?>
 						<div
 							class = "alert alert-success"
 							role = "status"

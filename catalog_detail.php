@@ -1,18 +1,20 @@
 <?php
 session_start();
-if (($_SESSION["logged_in"] ?? false) !== true ||
-	($_SESSION["type"] ?? null) !== "user" || !isset($_SESSION["email"])) {
+if ( ($_SESSION["logged_in"] ?? false) !== true ||
+	($_SESSION["type"] ?? null) !== "user" || !isset($_SESSION["email"]) ) {
 	header("Location: login.php");
 	exit;
 }
 
 $gameId = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
 require_once __DIR__."/db_connect.php";
-$statement = $pdo -> prepare("SELECT id,name,categories,description,players,duration,image,image_data IS NOT NULL AS has_image_data FROM catalog_info WHERE id=?");
-$statement -> execute([$gameId ?: 0]);
+$statement = $pdo -> prepare(
+	"SELECT id,name,categories,description,players,duration,image,image_data IS NOT NULL AS has_image_data FROM catalog_info WHERE id=?"
+);
+$statement -> execute([ $gameId ?: 0 ]);
 $game = $statement -> fetch() ?: null;
-if ($game) $game["categories"] = json_decode($game["categories"], true) ?? [];
-if ($game === null) {
+if ( $game ) $game["categories"] = json_decode($game["categories"], true) ?? [];
+if ( $game === null ) {
 	http_response_code(404);
 }
 function catalogDetailEscape($value)
@@ -66,7 +68,7 @@ function catalogDetailEscape($value)
 			<i class = "bi bi-arrow-left"></i >
 			Back to Catalogue
 		</a >
-		<?php if ($game === null): ?>
+		<?php if ( $game === null ): ?>
 			<section class = "catalog-detail-panel">
 				<h1 >Game Not Found</h1 >
 				<p >The requested board game is not available. Return to the catalogue to explore other games.</p >
@@ -76,7 +78,7 @@ function catalogDetailEscape($value)
 				<span class = "catalog-detail-eyebrow">BOARDGAME COLLECTION</span >
 				<h1 ><?php echo catalogDetailEscape($game["name"]); ?></h1 >
 				<div class = "catalog-game-categories">
-					<?php foreach ($game["categories"] ?? [] as $category): ?>
+					<?php foreach ( $game["categories"] ?? [] as $category ): ?>
 						<span class = "catalog-category-tag"><?php echo catalogDetailEscape($category); ?></span >
 					<?php endforeach; ?>
 				</div >
@@ -85,7 +87,9 @@ function catalogDetailEscape($value)
 				<section class = "catalog-detail-panel">
 					<img
 						class = "catalog-detail-image"
-						src = "<?php echo catalogDetailEscape($game["has_image_data"] ? "catalog_image.php?id=".(int)$game["id"] : ($game["image"] ?? "img/boardgames/placeholder.svg")); ?>"
+						src = "<?php echo catalogDetailEscape(
+							$game["has_image_data"] ? "catalog_image.php?id=".(int)$game["id"] : ($game["image"] ?? "img/boardgames/placeholder.svg")
+						); ?>"
 						alt = "<?php echo catalogDetailEscape($game["name"]); ?>"
 					>
 					<div class = "catalog-detail-description">

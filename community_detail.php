@@ -61,7 +61,7 @@ require_once __DIR__."/file_upload.php";
 				Community
 			</a >
 
-			<?php if ($community === null): ?>
+			<?php if ( $community === null ): ?>
 				<section
 					class = "community-detail-empty"
 					aria-labelledby = "not-found-title"
@@ -76,7 +76,7 @@ require_once __DIR__."/file_upload.php";
 					</a >
 				</section >
 			<?php else: ?>
-				<?php if ($quitNotice !== ""): ?>
+				<?php if ( $quitNotice !== "" ): ?>
 					<div
 						class = "alert alert-success alert-dismissible fade show"
 						role = "status"
@@ -94,7 +94,7 @@ require_once __DIR__."/file_upload.php";
 						></button >
 					</div >
 				<?php endif; ?>
-				<?php if ($cancelNotice !== ""): ?>
+				<?php if ( $cancelNotice !== "" ): ?>
 					<div
 						class = "alert alert-success alert-dismissible fade show"
 						role = "status"
@@ -112,12 +112,12 @@ require_once __DIR__."/file_upload.php";
 						></button >
 					</div >
 				<?php endif; ?>
-				<?php if ($joinError !== ""): ?>
+				<?php if ( $joinError !== "" ): ?>
 					<div
 						class = "alert alert-danger"
 						role = "alert"
 					><?php echo e($joinError); ?></div ><?php endif; ?>
-				<?php if ($postNotice !== ""): ?>
+				<?php if ( $postNotice !== "" ): ?>
 					<div
 						class = "alert alert-success alert-dismissible fade show"
 						role = "status"
@@ -135,13 +135,13 @@ require_once __DIR__."/file_upload.php";
 						></button >
 					</div >
 				<?php endif; ?>
-				<?php if ($postError !== ""): ?>
+				<?php if ( $postError !== "" ): ?>
 					<div
 						class = "alert alert-danger"
 						role = "alert"
 					><?php echo e($postError); ?></div >
 				<?php endif; ?>
-				<?php if ($joinStatus === "pending"): ?>
+				<?php if ( $joinStatus === "pending" ): ?>
 					<div
 						class = "alert alert-dismissible fade show community-detail-pending-alert"
 						role = "status"
@@ -172,7 +172,7 @@ require_once __DIR__."/file_upload.php";
 					<p ><?php echo e($communityDescription); ?></p >
 					<div class = "community-detail-meta">
 						<span ><i class = "bi bi-people-fill"></i > <?php echo $memberCount; ?> Members</span >
-						<?php if ($createdAt !== ""): ?>
+						<?php if ( $createdAt !== "" ): ?>
 							<span >
 							<i class = "bi bi-calendar3"></i >
 							Created <?php echo e(date("d M Y", strtotime($createdAt))); ?>
@@ -192,13 +192,15 @@ require_once __DIR__."/file_upload.php";
 								type = "submit"
 								name = "join_community"
 								value = "1"
-								class = "btn community-detail-primary-button<?php echo $joinStatus === "pending" ? " community-detail-pending-button" : ($joinStatus === "approved" ? " community-detail-approved-status" : ""); ?>" <?php echo in_array($joinStatus,
-								["pending", "approved"], true) ? "disabled" : ""; ?>>
+								class = "btn community-detail-primary-button<?php echo $joinStatus === "pending" ? " community-detail-pending-button" : ($joinStatus === "approved" ? " community-detail-approved-status" : ""); ?>" <?php echo in_array(
+								$joinStatus,
+								[ "pending", "approved" ], true
+							) ? "disabled" : ""; ?>>
 								<i class = "bi <?php echo $joinStatus === "pending" ? "bi-hourglass-split" : ($joinStatus === "approved" ? "bi-check-circle-fill" : "bi-person-plus-fill"); ?>"></i >
 								<?php echo $joinStatus === "pending" ? "Pending Approval" : ($joinStatus === "approved" ? "Already in Community" : "Join Community"); ?>
 							</button >
 						</form >
-						<?php if ($joinStatus === "pending"): ?>
+						<?php if ( $joinStatus === "pending" ): ?>
 							<form
 								method = "post"
 								class = "community-detail-cancel-form"
@@ -222,7 +224,7 @@ require_once __DIR__."/file_upload.php";
 								</button >
 							</form >
 						<?php endif; ?>
-						<?php if ($joinStatus === "approved"): ?>
+						<?php if ( $joinStatus === "approved" ): ?>
 							<form
 								method = "post"
 								class = "community-detail-quit-form"
@@ -260,10 +262,12 @@ require_once __DIR__."/file_upload.php";
 						</div >
 						<span
 							class = "community-detail-count"
-						><?php echo count($contributions); ?> item<?php echo count($contributions) === 1 ? "" : "s"; ?></span >
+						><?php echo count($contributions); ?> item<?php echo count(
+								$contributions
+							) === 1 ? "" : "s"; ?></span >
 					</div >
 
-					<?php if ($joinStatus === "approved"): ?>
+					<?php if ( $joinStatus === "approved" ): ?>
 						<button
 							type = "button"
 							class = "community-post-composer community-post-composer-trigger"
@@ -271,7 +275,7 @@ require_once __DIR__."/file_upload.php";
 							data-bs-target = "#communityPostModal"
 						>
 							<span class = "community-post-avatar">
-								<?php if (!empty($postingUser["has_profile_image"])): ?>
+								<?php if ( !empty($postingUser["has_profile_image"]) ): ?>
 									<img
 										src = "profile_image.php?email=<?php echo urlencode($_SESSION["email"]); ?>"
 										alt = "Your profile photo"
@@ -339,15 +343,17 @@ require_once __DIR__."/file_upload.php";
 												rows = "5"
 												required
 											><?php echo e($_POST["description"] ?? ""); ?></textarea >
-											<?php renderFileUpload([
-												"id" => "community-post-image",
-												"name" => "contribution_image",
-												"label" => "Post Image",
-												"accept" => "image/jpeg,image/png",
-												"kind" => "image",
-												"types" => "JPG, JPEG and PNG images only",
-												"max_size" => "maximum 5MB"
-											]); ?>
+											<?php renderFileUpload(
+												[
+													"id" => "community-post-image",
+													"name" => "contribution_image",
+													"label" => "Post Image",
+													"accept" => "image/jpeg,image/png",
+													"kind" => "image",
+													"types" => "JPG, JPEG and PNG images only",
+													"max_size" => "maximum 5MB"
+												]
+											); ?>
 										</div >
 										<div class = "modal-footer">
 											<button
@@ -371,7 +377,7 @@ require_once __DIR__."/file_upload.php";
 					<?php else: ?>
 						<div class = "community-post-composer community-post-composer-locked">
 							<span class = "community-post-avatar">
-								<?php if (!empty($postingUser["has_profile_image"])): ?>
+								<?php if ( !empty($postingUser["has_profile_image"]) ): ?>
 									<img
 										src = "profile_image.php?email=<?php echo urlencode($_SESSION["email"]); ?>"
 										alt = "Your profile photo"
@@ -387,27 +393,31 @@ require_once __DIR__."/file_upload.php";
 						</div >
 					<?php endif; ?>
 
-					<?php if (empty($contributions)): ?>
+					<?php if ( empty($contributions) ): ?>
 						<div class = "community-detail-no-contributions">
 							<i class = "bi bi-image"></i >
 							<p >No contributions have been shared yet.</p >
 						</div >
 					<?php else: ?>
 						<div class = "community-detail-contribution-grid">
-							<?php foreach ($contributions as $contribution): ?>
+							<?php foreach ( $contributions as $contribution ): ?>
 								<?php
 								$hasCommunityImage = !empty($contribution["has_community_image"]);
 								$title = $contribution["title"] ?? "Untitled contribution";
 								$description = $contribution["description"] ?? "No description available.";
-								$contributor = trim(($contribution["first_name"] ?? "")." ".($contribution["last_name"] ?? ""));
+								$contributor = trim(
+									($contribution["first_name"] ?? "")." ".($contribution["last_name"] ?? "")
+								);
 								$contributionDate = $contribution["created_at"] ?? "";
 								?>
 								<article class = "community-detail-card">
 									<div class = "community-post-user">
 										<span class = "community-post-avatar">
-											<?php if (!empty($contribution["email"]) && !empty($contribution["has_profile_image"])): ?>
+											<?php if ( !empty($contribution["email"]) && !empty($contribution["has_profile_image"]) ): ?>
 												<img
-													src = "profile_image.php?email=<?php echo urlencode($contribution["email"]); ?>"
+													src = "profile_image.php?email=<?php echo urlencode(
+														$contribution["email"]
+													); ?>"
 													alt = "<?php echo e($contributor); ?> profile photo"
 												>
 											<?php else: ?>
@@ -418,17 +428,27 @@ require_once __DIR__."/file_upload.php";
 											<?php endif; ?>
 										</span >
 										<div class = "community-post-user-details">
-											<strong ><?php echo e($contributor !== "" ? $contributor : "Unknown contributor"); ?></strong >
-											<?php if ($contributionDate !== ""): ?>
-												<time datetime = "<?php echo e(date("c",
-													strtotime($contributionDate))); ?>"><?php echo e(date("d M Y, g:i A",
-													strtotime($contributionDate))); ?></time ><?php endif; ?>
+											<strong ><?php echo e(
+													$contributor !== "" ? $contributor : "Unknown contributor"
+												); ?></strong >
+											<?php if ( $contributionDate !== "" ): ?>
+												<time datetime = "<?php echo e(
+													date(
+														"c",
+														strtotime($contributionDate)
+													)
+												); ?>"><?php echo e(
+													date(
+														"d M Y, g:i A",
+														strtotime($contributionDate)
+													)
+												); ?></time ><?php endif; ?>
 										</div >
 									</div >
 									<div class = "community-post-content">
 										<h3 ><?php echo e($title); ?></h3 >
 										<p class = "community-detail-description"><?php echo e($description); ?></p >
-										<?php if ($hasCommunityImage): ?>
+										<?php if ( $hasCommunityImage ): ?>
 											<img class = "community-post-image"
 											src = "community_image.php?id=<?php echo (int)$contribution["id"]; ?>"
 											alt = "<?php echo e($title); ?>"><?php endif; ?>
@@ -447,8 +467,12 @@ require_once __DIR__."/file_upload.php";
 		integrity = "sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
 		crossorigin = "anonymous"
 	></script >
-	<script src = "components/file_upload.js?v=<?php echo filemtime(__DIR__."/components/file_upload.js"); ?>"></script >
-	<?php if ($postError !== "" && $joinStatus === "approved"): ?>
+	<script
+		src = "components/file_upload.js?v=<?php echo filemtime(
+			__DIR__."/components/file_upload.js"
+		); ?>"
+	></script >
+	<?php if ( $postError !== "" && $joinStatus === "approved" ): ?>
 		<script >
             bootstrap.Modal.getOrCreateInstance(document.getElementById("communityPostModal")).show();
 		</script >

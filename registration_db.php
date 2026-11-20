@@ -12,7 +12,7 @@ $errors = [];
 |--------------------------------------------------------------------------
 */
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+if ( $_SERVER["REQUEST_METHOD"] !== "POST" ) {
 	header("Location: registration.php");
 	exit;
 }
@@ -56,35 +56,35 @@ $_SESSION["registration_old"] = [
 |--------------------------------------------------------------------------
 */
 
-if ($firstName === "") {
+if ( $firstName === "" ) {
 	$errors[] = "First Name is required.";
 }
 
-if ($lastName === "") {
+if ( $lastName === "" ) {
 	$errors[] = "Last Name is required.";
 }
 
-if ($dob === "") {
+if ( $dob === "" ) {
 	$errors[] = "Date of Birth is required.";
 }
 
-if ($gender === "") {
+if ( $gender === "" ) {
 	$errors[] = "Gender is required.";
 }
 
-if ($email === "") {
+if ( $email === "" ) {
 	$errors[] = "Email is required.";
 }
 
-if ($hometown === "") {
+if ( $hometown === "" ) {
 	$errors[] = "Hometown is required.";
 }
 
-if ($password === "") {
+if ( $password === "" ) {
 	$errors[] = "Password is required.";
 }
 
-if ($confirmPassword === "") {
+if ( $confirmPassword === "" ) {
 	$errors[] = "Confirm Password is required.";
 }
 
@@ -96,7 +96,7 @@ if ($confirmPassword === "") {
 |--------------------------------------------------------------------------
 */
 
-if ($firstName !== "" && !preg_match("/^[a-zA-Z ]+$/", $firstName)) {
+if ( $firstName !== "" && !preg_match("/^[a-zA-Z ]+$/", $firstName) ) {
 	$errors[] = "First Name can only contain letters and spaces.";
 }
 
@@ -107,7 +107,7 @@ if ($firstName !== "" && !preg_match("/^[a-zA-Z ]+$/", $firstName)) {
 |--------------------------------------------------------------------------
 */
 
-if ($lastName !== "" && !preg_match("/^[a-zA-Z ]+$/", $lastName)) {
+if ( $lastName !== "" && !preg_match("/^[a-zA-Z ]+$/", $lastName) ) {
 	$errors[] = "Last Name can only contain letters and spaces.";
 }
 
@@ -118,7 +118,7 @@ if ($lastName !== "" && !preg_match("/^[a-zA-Z ]+$/", $lastName)) {
 |--------------------------------------------------------------------------
 */
 
-if ($email !== "" && !isValidEmail($email)) {
+if ( $email !== "" && !isValidEmail($email) ) {
 	$errors[] = "Please enter a valid email address.";
 }
 
@@ -129,7 +129,7 @@ if ($email !== "" && !isValidEmail($email)) {
 |--------------------------------------------------------------------------
 */
 
-if ($gender !== "" && $gender !== "Male" && $gender !== "Female") {
+if ( $gender !== "" && $gender !== "Male" && $gender !== "Female" ) {
 	$errors[] = "Invalid gender selected.";
 }
 
@@ -140,9 +140,9 @@ if ($gender !== "" && $gender !== "Male" && $gender !== "Female") {
 |--------------------------------------------------------------------------
 */
 
-if ($dob !== "") {
+if ( $dob !== "" ) {
 
-	if (!isValidDate($dob)) {
+	if ( !isValidDate($dob) ) {
 		$errors[] = "Please enter a valid Date of Birth.";
 	}
 }
@@ -154,17 +154,17 @@ if ($dob !== "") {
 |--------------------------------------------------------------------------
 */
 
-if ($password !== "") {
+if ( $password !== "" ) {
 
-	if (strlen($password) < 8) {
+	if ( strlen($password) < 8 ) {
 		$errors[] = "Password must be at least 8 characters long.";
 	}
 
-	if (!preg_match("/[0-9]/", $password)) {
+	if ( !preg_match("/[0-9]/", $password) ) {
 		$errors[] = "Password must contain at least one number.";
 	}
 
-	if (!preg_match("/[^a-zA-Z0-9]/", $password)) {
+	if ( !preg_match("/[^a-zA-Z0-9]/", $password) ) {
 		$errors[] = "Password must contain at least one symbol.";
 	}
 }
@@ -191,7 +191,7 @@ if (
 |--------------------------------------------------------------------------
 */
 
-if (!empty($errors)) {
+if ( !empty($errors) ) {
 
 	$_SESSION["registration_errors"] = $errors;
 
@@ -204,27 +204,29 @@ require_once __DIR__."/db_connect.php";
 
 try {
 	$check = $pdo -> prepare("SELECT email FROM user_table WHERE email = ?");
-	$check -> execute([$email]);
-	if ($check -> fetch()) {
-		$_SESSION["registration_errors"] = ["This email address is already registered."];
+	$check -> execute([ $email ]);
+	if ( $check -> fetch() ) {
+		$_SESSION["registration_errors"] = [ "This email address is already registered." ];
 		header("Location: registration.php");
 		exit;
 	}
 
 	$pdo -> beginTransaction();
-	$user = $pdo -> prepare("INSERT INTO user_table (email, first_name, last_name, dob, gender, hometown) VALUES (?, ?, ?, ?, ?, ?)");
-	$user -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown]);
+	$user = $pdo -> prepare(
+		"INSERT INTO user_table (email, first_name, last_name, dob, gender, hometown) VALUES (?, ?, ?, ?, ?, ?)"
+	);
+	$user -> execute([ $email, $firstName, $lastName, $dob, $gender, $hometown ]);
 	$account = $pdo -> prepare("INSERT INTO account_table (email, password, type) VALUES (?, ?, 'user')");
-	$account -> execute([$email, password_hash($password, PASSWORD_DEFAULT)]);
+	$account -> execute([ $email, password_hash($password, PASSWORD_DEFAULT) ]);
 	$pdo -> commit();
-} catch (PDOException $e) {
-	if ($pdo -> inTransaction()) {
+} catch ( PDOException $e ) {
+	if ( $pdo -> inTransaction() ) {
 		$pdo -> rollBack();
 	}
 	error_log($e -> getMessage());
-	$_SESSION["registration_errors"] = [$e -> getCode() === "23000"
+	$_SESSION["registration_errors"] = [ $e -> getCode() === "23000"
 		? "This email address is already registered."
-		: "Unable to save your registration. Please try again."];
+		: "Unable to save your registration. Please try again." ];
 	header("Location: registration.php");
 	exit;
 }

@@ -64,7 +64,7 @@ unset($_SESSION["activity_registration_notice"]);
 	<?php include "navbar.php"; ?>
 
 	<main class = "container py-5">
-		<?php if ($activityRegistrationSuccess !== ""): ?>
+		<?php if ( $activityRegistrationSuccess !== "" ): ?>
 			<div
 				class = "alert <?php echo $activityRegistrationNotice === "pending" ? "alert-warning" : "alert-success"; ?> alert-dismissible fade show"
 				role = "alert"
@@ -74,7 +74,7 @@ unset($_SESSION["activity_registration_notice"]);
 					aria-hidden = "true"
 				></i >
 				<?php echo htmlspecialchars($activityRegistrationSuccess, ENT_QUOTES, "UTF-8"); ?>
-				<?php if ($activityRegistrationNotice === "pending"): ?>
+				<?php if ( $activityRegistrationNotice === "pending" ): ?>
 					Your registration is pending admin approval.
 				<?php endif; ?>
 				<button
@@ -96,7 +96,7 @@ unset($_SESSION["activity_registration_notice"]);
 
 		</div >
 
-		<?php if (empty($activities)): ?>
+		<?php if ( empty($activities) ): ?>
 			<div
 				class = "alert alert-light border activities-empty-alert"
 				role = "alert"
@@ -109,7 +109,7 @@ unset($_SESSION["activity_registration_notice"]);
 				id = "activity-list"
 				class = "activities-list"
 			>
-				<?php foreach ($activities as $activity): ?>
+				<?php foreach ( $activities as $activity ): ?>
 					<?php
 					$image = isset($activity["image"]) ? $activity["image"] : null;
 					$hasImage = !empty($image) && file_exists($image);
@@ -132,7 +132,7 @@ unset($_SESSION["activity_registration_notice"]);
 							aria-label = "Register for <?php echo htmlspecialchars($activity["title"]); ?>"
 						>
 							<div class = "activity-card-image">
-								<?php if ($hasImage): ?>
+								<?php if ( $hasImage ): ?>
 									<img
 										src = "<?php echo htmlspecialchars($image); ?>"
 										alt = "<?php echo htmlspecialchars($activity["title"]); ?>"
@@ -187,13 +187,21 @@ unset($_SESSION["activity_registration_notice"]);
 											<span class = "activity-detail-label">Time</span >
 											<span class = "activity-detail-value">
                                                     <?php
-													echo htmlspecialchars(date("g:i A",
-														strtotime($activity["start_time"])));
+													echo htmlspecialchars(
+	                                                    date(
+		                                                    "g:i A",
+															strtotime($activity["start_time"])
+	                                                    )
+                                                    );
 													?>
                                                     -
                                                     <?php
-													echo htmlspecialchars(date("g:i A",
-														strtotime($activity["end_time"])));
+													echo htmlspecialchars(
+	                                                    date(
+		                                                    "g:i A",
+															strtotime($activity["end_time"])
+	                                                    )
+                                                    );
 													?>
                                                 </span >
 										</div >
@@ -227,7 +235,7 @@ unset($_SESSION["activity_registration_notice"]);
                                     <i class = "bi bi-people-fill me-1"></i >
                                     Join the Boardgame Hub community
                                 </span >
-							<?php if ($registrationStatus === "pending"): ?>
+							<?php if ( $registrationStatus === "pending" ): ?>
 								<a
 									href = "<?php echo htmlspecialchars($activityRegisterLink); ?>"
 									class = "btn activity-register-card-btn activity-registration-status-icon activity-registration-pending-icon"
@@ -236,7 +244,7 @@ unset($_SESSION["activity_registration_notice"]);
 								>
 									<i class = "bi bi-hourglass-split"></i >
 								</a >
-							<?php elseif ($registrationStatus === "approved"): ?>
+							<?php elseif ( $registrationStatus === "approved" ): ?>
 								<a
 									href = "<?php echo htmlspecialchars($activityRegisterLink); ?>"
 									class = "btn activity-register-card-btn activity-registration-status-icon activity-registration-approved-icon"

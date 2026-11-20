@@ -3,7 +3,7 @@ $activityDbPage = "registration";
 require_once __DIR__."/activities_db.php";
 require_once __DIR__."/helpers.php";
 $registrationSuccess = $_SESSION["activity_registration_success"] ?? "";
-if ($registrationSuccess !== "") {
+if ( $registrationSuccess !== "" ) {
 	unset($_SESSION["activity_registration_success"], $_SESSION["activity_registration_notice"]);
 }
 ?>
@@ -62,7 +62,7 @@ if ($registrationSuccess !== "") {
 
 	<main class = "activity-registration-page">
 		<div class = "container py-5">
-			<?php if ($registrationSuccess !== "" && $registrationStatus !== "pending"): ?>
+			<?php if ( $registrationSuccess !== "" && $registrationStatus !== "pending" ): ?>
 				<div
 					class = "alert alert-warning"
 					role = "status"
@@ -98,7 +98,7 @@ if ($registrationSuccess !== "") {
 			</div >
 
 			<!-- Error Message -->
-			<?php if ($error !== ""): ?>
+			<?php if ( $error !== "" ): ?>
 				<div
 					class = "alert alert-danger activity-registration-alert"
 					role = "alert"
@@ -108,7 +108,7 @@ if ($registrationSuccess !== "") {
 				</div >
 			<?php endif; ?>
 
-			<?php if ($selectedActivity !== null): ?>
+			<?php if ( $selectedActivity !== null ): ?>
 
 				<form
 					action = "activity_reg.php?id=<?php echo $activityId; ?>"
@@ -285,8 +285,10 @@ if ($registrationSuccess !== "") {
 									value = "<?php echo htmlspecialchars($contactNumber); ?>"
 									placeholder = "Enter your contact number"
 									required
-									<?php echo in_array($registrationStatus, ["pending", "approved"],
-										true) ? "readonly aria-readonly=\"true\"" : ""; ?>
+									<?php echo in_array(
+										$registrationStatus, [ "pending", "approved" ],
+										true
+									) ? "readonly aria-readonly=\"true\"" : ""; ?>
 								>
 							</div >
 						</div >
@@ -294,7 +296,7 @@ if ($registrationSuccess !== "") {
 
 					<!-- Form Actions -->
 					<div class = "activity-registration-actions">
-						<?php if (!in_array($registrationStatus, ["pending", "approved"], true)): ?>
+						<?php if ( !in_array($registrationStatus, [ "pending", "approved" ], true) ): ?>
 							<a
 								href = "activities.php"
 								class = "btn activity-cancel-button"
@@ -303,7 +305,7 @@ if ($registrationSuccess !== "") {
 							</a >
 						<?php endif; ?>
 
-						<?php if (in_array($registrationStatus, ["pending", "approved"], true)): ?>
+						<?php if ( in_array($registrationStatus, [ "pending", "approved" ], true) ): ?>
 							<div
 								class = "alert <?php echo $registrationStatus === "pending" ? "alert-warning" : "alert-success"; ?> activity-registration-status mb-0"
 								role = "status"

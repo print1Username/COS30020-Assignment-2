@@ -79,15 +79,15 @@
 					</a >
 				</p >
 
-				<?php if ($search !== "" && $result === null): ?>
+				<?php if ( $search !== "" && $result === null ): ?>
 					<p
 						class = "smart-feature-message"
 						role = "status"
 					>No matching data available.
 					</p >
-				<?php elseif ($result !== null): ?>
+				<?php elseif ( $result !== null ): ?>
 					<article class = "smart-feature-panel smart-feature-result">
-						<?php if ($image = smartFeatureAsset($result["item_image"])): ?>
+						<?php if ( $image = smartFeatureAsset($result["item_image"]) ): ?>
 							<img
 								src = "<?php echo smartFeatureEscape($image); ?>"
 								class = "smart-feature-result-image"
@@ -99,7 +99,7 @@
 						<div class = "smart-feature-result-body">
 							<h2 ><?php echo smartFeatureEscape($result["item_name"]); ?></h2 >
 							<p >Category: <?php echo smartFeatureEscape($result["item_category"]); ?></p >
-							<?php if ($pdf = smartFeatureAsset($result["description_file"])): ?>
+							<?php if ( $pdf = smartFeatureAsset($result["description_file"]) ): ?>
 								<a
 									class = "btn smart-feature-button"
 									href = "<?php echo smartFeatureEscape($pdf); ?>"

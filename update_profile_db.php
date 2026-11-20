@@ -7,10 +7,12 @@ require_once __DIR__."/db_connect.php";
 require_once __DIR__."/upload_helpers.php";
 
 $currentEmail = $_SESSION["email"];
-$statement = $pdo -> prepare("SELECT email, first_name, last_name, dob, gender, hometown, profile_image, profile_image_data IS NOT NULL AND OCTET_LENGTH(profile_image_data) > 0 AS has_profile_image, profile_image_mime, resume_file, resume_filename FROM user_table WHERE email = ?");
-$statement -> execute([$currentEmail]);
+$statement = $pdo -> prepare(
+	"SELECT email, first_name, last_name, dob, gender, hometown, profile_image, profile_image_data IS NOT NULL AND OCTET_LENGTH(profile_image_data) > 0 AS has_profile_image, profile_image_mime, resume_file, resume_filename FROM user_table WHERE email = ?"
+);
+$statement -> execute([ $currentEmail ]);
 $user = $statement -> fetch();
-if (!$user) {
+if ( !$user ) {
 	header("Location: login.php");
 	exit;
 }
@@ -26,7 +28,7 @@ $userData = [
 $error = "";
 $profileImage = $user["profile_image"] ?? "";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ( $_SERVER["REQUEST_METHOD"] === "POST" ) {
 	$firstName = trim($_POST["first_name"] ?? "");
 	$lastName = trim($_POST["last_name"] ?? "");
 	$dob = trim($_POST["dob"] ?? "");
@@ -42,29 +44,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		"Hometown" => $hometown
 	];
 
-	if ($firstName === "" || $lastName === "" || $dob === "" ||
-		$gender === "" || $email === "" || $hometown === "") {
+	if ( $firstName === "" || $lastName === "" || $dob === "" ||
+		$gender === "" || $email === "" || $hometown === "" ) {
 		$error = "Please complete all required fields.";
-	} elseif (!isValidName($firstName) || !isValidName($lastName)) {
+	} elseif ( !isValidName($firstName) || !isValidName($lastName) ) {
 		$error = "Names must contain only letters and spaces (maximum 50 characters).";
-	} elseif (!isValidEmail($email)) {
+	} elseif ( !isValidEmail($email) ) {
 		$error = "Please enter a valid email address (maximum 50 characters).";
-	} elseif (!in_array($gender, ["Male", "Female"], true)) {
+	} elseif ( !in_array($gender, [ "Male", "Female" ], true) ) {
 		$error = "Please select a valid gender.";
-	} elseif (!isValidDate($dob)) {
+	} elseif ( !isValidDate($dob) ) {
 		$error = "Please enter a valid date of birth.";
-	} elseif (strlen($hometown) > 50) {
+	} elseif ( strlen($hometown) > 50 ) {
 		$error = "Hometown must be 50 characters or fewer.";
 	}
 
-	if ($error === "") {
+	if ( $error === "" ) {
 		$newFiles = [];
 		$newProfileImage = null;
 		try {
-			if (strcasecmp($email, $currentEmail) !== 0) {
+			if ( strcasecmp($email, $currentEmail) !== 0 ) {
 				$check = $pdo -> prepare("SELECT email FROM user_table WHERE email = ?");
-				$check -> execute([$email]);
-				if ($check -> fetch()) {
+				$check -> execute([ $email ]);
+				if ( $check -> fetch() ) {
 					throw new RuntimeException("This email address is already registered.");
 				}
 			}
@@ -72,52 +74,58 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			$newImageMime = null;
 			$newResume = $user["resume_file"];
 			$newResumeFilename = $user["resume_filename"];
-			if (isset($_FILES["profile_image"]) &&
-				$_FILES["profile_image"]["error"] !== UPLOAD_ERR_NO_FILE) {
-				$allowedImages = ["jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png"];
+			if ( isset($_FILES["profile_image"]) &&
+				$_FILES["profile_image"]["error"] !== UPLOAD_ERR_NO_FILE ) {
+				$allowedImages = [ "jpg" => "image/jpeg", "jpeg" => "image/jpeg", "png" => "image/png" ];
 				$imageFile = $_FILES["profile_image"];
 				$newImageMime = validateUpload($imageFile, $allowedImages, 5 * 1024 * 1024)["mime"];
 				$newImagePath = $imageFile["tmp_name"];
 			}
-			if (isset($_FILES["resume_file"]) &&
-				$_FILES["resume_file"]["error"] !== UPLOAD_ERR_NO_FILE) {
+			if ( isset($_FILES["resume_file"]) &&
+				$_FILES["resume_file"]["error"] !== UPLOAD_ERR_NO_FILE ) {
 				$newResumeFilename = basename(str_replace("\\", "/", $_FILES["resume_file"]["name"]));
-				if (strlen($newResumeFilename) > 255) {
+				if ( strlen($newResumeFilename) > 255 ) {
 					throw new RuntimeException("The PDF filename is too long.");
 				}
 				$newResume = saveValidatedUpload(
 					$_FILES["resume_file"], "resume",
-					["pdf" => "application/pdf"], 7 * 1024 * 1024
+					[ "pdf" => "application/pdf" ], 7 * 1024 * 1024
 				);
 				$newFiles[] = $newResume;
 			}
 			$pdo -> beginTransaction();
-			if ($newImagePath !== null) {
+			if ( $newImagePath !== null ) {
 				$newProfileImage = storeProfileImage($pdo, $email, $newImageMime, $newImagePath, $currentEmail);
-			} elseif (strcasecmp($email, $currentEmail) !== 0 &&
+			} elseif ( strcasecmp($email, $currentEmail) !== 0 &&
 				is_string($user["profile_image"]) &&
 				preg_match('~^profile_images/[^/]+/[a-f0-9]{32}\.(?:jpg|png)$~', $user["profile_image"]) &&
-				is_file(__DIR__."/".$user["profile_image"])) {
+				is_file(__DIR__."/".$user["profile_image"]) ) {
 				$existingMime = (new finfo(FILEINFO_MIME_TYPE)) -> file(__DIR__."/".$user["profile_image"]);
-				$newProfileImage = storeProfileImage($pdo, $email, $existingMime, __DIR__."/".$user["profile_image"],
-					$currentEmail);
+				$newProfileImage = storeProfileImage(
+					$pdo, $email, $existingMime, __DIR__."/".$user["profile_image"],
+					$currentEmail
+				);
 			}
-			$update = $pdo -> prepare("UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, resume_file = ?, resume_filename = ? WHERE email = ?");
-			$update -> execute([$email, $firstName, $lastName, $dob, $gender, $hometown, $newResume, $newResumeFilename, $currentEmail]);
-			if ($newProfileImage !== null) {
+			$update = $pdo -> prepare(
+				"UPDATE user_table SET email = ?, first_name = ?, last_name = ?, dob = ?, gender = ?, hometown = ?, resume_file = ?, resume_filename = ? WHERE email = ?"
+			);
+			$update -> execute(
+				[ $email, $firstName, $lastName, $dob, $gender, $hometown, $newResume, $newResumeFilename, $currentEmail ]
+			);
+			if ( $newProfileImage !== null ) {
 				$updateImage = $pdo -> prepare("UPDATE user_table SET profile_image = ? WHERE email = ?");
-				$updateImage -> execute([$newProfileImage, $email]);
+				$updateImage -> execute([ $newProfileImage, $email ]);
 			}
 			$pdo -> commit();
 			$_SESSION["email"] = $email;
 			header("Location: profile.php");
 			exit;
 
-		} catch (RuntimeException|PDOException $e) {
-			if ($newProfileImage !== null && is_file(__DIR__."/".$newProfileImage)) {
+		} catch ( RuntimeException|PDOException $e ) {
+			if ( $newProfileImage !== null && is_file(__DIR__."/".$newProfileImage) ) {
 				unlink(__DIR__."/".$newProfileImage);
 			}
-			if ($pdo -> inTransaction()) {
+			if ( $pdo -> inTransaction() ) {
 				$pdo -> rollBack();
 			}
 			$error = $e instanceof PDOException
@@ -130,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 $fullName = trim($userData["First Name"]." ".$userData["LastName"]);
 $dobInputValue = $userData["DOB"];
 $profileImagePath = !empty($user["has_profile_image"]) &&
-in_array($user["profile_image_mime"], ["image/jpeg", "image/png"], true)
+in_array($user["profile_image_mime"], [ "image/jpeg", "image/png" ], true)
 	? "profile_image.php"
 	: "";
 ?>

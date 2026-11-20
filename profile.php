@@ -40,7 +40,7 @@ require_once __DIR__."/file_upload.php";
 			rel = "stylesheet"
 			href = "style/navbar.css"
 		>
-		<?php if ($_SESSION["type"] === "admin"): ?>
+		<?php if ( $_SESSION["type"] === "admin" ): ?>
 			<link rel = "stylesheet"
 			href = "style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
 		<link
@@ -53,8 +53,8 @@ require_once __DIR__."/file_upload.php";
 		>
 	</head >
 
-	<body<?php if ($_SESSION["type"] === "admin") echo ' class="admin-profile"'; ?>>
-	<?php if ($_SESSION["type"] === "admin"): ?>
+	<body<?php if ( $_SESSION["type"] === "admin" ) echo ' class="admin-profile"'; ?>>
+	<?php if ( $_SESSION["type"] === "admin" ): ?>
 		<?php include __DIR__."/admin_nav.php"; ?>
 	<?php else: ?>
 		<?php include "navbar.php"; ?>
@@ -65,7 +65,7 @@ require_once __DIR__."/file_upload.php";
 			<h1 >Profile</h1 >
 			<p >View and manage your personal information.</p >
 		</div >
-		<?php if ($uploadError !== ""): ?>
+		<?php if ( $uploadError !== "" ): ?>
 			<div
 				class = "alert alert-danger"
 				role = "alert"
@@ -76,7 +76,7 @@ require_once __DIR__."/file_upload.php";
 			<div class = "profile-left-column">
 				<section class = "profile-card">
 					<div class = "profile-picture-container">
-						<?php if ($profileImagePath !== ""): ?>
+						<?php if ( $profileImagePath !== "" ): ?>
 							<img
 								src = "<?php echo htmlspecialchars($profileImagePath); ?>"
 								alt = "Profile picture"
@@ -230,20 +230,22 @@ require_once __DIR__."/file_upload.php";
 						name = "upload_token"
 						value = "<?php echo htmlspecialchars($_SESSION["profile_upload_token"], ENT_QUOTES); ?>"
 					>
-					<?php renderFileUpload([
-						"id" => "profilePdfInput",
-						"name" => "resume_file",
-						"label" => "Supporting Document",
-						"accept" => "application/pdf,.pdf",
-						"kind" => "file",
-						"types" => "PDF files only",
-						"max_size" => "maximum 7MB",
-						"current_url" => $resumeAvailable ? $resumePath : "",
-						"current_name" => $resumeAvailable ? $resumeName : "",
-						"auto_submit" => true,
-						"allow_remove" => true,
-						"remove_name" => "remove_pdf"
-					]); ?>
+					<?php renderFileUpload(
+						[
+							"id" => "profilePdfInput",
+							"name" => "resume_file",
+							"label" => "Supporting Document",
+							"accept" => "application/pdf,.pdf",
+							"kind" => "file",
+							"types" => "PDF files only",
+							"max_size" => "maximum 7MB",
+							"current_url" => $resumeAvailable ? $resumePath : "",
+							"current_name" => $resumeAvailable ? $resumeName : "",
+							"auto_submit" => true,
+							"allow_remove" => true,
+							"remove_name" => "remove_pdf"
+						]
+					); ?>
 				</form >
 
 				<section class = "academic-integrity-section">
@@ -266,8 +268,12 @@ require_once __DIR__."/file_upload.php";
             });
         }
 	</script >
-	<script src = "components/file_upload.js?v=<?php echo filemtime(__DIR__."/components/file_upload.js"); ?>"></script >
-	<?php if ($_SESSION["type"] === "admin"): ?>
+	<script
+		src = "components/file_upload.js?v=<?php echo filemtime(
+			__DIR__."/components/file_upload.js"
+		); ?>"
+	></script >
+	<?php if ( $_SESSION["type"] === "admin" ): ?>
 		<script
 			src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
 		></script ><?php endif; ?>

@@ -47,10 +47,10 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 	<body ><?php include __DIR__."/admin_nav.php"; ?>
 	<main class = "container py-5"><?php
 		$communityTab = $_GET['tab'] ?? 'create';
-		if (!in_array($communityTab, ['create', 'join', 'post'], true)) $communityTab = 'create';
-		if ($communityEdit || $communityError) $communityTab = 'create';
-		if ($edit || $error) $communityTab = 'post';
-		if ($joinError) $communityTab = 'join';
+		if ( !in_array($communityTab, [ 'create', 'join', 'post' ], true) ) $communityTab = 'create';
+		if ( $communityEdit || $communityError ) $communityTab = 'create';
+		if ( $edit || $error ) $communityTab = 'post';
+		if ( $joinError ) $communityTab = 'join';
 		?>
 		<h1 >Manage Community</h1 >
 		<p >
@@ -64,23 +64,28 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 			class = "admin-community-tabs"
 			aria-label = "Community management sections"
 		>
-			<?php foreach (['create' => 'Communities', 'join' => 'Join Requests', 'post' => 'Community Posts'] as $tab
-			=> $label): ?>
+			<?php
+			foreach ( [ 'create' => 'Communities', 'join' => 'Manage Community Members', 'post' => 'Community Posts' ]
+				as $tab
+			=> $label
+			): ?>
 				<a
 					class = "admin-community-tab<?= $communityTab === $tab ? ' active' : '' ?>"
 					href = "manage_community.php?tab=<?= $tab ?>" <?= $communityTab === $tab ? 'aria-current="page"' : '' ?>><?= $label ?></a >
 			<?php endforeach; ?>
 		</nav >
-		<?php if ($error): ?>
-			<div class = "alert alert-danger"><?= adminEscape($error) ?></div ><?php endif; ?><?php if ($notice): ?>
+		<?php if ( $error ): ?>
+			<div class = "alert alert-danger"><?= adminEscape($error) ?></div ><?php endif; ?><?php if ( $notice ): ?>
 			<div class = "alert alert-success"><?= adminEscape($notice) ?></div ><?php endif; ?>
-		<?php if ($communityError): ?>
+		<?php if ( $communityError ): ?>
 			<div class = "alert alert-danger"><?= adminEscape($communityError) ?></div ><?php endif; ?>
-		<?php if ($joinError): ?>
+		<?php if ( $joinError ): ?>
 			<div class = "alert alert-danger"><?= adminEscape($joinError) ?></div ><?php endif; ?>
 		<div <?= $communityTab !== 'post' ? 'hidden' : '' ?>>
-			<?php adminDisclosureStart($edit ? 'Edit Post' : 'Create Post', 'Enter author and post content details',
-				(bool)($edit || $error)); ?>
+			<?php adminDisclosureStart(
+				$edit ? 'Edit Post' : 'Create Post', 'Enter author and post content details',
+				(bool)($edit || $error)
+			); ?>
 			<form
 				method = "post"
 				enctype = "multipart/form-data"
@@ -107,8 +112,9 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 						aria-labelledby = "post-user-title"
 					>
 						<h3 id = "post-user-title">User Details</h3 >
-						<?php foreach (['first_name' => 'First Name', 'last_name' => 'Last Name'] as $field =>
-						               $label):
+						<?php foreach ( [ 'first_name' => 'First Name', 'last_name' => 'Last Name' ] as $field =>
+							$label
+						):
 							?>
 							<div >
 								<label
@@ -121,7 +127,9 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 									name = "<?= $field ?>"
 									maxlength = "50"
 									required
-									value = "<?= adminEscape($edit[$field] ?? ($_POST[$field] ?? $adminUser[$field])) ?>"
+									value = "<?= adminEscape(
+										$edit[$field] ?? ($_POST[$field] ?? $adminUser[$field])
+									) ?>"
 								>
 							</div >
 						<?php endforeach; ?>
@@ -194,11 +202,13 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 									aria-label = "Matching communities"
 									hidden
 								>
-									<?php foreach ($communities as $community): ?>
+									<?php foreach ( $communities as $community ): ?>
 										<button type = "button"
 										class = "admin-activity-result admin-community-result"
 										data-community-id = "<?= (int)$community['id'] ?>"
-										data-community-title = "<?= adminEscape($community['title']) ?>"><?= adminEscape($community['title']) ?></button ><?php
+										data-community-title = "<?= adminEscape(
+											$community['title']
+										) ?>"><?= adminEscape($community['title']) ?></button ><?php
 									endforeach; ?>
 									<p
 										class = "admin-activity-no-results text-muted"
@@ -242,19 +252,23 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 							$currentAdminPostImage = $edit && !empty($edit["contribution_image"]) &&
 							is_file(__DIR__."/".$edit["contribution_image"])
 								? $edit["contribution_image"] : "";
-							renderFileUpload([
-								"id" => "contribution_image",
-								"name" => "contribution_image",
-								"label" => "Post Image",
-								"accept" => "image/jpeg,image/png",
-								"kind" => "image",
-								"types" => "JPG, JPEG and PNG images only",
-								"max_size" => "maximum 5MB",
-								"current_url" => $currentAdminPostImage,
-								"current_name" => $currentAdminPostImage !== "" ? basename($currentAdminPostImage) : ""
-							]);
+							renderFileUpload(
+								[
+									"id" => "contribution_image",
+									"name" => "contribution_image",
+									"label" => "Post Image",
+									"accept" => "image/jpeg,image/png",
+									"kind" => "image",
+									"types" => "JPG, JPEG and PNG images only",
+									"max_size" => "maximum 5MB",
+									"current_url" => $currentAdminPostImage,
+									"current_name" => $currentAdminPostImage !== "" ? basename(
+										$currentAdminPostImage
+									) : ""
+								]
+							);
 							?></div >
-						<?php if ($edit): ?>
+						<?php if ( $edit ): ?>
 							<div class = "admin-post-status">
 							<label
 								class = "form-label"
@@ -265,16 +279,18 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 								class = "form-select"
 								id = "status"
 								name = "status"
-							><?php foreach (['pending', 'approved', 'rejected'] as $status): ?>
+							><?php foreach ( [ 'pending', 'approved', 'rejected' ] as $status ): ?>
 									<option
-									value = "<?= $status ?>" <?= ($edit['status'] ?? 'pending') === $status ? 'selected' : '' ?>><?= ucfirst($status) ?></option ><?php
+									value = "<?= $status ?>" <?= ($edit['status'] ?? 'pending') === $status ? 'selected' : '' ?>><?= ucfirst(
+									$status
+								) ?></option ><?php
 								endforeach; ?></select ></div ><?php endif; ?>
 					</section >
 				</div >
 				<div class = "admin-post-form-actions">
 					<button
 						class = "btn btn-primary"
-					><?= $edit ? 'Save Post' : 'Create Post' ?></button ><?php if ($edit): ?>
+					><?= $edit ? 'Save Post' : 'Create Post' ?></button ><?php if ( $edit ): ?>
 						<a
 							class = "btn btn-outline-secondary"
 							href = "manage_community.php?tab=post"
@@ -284,19 +300,24 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 			<?php adminDisclosureEnd(); ?>
 			<?php
 			$pendingRows = array_values(array_filter($rows, fn($row) => $row['status'] === 'pending'));
-			$reviewedRows = array_values(array_filter($rows,
-				fn($row) => in_array($row['status'], ['approved', 'rejected'], true)));
+			$reviewedRows = array_values(
+				array_filter(
+					$rows,
+					fn($row) => in_array($row['status'], [ 'approved', 'rejected' ], true)
+				)
+			);
 			?>
 			<section class = "admin-panel">
 				<h2 class = "h4">Community Posts</h2 >
-				<?php foreach ([
-								   ['Pending', $pendingRows, 'pending-posts-pagination', 'No pending community posts are available.'],
-								   ['Approved / Rejected', $reviewedRows, 'reviewed-posts-pagination', 'No reviewed community posts are available.']
-							   ] as [$heading, $postRows, $paginationId, $emptyMessage]): ?>
-					<?php if ($heading === 'Approved / Rejected'): ?>
+				<?php foreach ( [
+					[ 'Pending', $pendingRows, 'pending-posts-pagination', 'No pending community posts are available.' ],
+					[ 'Approved / Rejected', $reviewedRows, 'reviewed-posts-pagination', 'No reviewed community posts are available.' ]
+				] as [$heading, $postRows, $paginationId, $emptyMessage]
+				): ?>
+					<?php if ( $heading === 'Approved / Rejected' ): ?>
 						<hr class = "admin-registration-divider"><?php endif; ?>
 					<h3 class = "h5"><?= $heading ?></h3 >
-					<?php if (!$postRows): ?>
+					<?php if ( !$postRows ): ?>
 						<p class = "mb-0 admin-registration-empty"><?= $emptyMessage ?></p >
 					<?php else: ?>
 						<div class = "table-responsive">
@@ -318,11 +339,13 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 									data-admin-pagination = "<?= $paginationId ?>"
 									data-admin-page-size = "4"
 								>
-								<?php foreach ($postRows as $row): ?>
+								<?php foreach ( $postRows as $row ): ?>
 									<tr >
 										<td ><?= (int)$row['id'] ?></td >
 										<td ><?= adminEscape($row['community_title'] ?? 'Unknown community') ?></td >
-										<td ><?= adminEscape(trim($row['first_name'].' '.$row['last_name'])) ?><?php if ($row['email']): ?>
+										<td ><?= adminEscape(
+												trim($row['first_name'].' '.$row['last_name'])
+											) ?><?php if ( $row['email'] ): ?>
 												<br >
 												<small
 													class = "text-muted"
@@ -330,8 +353,10 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 										<td >
 											<strong ><?= adminEscape($row['title']) ?></strong >
 										</td >
-										<td class = "admin-post-description"><?= adminEscape($row['description']) ?></td >
-										<td ><?php if (!empty($row['has_community_image'])): ?>
+										<td class = "admin-post-description"><?= adminEscape(
+												$row['description']
+											) ?></td >
+										<td ><?php if ( !empty($row['has_community_image']) ): ?>
 												<img
 												class = "admin-post-thumbnail"
 												src = "community_image.php?id=<?= (int)$row['id'] ?>"
@@ -341,7 +366,8 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 										<td ><?= adminEscape(adminFormatDateTime($row['created_at'])) ?></td >
 										<td >
 											<div class = "admin-actions admin-post-actions">
-												<?php adminTableActions($heading === 'Pending' ? 'review' : 'edit_delete',
+												<?php adminTableActions(
+													$heading === 'Pending' ? 'review' : 'edit_delete',
 													[
 														'id' => (int)$row['id'],
 														'status' => $row['status'],
@@ -350,7 +376,8 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 														'confirm' => 'Delete this post?',
 														'delete_action' => 'delete',
 														'id_field' => 'id'
-													]); ?>
+													]
+												); ?>
 											</div >
 										</td >
 									</tr >
@@ -372,9 +399,11 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 			</section >
 		</div >
 		<div <?= $communityTab !== 'create' ? 'hidden' : '' ?>>
-			<?php adminDisclosureStart($communityEdit ? 'Edit Community' : 'Create Community',
+			<?php adminDisclosureStart(
+				$communityEdit ? 'Edit Community' : 'Create Community',
 				'Enter community details',
-				(bool)($communityEdit || ($communityError && ($_POST['action'] ?? '') !== 'community_delete'))); ?>
+				(bool)($communityEdit || ($communityError && ($_POST['action'] ?? '') !== 'community_delete'))
+			); ?>
 			<form
 				method = "post"
 				class = "admin-disclosure-content"
@@ -422,13 +451,15 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 							id = "community-description"
 							name = "community_description"
 							rows = "4"
-						><?= adminEscape($communityEdit['description'] ?? ($_POST['community_description'] ?? '')) ?></textarea >
+						><?= adminEscape(
+								$communityEdit['description'] ?? ($_POST['community_description'] ?? '')
+							) ?></textarea >
 					</div >
 				</div >
 				<div class = "admin-post-form-actions">
 					<button
 						class = "btn btn-primary"
-					><?= $communityEdit ? 'Save Community' : 'Create Community' ?></button ><?php if ($communityEdit): ?>
+					><?= $communityEdit ? 'Save Community' : 'Create Community' ?></button ><?php if ( $communityEdit ): ?>
 						<a
 							class = "btn btn-outline-secondary"
 							href = "manage_community.php"
@@ -439,7 +470,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 			<?php adminDisclosureEnd(); ?>
 			<section class = "admin-panel">
 				<h2 class = "h4">Manage Community</h2 >
-				<?php if (!$communityRows): ?>
+				<?php if ( !$communityRows ): ?>
 					<p class = "mb-0">No communities are available.</p ><?php else: ?>
 					<div class = "table-responsive">
 						<table class = "table table-striped align-middle">
@@ -458,25 +489,29 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 								data-admin-pagination = "communities-pagination"
 								data-admin-page-size = "4"
 							>
-							<?php foreach ($communityRows as $communityRow): ?>
+							<?php foreach ( $communityRows as $communityRow ): ?>
 								<tr >
 								<td ><?= (int)$communityRow['id'] ?></td >
 								<td >
 									<strong ><?= adminEscape($communityRow['title']) ?></strong >
 								</td >
-								<td class = "admin-post-description"><?= adminEscape($communityRow['description'] ?? '') ?></td >
+								<td class = "admin-post-description"><?= adminEscape(
+										$communityRow['description'] ?? ''
+									) ?></td >
 								<td ><?= (int)$communityRow['member_count'] ?></td >
 								<td ><?= (int)$communityRow['post_count'] ?></td >
 								<td ><?= adminEscape(adminFormatDate($communityRow['created_at'])) ?></td >
 								<td >
 									<div class = "admin-actions admin-post-actions">
-										<?php adminTableActions('edit_delete', [
+										<?php adminTableActions(
+											'edit_delete', [
 											'id' => (int)$communityRow['id'],
 											'edit_url' => 'manage_community.php?community_edit='.(int)$communityRow['id'],
 											'confirm' => 'Delete this community?',
 											'delete_action' => 'community_delete',
 											'id_field' => 'community_id'
-										]); ?>
+										]
+										); ?>
 									</div >
 								</td >
 								</tr ><?php endforeach; ?>
@@ -496,10 +531,9 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 			</section >
 		</div >
 		<div <?= $communityTab !== 'join' ? 'hidden' : '' ?>>
-			<section class = "admin-panel">
+			<section class = "admin-panel mb-4">
 				<h2 class = "h4">Join Requests</h2 >
-				<h3 class = "h5">Pending</h3 >
-				<?php if (!$joinRows): ?>
+				<?php if ( !$joinRows ): ?>
 					<p class = "mb-0 admin-registration-empty">No pending join requests are
 						available.
 					</p ><?php else: ?>
@@ -518,7 +552,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 								data-admin-pagination = "join-pagination"
 								data-admin-page-size = "4"
 							>
-							<?php foreach ($joinRows as $joinRow): ?>
+							<?php foreach ( $joinRows as $joinRow ): ?>
 								<tr >
 								<td ><?= (int)$joinRow['id'] ?></td >
 								<td ><?= adminEscape($joinRow['community_title']) ?></td >
@@ -531,12 +565,9 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 								<td >Pending</td >
 								<td >
 									<div class = "admin-actions admin-post-actions">
-										<?php adminTableActions('review', [
-											'id' => (int)$joinRow['id'],
-											'status' => 'pending',
-											'subject' => 'join request',
-											'join_request' => true
-										]); ?>
+										<?php adminReviewActions(
+											(int)$joinRow['id'], 'pending', 'join request', true
+										); ?>
 									</div >
 								</td >
 								</tr ><?php endforeach; ?>
@@ -554,14 +585,70 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 					</nav >
 				<?php endif; ?>
 			</section >
+			<section class = "admin-panel">
+				<h2 class = "h4">Community Members</h2 >
+				<?php if ( !$memberRows ): ?>
+					<p class = "mb-0 admin-registration-empty">No community members are available.</p >
+				<?php else: ?>
+					<div class = "table-responsive">
+						<table class = "table table-striped align-middle">
+							<thead >
+							<tr >
+								<th >ID</th >
+								<th >Community</th >
+								<th >Member</th >
+								<th >Email</th >
+								<th >Actions</th >
+							</tr >
+							</thead >
+							<tbody data-admin-pagination = "members-pagination" data-admin-page-size = "4">
+							<?php foreach ( $memberRows as $memberRow ): ?>
+								<tr >
+								<td ><?= (int)$memberRow['id'] ?></td >
+								<td ><?= adminEscape($memberRow['community_title']) ?></td >
+								<td ><?= adminEscape(
+										trim($memberRow['first_name'].' '.$memberRow['last_name'])
+									) ?></td >
+								<td ><?= adminEscape($memberRow['email']) ?></td >
+								<td >
+									<div class = "admin-actions admin-post-actions">
+										<?php adminTableActions(
+											'delete_only', [
+											'id' => (int)$memberRow['id'],
+											'confirm' => 'Remove this member from the community?',
+											'delete_action' => 'member_remove',
+											'id_field' => 'member_id'
+										]
+										); ?>
+									</div >
+								</td >
+								</tr ><?php endforeach; ?>
+							</tbody >
+						</table >
+					</div >
+					<nav class = "admin-pagination" aria-label = "Community members pagination">
+						<ul id = "members-pagination" class = "pagination justify-content-center mb-0"></ul >
+					</nav >
+				<?php endif; ?>
+			</section >
 		</div >
 	</main >
 	<script src = "components/pagination.js?v=<?= filemtime(__DIR__."/components/pagination.js") ?>"></script >
-	<script src = "components/admin_pagination.js?v=<?= filemtime(__DIR__."/components/admin_pagination.js") ?>"></script >
 	<script
-		src = "components/admin_community_picker.js?v=<?php echo filemtime(__DIR__.'/components/admin_community_picker.js'); ?>"
+		src = "components/admin_pagination.js?v=<?= filemtime(
+			__DIR__."/components/admin_pagination.js"
+		) ?>"
 	></script >
-	<script src = "components/file_upload.js?v=<?php echo filemtime(__DIR__."/components/file_upload.js"); ?>"></script >
+	<script
+		src = "components/admin_community_picker.js?v=<?php echo filemtime(
+			__DIR__.'/components/admin_community_picker.js'
+		); ?>"
+	></script >
+	<script
+		src = "components/file_upload.js?v=<?php echo filemtime(
+			__DIR__."/components/file_upload.js"
+		); ?>"
+	></script >
 	<script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script >
 	</body >
 </html >

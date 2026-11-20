@@ -3,7 +3,7 @@ require_once __DIR__."/auth.php";
 require_once __DIR__."/helpers.php";
 startSession();
 
-if (isset($_GET["logout"])) {
+if ( isset($_GET["logout"]) ) {
 	session_unset();
 	session_destroy();
 	header("Location: login.php");
@@ -21,7 +21,7 @@ function adminEscape($value): string
 
 function adminToken(): string
 {
-	if (!isset($_SESSION["admin_token"])) {
+	if ( !isset($_SESSION["admin_token"]) ) {
 		$_SESSION["admin_token"] = bin2hex(random_bytes(32));
 	}
 	return $_SESSION["admin_token"];
@@ -29,7 +29,7 @@ function adminToken(): string
 
 function adminCheckPost(): void
 {
-	if (!hash_equals(adminToken(), (string)($_POST["token"] ?? ""))) {
+	if ( !hash_equals(adminToken(), (string)($_POST["token"] ?? "")) ) {
 		http_response_code(403);
 		exit("Invalid request token.");
 	}

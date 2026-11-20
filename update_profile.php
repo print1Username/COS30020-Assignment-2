@@ -40,7 +40,7 @@ require_once __DIR__."/file_upload.php";
 			rel = "stylesheet"
 			href = "style/navbar.css"
 		>
-		<?php if ($_SESSION["type"] === "admin"): ?>
+		<?php if ( $_SESSION["type"] === "admin" ): ?>
 			<link rel = "stylesheet"
 			href = "style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
 		<link
@@ -53,8 +53,8 @@ require_once __DIR__."/file_upload.php";
 		>
 	</head >
 
-	<body<?php if ($_SESSION["type"] === "admin") echo ' class="admin-profile"'; ?>>
-	<?php if ($_SESSION["type"] === "admin"): ?>
+	<body<?php if ( $_SESSION["type"] === "admin" ) echo ' class="admin-profile"'; ?>>
+	<?php if ( $_SESSION["type"] === "admin" ): ?>
 		<?php include __DIR__."/admin_nav.php"; ?>
 	<?php else: ?>
 		<?php include "navbar.php"; ?>
@@ -66,7 +66,7 @@ require_once __DIR__."/file_upload.php";
 			<p >Update your personal information and profile picture.</p >
 		</div >
 
-		<?php if ($error !== ""): ?>
+		<?php if ( $error !== "" ): ?>
 			<div
 				class = "alert alert-danger profile-alert"
 				role = "alert"
@@ -83,7 +83,7 @@ require_once __DIR__."/file_upload.php";
 			<div class = "profile-layout">
 				<section class = "profile-card">
 					<div class = "profile-picture-container">
-						<?php if ($profileImagePath !== ""): ?>
+						<?php if ( $profileImagePath !== "" ): ?>
 							<img
 								src = "<?php echo htmlspecialchars($profileImagePath); ?>"
 								alt = "Profile picture"
@@ -248,17 +248,21 @@ require_once __DIR__."/file_upload.php";
 						$updateResumeAvailable = is_string($updateResumePath) &&
 							preg_match('~^resume/[a-f0-9]{32}\.pdf$~', $updateResumePath) &&
 							is_file(__DIR__."/".$updateResumePath);
-						renderFileUpload([
-							"id" => "resume_file",
-							"name" => "resume_file",
-							"label" => "Supporting Document",
-							"accept" => "application/pdf,.pdf",
-							"kind" => "file",
-							"types" => "PDF files only",
-							"max_size" => "maximum 7MB",
-							"current_url" => $updateResumeAvailable ? $updateResumePath : "",
-							"current_name" => $updateResumeAvailable ? ($user["resume_filename"] ?: basename($updateResumePath)) : ""
-						]);
+						renderFileUpload(
+							[
+								"id" => "resume_file",
+								"name" => "resume_file",
+								"label" => "Supporting Document",
+								"accept" => "application/pdf,.pdf",
+								"kind" => "file",
+								"types" => "PDF files only",
+								"max_size" => "maximum 7MB",
+								"current_url" => $updateResumeAvailable ? $updateResumePath : "",
+								"current_name" => $updateResumeAvailable ? ($user["resume_filename"] ?: basename(
+									$updateResumePath
+								)) : ""
+							]
+						);
 						?>
 					</div >
 				</section >
@@ -303,8 +307,12 @@ require_once __DIR__."/file_upload.php";
 	</div >
 
 	<script src = "components/profile_crop.js"></script >
-	<script src = "components/file_upload.js?v=<?php echo filemtime(__DIR__."/components/file_upload.js"); ?>"></script >
-	<?php if ($_SESSION["type"] === "admin"): ?>
+	<script
+		src = "components/file_upload.js?v=<?php echo filemtime(
+			__DIR__."/components/file_upload.js"
+		); ?>"
+	></script >
+	<?php if ( $_SESSION["type"] === "admin" ): ?>
 		<script
 			src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
 		></script ><?php endif; ?>

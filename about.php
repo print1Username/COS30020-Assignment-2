@@ -33,7 +33,7 @@ $isAdminAbout = ($_SESSION["logged_in"] ?? false) === true &&
 			rel = "stylesheet"
 			href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
 		>
-		<?php if ($isAdminAbout): ?>
+		<?php if ( $isAdminAbout ): ?>
 			<link
 				rel = "stylesheet"
 				href = "style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"

@@ -48,11 +48,13 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 			>Back to Admin Menu
 			</a >
 		</p >
-		<?php if ($error): ?>
-			<div class = "alert alert-danger"><?= adminEscape($error) ?></div ><?php endif; ?><?php if ($notice): ?>
+		<?php if ( $error ): ?>
+			<div class = "alert alert-danger"><?= adminEscape($error) ?></div ><?php endif; ?><?php if ( $notice ): ?>
 			<div class = "alert alert-success"><?= adminEscape($notice) ?></div ><?php endif; ?>
-		<?php adminDisclosureStart(($edit ? 'Edit' : 'Add')." Registration",
-			"Enter participant and activity registration details", (bool)($edit || $error)); ?>
+		<?php adminDisclosureStart(
+			($edit ? 'Edit' : 'Add')." Registration",
+			"Enter participant and activity registration details", (bool)($edit || $error)
+		); ?>
 		<form
 			method = "post"
 			class = "row g-3 admin-disclosure-content"
@@ -72,7 +74,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 				name = "id"
 				value = "<?= (int)($edit['id'] ?? 0) ?>"
 			>
-			<?php if (!$edit): ?>
+			<?php if ( !$edit ): ?>
 				<div
 					class = "col-12 admin-activity-picker"
 					data-admin-activity-picker
@@ -113,7 +115,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 							aria-label = "Matching activities"
 							hidden
 						>
-							<?php foreach ($events as $event): ?><?php if ($event['status'] === 'approved'): ?>
+							<?php foreach ( $events as $event ): ?><?php if ( $event['status'] === 'approved' ): ?>
 								<button
 									type = "button"
 									class = "admin-activity-result"
@@ -149,8 +151,9 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 				</div >
 			<?php endif; ?>
 			<?php
-			foreach ($edit ? ['first_name' => 'First Name', 'last_name' => 'Last Name', 'email' => 'Email', 'contact_number' => 'Contact Number', 'date' => 'Date', 'time' => 'Time'] : ['first_name' => 'First Name', 'last_name' => 'Last Name', 'email' => 'Email', 'contact_number' => 'Contact Number']
-			         as $field => $label): ?>
+			foreach ( $edit ? [ 'first_name' => 'First Name', 'last_name' => 'Last Name', 'email' => 'Email', 'contact_number' => 'Contact Number', 'date' => 'Date', 'time' => 'Time' ] : [ 'first_name' => 'First Name', 'last_name' => 'Last Name', 'email' => 'Email', 'contact_number' => 'Contact Number' ]
+				as $field => $label
+			): ?>
 				<div class = "col-md-4">
 				<label
 					class = "form-label"
@@ -160,10 +163,12 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 					class = "form-control"
 					id = "<?= $field ?>"
 					name = "<?= $field ?>"
-					type = "<?= in_array($field, ['email', 'date', 'time'], true) ? $field : 'text' ?>"
-					value = "<?= adminEscape($edit[$field] ?? ($_POST[$field] ?? '')) ?>" <?= in_array($field,
-					['email', 'first_name', 'last_name', 'contact_number'], true) ? 'required' : '' ?>></div ><?php
-			endforeach; ?><?php if ($edit): ?>
+					type = "<?= in_array($field, [ 'email', 'date', 'time' ], true) ? $field : 'text' ?>"
+					value = "<?= adminEscape($edit[$field] ?? ($_POST[$field] ?? '')) ?>" <?= in_array(
+					$field,
+					[ 'email', 'first_name', 'last_name', 'contact_number' ], true
+				) ? 'required' : '' ?>></div ><?php
+			endforeach; ?><?php if ( $edit ): ?>
 				<div class = "col-md-4">
 				<label
 					class = "form-label"
@@ -174,12 +179,14 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 					class = "form-select"
 					id = "status"
 					name = "status"
-				><?php foreach (['pending', 'approved', 'rejected'] as $status): ?>
+				><?php foreach ( [ 'pending', 'approved', 'rejected' ] as $status ): ?>
 						<option
-						value = "<?= $status ?>" <?= ($edit['status'] ?? 'pending') === $status ? 'selected' : '' ?>><?= ucfirst($status) ?></option ><?php
+						value = "<?= $status ?>" <?= ($edit['status'] ?? 'pending') === $status ? 'selected' : '' ?>><?= ucfirst(
+						$status
+					) ?></option ><?php
 					endforeach; ?></select ></div ><?php endif; ?>
 			<div class = "col-12">
-				<button class = "btn btn-primary">Save Registration</button > <?php if ($edit): ?>
+				<button class = "btn btn-primary">Save Registration</button > <?php if ( $edit ): ?>
 					<a
 						class = "btn btn-outline-secondary"
 						href = "manage_activities.php"
@@ -189,19 +196,24 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 		<?php adminDisclosureEnd(); ?>
 		<?php
 		$pendingRows = array_values(array_filter($rows, fn($row) => $row['status'] === 'pending'));
-		$reviewedRows = array_values(array_filter($rows,
-			fn($row) => in_array($row['status'], ['approved', 'rejected'], true)));
+		$reviewedRows = array_values(
+			array_filter(
+				$rows,
+				fn($row) => in_array($row['status'], [ 'approved', 'rejected' ], true)
+			)
+		);
 		?>
 		<section class = "admin-panel mb-4">
 			<h2 class = "h4">Activity Registrations</h2 >
-			<?php foreach ([
-							   ['Pending', $pendingRows, 'pending-registrations-pagination', 'No pending activity registrations are available.'],
-							   ['Approved / Rejected', $reviewedRows, 'reviewed-registrations-pagination', 'No reviewed activity registrations are available.']
-						   ] as [$heading, $registrationRows, $paginationId, $emptyMessage]): ?>
-				<?php if ($heading === 'Approved / Rejected'): ?>
+			<?php foreach ( [
+				[ 'Pending', $pendingRows, 'pending-registrations-pagination', 'No pending activity registrations are available.' ],
+				[ 'Approved / Rejected', $reviewedRows, 'reviewed-registrations-pagination', 'No reviewed activity registrations are available.' ]
+			] as [$heading, $registrationRows, $paginationId, $emptyMessage]
+			): ?>
+				<?php if ( $heading === 'Approved / Rejected' ): ?>
 					<hr class = "admin-registration-divider"><?php endif; ?>
 				<h3 class = "h5"><?= $heading ?></h3 >
-				<?php if (!$registrationRows): ?>
+				<?php if ( !$registrationRows ): ?>
 					<p class = "mb-0 admin-registration-empty"><?= $emptyMessage ?></p >
 				<?php else: ?>
 					<div class = "table-responsive">
@@ -222,18 +234,21 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 								data-admin-pagination = "<?= $paginationId ?>"
 								data-admin-page-size = "4"
 							>
-							<?php foreach ($registrationRows as $row): ?>
+							<?php foreach ( $registrationRows as $row ): ?>
 								<tr >
 									<td ><?= (int)$row['id'] ?></td >
 									<td ><?= adminEscape($row['activity_title'] ?? 'Not linked to an activity') ?></td >
 									<td ><?= adminEscape($row['email']) ?></td >
 									<td ><?= adminEscape($row['first_name'].' '.$row['last_name']) ?></td >
-									<td ><?= adminEscape(adminFormatDate($row['date']).' '.adminFormatTime($row['time'])) ?></td >
+									<td ><?= adminEscape(
+											adminFormatDate($row['date']).' '.adminFormatTime($row['time'])
+										) ?></td >
 									<td ><?= adminEscape($row['contact_number']) ?></td >
 									<td ><?= adminEscape($row['status']) ?></td >
 									<td >
 										<div class = "admin-actions">
-											<?php adminTableActions($heading === 'Pending' ? 'review' : 'edit_delete', [
+											<?php adminTableActions(
+												$heading === 'Pending' ? 'review' : 'edit_delete', [
 												'id' => (int)$row['id'],
 												'status' => $row['status'],
 												'subject' => 'registration',
@@ -241,7 +256,8 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 												'confirm' => 'Delete this registration?',
 												'delete_action' => 'delete',
 												'id_field' => 'id'
-											]); ?>
+											]
+											); ?>
 										</div >
 									</td >
 								</tr >
@@ -263,7 +279,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 		</section >
 		<section class = "admin-panel">
 			<h2 class = "h4">Activities</h2 >
-			<?php if (!$events): ?>
+			<?php if ( !$events ): ?>
 				<p class = "mb-0">No activities are available.</p ><?php else: ?>
 				<div class = "table-responsive">
 					<table class = "table table-striped align-middle">
@@ -280,17 +296,23 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 						</tr >
 						</thead >
 						<tbody data-admin-pagination = "events-pagination">
-						<?php foreach ($events as $event): ?>
+						<?php foreach ( $events as $event ): ?>
 							<tr >
 							<td ><?= (int)$event['id'] ?></td >
 							<td >
-								<strong ><?= adminEscape($event['title']) ?></strong ><?php if ($event['description']): ?>
+								<strong ><?= adminEscape(
+										$event['title']
+									) ?></strong ><?php if ( $event['description'] ): ?>
 									<div
 										class = "text-secondary small"
 									><?= adminEscape($event['description']) ?></div ><?php endif; ?></td >
 							<td ><?= adminEscape($event['activity_type']) ?></td >
 							<td ><?= adminEscape(adminFormatDate($event['date'])) ?></td >
-							<td ><?= adminEscape(adminFormatTime($event['time'])) ?><?php if ($event['end_time']): ?> - <?= adminEscape(adminFormatTime($event['end_time'])) ?><?php endif; ?></td >
+							<td ><?= adminEscape(
+									adminFormatTime($event['time'])
+								) ?><?php if ( $event['end_time'] ): ?> - <?= adminEscape(
+									adminFormatTime($event['end_time'])
+								) ?><?php endif; ?></td >
 							<td ><?= adminEscape($event['venue']) ?></td >
 							<td ><?= adminEscape($event['table_name']) ?></td >
 							<td ><?= adminEscape($event['status']) ?></td ></tr ><?php endforeach; ?>
@@ -308,9 +330,15 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 				</nav ><?php endif; ?></section >
 	</main >
 	<script src = "components/pagination.js?v=<?= filemtime(__DIR__."/components/pagination.js") ?>"></script >
-	<script src = "components/admin_pagination.js?v=<?= filemtime(__DIR__."/components/admin_pagination.js") ?>"></script >
 	<script
-		src = "components/admin_activity_picker.js?v=<?php echo filemtime(__DIR__.'/components/admin_activity_picker.js'); ?>"
+		src = "components/admin_pagination.js?v=<?= filemtime(
+			__DIR__."/components/admin_pagination.js"
+		) ?>"
+	></script >
+	<script
+		src = "components/admin_activity_picker.js?v=<?php echo filemtime(
+			__DIR__.'/components/admin_activity_picker.js'
+		); ?>"
 	></script >
 	<script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script >
 	</body >
