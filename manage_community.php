@@ -43,6 +43,10 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 			rel = "stylesheet"
 			href = "style/file_upload.css?v=<?php echo filemtime(__DIR__."/style/file_upload.css"); ?>"
 		>
+		<link
+			rel = "stylesheet"
+			href = "style/manage_community.css?v=<?= filemtime(__DIR__."/style/manage_community.css") ?>"
+		>
 	</head >
 	<body ><?php include __DIR__."/admin_nav.php"; ?>
 	<main class = "container py-5"><?php
@@ -299,16 +303,60 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 			</form >
 			<?php adminDisclosureEnd(); ?>
 			<?php
-			$pendingRows = array_values(array_filter($rows, fn($row) => $row['status'] === 'pending'));
+			$postSearch = is_string($_GET['search'] ?? null) ? trim($_GET['search']) : '';
+			$postStatus = is_string($_GET['status'] ?? null) ? $_GET['status'] : 'all';
+			if ( !in_array($postStatus, [ 'all', 'pending', 'approved', 'rejected' ], true) ) $postStatus = 'all';
+			$displayRows = array_values(
+				array_filter(
+					$rows, function($row) use ($postSearch, $postStatus) {
+					if ( $postStatus !== 'all' && $row['status'] !== $postStatus ) return false;
+					if ( $postSearch === '' ) return true;
+					return mb_stripos(
+							implode(
+								' ', [
+								$row['id'], $row['community_title'] ?? '', $row['first_name'], $row['last_name'],
+								$row['email'] ?? '', $row['title'], $row['description'], $row['status']
+							]
+							), $postSearch
+						) !== false;
+				}
+				)
+			);
+			$filterActive = $postSearch !== '' || $postStatus !== 'all';
+			$pendingRows = array_values(array_filter($displayRows, fn($row) => $row['status'] === 'pending'));
 			$reviewedRows = array_values(
 				array_filter(
-					$rows,
+					$displayRows,
 					fn($row) => in_array($row['status'], [ 'approved', 'rejected' ], true)
 				)
 			);
 			?>
-			<section class = "admin-panel">
+			<section class = "admin-panel admin-community-posts">
 				<h2 class = "h4">Community Posts</h2 >
+				<form method = "get" class = "row g-2 align-items-end admin-community-post-filters mb-4">
+					<input type = "hidden" name = "tab" value = "post">
+					<div class = "col-12 col-md-6">
+						<label class = "form-label" for = "post-search">Search</label >
+						<input
+							class = "form-control" type = "search" id = "post-search" name = "search"
+							placeholder = "Search community posts" value = "<?= adminEscape($postSearch) ?>"
+						>
+					</div >
+					<div class = "col-12 col-sm-7 col-md-3">
+						<label class = "form-label" for = "post-status">Status</label >
+						<select class = "form-select" id = "post-status" name = "status">
+							<?php
+							foreach ( [ 'all' => 'All', 'pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected' ]
+								as $value => $label
+							): ?>
+								<option value = "<?= $value ?>" <?= $postStatus === $value ? 'selected' : '' ?>><?= $label ?></option >
+							<?php endforeach; ?>
+						</select >
+					</div >
+					<div class = "col-12 col-sm-5 col-md-3">
+						<button type = "submit" class = "btn btn-primary w-100">Search</button >
+					</div >
+				</form >
 				<?php foreach ( [
 					[ 'Pending', $pendingRows, 'pending-posts-pagination', 'No pending community posts are available.' ],
 					[ 'Approved / Rejected', $reviewedRows, 'reviewed-posts-pagination', 'No reviewed community posts are available.' ]
@@ -318,9 +366,9 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 						<hr class = "admin-registration-divider"><?php endif; ?>
 					<h3 class = "h5"><?= $heading ?></h3 >
 					<?php if ( !$postRows ): ?>
-						<p class = "mb-0 admin-registration-empty"><?= $emptyMessage ?></p >
+						<p class = "mb-0 admin-registration-empty"><?= $filterActive ? 'No matching posts.' : $emptyMessage ?></p >
 					<?php else: ?>
-						<div class = "table-responsive">
+						<div class = "table-responsive admin-community-post-scroll">
 							<table class = "table table-striped align-middle admin-post-table">
 								<thead >
 								<tr >
@@ -343,19 +391,20 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 									<tr >
 										<td ><?= (int)$row['id'] ?></td >
 										<td ><?= adminEscape($row['community_title'] ?? 'Unknown community') ?></td >
-										<td ><?= adminEscape(
+										<td class = "admin-community-post-author"><?= adminEscape(
 												trim($row['first_name'].' '.$row['last_name'])
 											) ?><?php if ( $row['email'] ): ?>
-												<br >
 												<small
 													class = "text-muted"
 												><?= adminEscape($row['email']) ?></small ><?php endif; ?></td >
 										<td >
 											<strong ><?= adminEscape($row['title']) ?></strong >
 										</td >
-										<td class = "admin-post-description"><?= adminEscape(
-												$row['description']
-											) ?></td >
+										<td class = "admin-post-description"><span
+												class = "admin-community-post-description"
+												title = "<?= adminEscape($row['description']) ?>"
+											><?= adminEscape($row['description']) ?></span >
+										</td >
 										<td ><?php if ( !empty($row['has_community_image']) ): ?>
 												<img
 												class = "admin-post-thumbnail"
