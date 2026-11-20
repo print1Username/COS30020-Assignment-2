@@ -306,7 +306,11 @@ require_once __DIR__."/file_upload.php";
 		</div >
 	</div >
 
-	<script src = "components/profile_crop.js"></script >
+	<script
+		src = "components/profile_crop.js?v=<?php echo filemtime(
+			__DIR__."/components/profile_crop.js"
+		); ?>"
+	></script >
 	<script
 		src = "components/file_upload.js?v=<?php echo filemtime(
 			__DIR__."/components/file_upload.js"

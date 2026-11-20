@@ -41,10 +41,10 @@ require_once __DIR__."/file_upload.php";
 			href = "style/navbar.css"
 		>
 		<?php if ( $_SESSION["type"] === "admin" ): ?>
-		<link
-			rel = "stylesheet"
-			href = "style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"
-		>
+			<link
+				rel = "stylesheet"
+				href = "style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"
+			>
 		<?php endif; ?>
 		<link
 			rel = "stylesheet"
@@ -58,9 +58,9 @@ require_once __DIR__."/file_upload.php";
 
 	<body<?php if ( $_SESSION["type"] === "admin" ) echo ' class="admin-profile"'; ?>>
 	<?php if ( $_SESSION["type"] === "admin" ): ?>
-	<?php include __DIR__."/admin_nav.php"; ?>
+		<?php include __DIR__."/admin_nav.php"; ?>
 	<?php else: ?>
-	<?php include "navbar.php"; ?>
+		<?php include "navbar.php"; ?>
 	<?php endif; ?>
 
 	<main class = "profile-page container py-5">
@@ -69,10 +69,10 @@ require_once __DIR__."/file_upload.php";
 			<p >View and manage your personal information.</p >
 		</div >
 		<?php if ( $uploadError !== "" ): ?>
-		<div
-			class = "alert alert-danger"
-			role = "alert"
-		><?php echo htmlspecialchars($uploadError); ?></div >
+			<div
+				class = "alert alert-danger"
+				role = "alert"
+			><?php echo htmlspecialchars($uploadError); ?></div >
 		<?php endif; ?>
 
 		<div class = "profile-layout">
@@ -80,18 +80,20 @@ require_once __DIR__."/file_upload.php";
 				<section class = "profile-card">
 					<div class = "profile-picture-container">
 						<?php if ( $profileImagePath !== "" ): ?>
-						<img
-							src = "<?php echo htmlspecialchars($profileImagePath); ?>"
-							alt = "Profile picture"
-							class = "profile-picture"
-						>
+							<img
+								src = "<?php echo htmlspecialchars($profileImagePath); ?>"
+								alt = "Profile picture"
+								class = "profile-picture"
+								id = "profileImage"
+							>
 						<?php else: ?>
-						<div
-							class = "profile-picture profile-picture-default"
-							aria-label = "Default profile picture"
-						>
-							<i class = "bi bi-person-fill"></i >
-						</div >
+							<div
+								class = "profile-picture profile-picture-default"
+								id = "profileImage"
+								aria-label = "Default profile picture"
+							>
+								<i class = "bi bi-person-fill"></i >
+							</div >
 						<?php endif; ?>
 					</div >
 
@@ -109,6 +111,8 @@ require_once __DIR__."/file_upload.php";
 							<input
 								type = "file"
 								id = "profilePhotoInput"
+								data-profile-crop-input
+								data-profile-crop-auto-submit
 								name = "profile_image"
 								accept = "image/jpeg,image/png"
 								hidden
@@ -116,6 +120,7 @@ require_once __DIR__."/file_upload.php";
 							<button
 								type = "button"
 								id = "profilePhotoButton"
+								data-profile-crop-trigger = "profilePhotoInput"
 								class = "btn profile-upload-button"
 							>
 								<i
@@ -137,6 +142,8 @@ require_once __DIR__."/file_upload.php";
 							<input
 								type = "file"
 								id = "profileCameraInput"
+								data-profile-crop-input
+								data-profile-crop-auto-submit
 								name = "profile_image"
 								accept = "image/jpeg,image/png"
 								capture = "user"
@@ -145,6 +152,7 @@ require_once __DIR__."/file_upload.php";
 							<button
 								type = "button"
 								id = "profileCameraButton"
+								data-profile-crop-trigger = "profileCameraInput"
 								class = "btn profile-camera-button"
 							>
 								<i
@@ -261,27 +269,49 @@ require_once __DIR__."/file_upload.php";
 			</section >
 		</div >
 	</main >
-	<script >
-        for ( const [ buttonId, inputId ] of [ [ "profilePhotoButton", "profilePhotoInput" ], [ "profileCameraButton", "profileCameraInput" ] ] ) {
-            const button = document.getElementById( buttonId );
-            const input = document.getElementById( inputId );
-            button.addEventListener( "click", () => input.click() );
-            input.addEventListener( "change", () => {
-                if ( input.files.length ) {
-                    input.form.requestSubmit();
-                }
-            } );
-        }
-	</script >
+	<div
+		class = "profile-crop-modal"
+		id = "profileCropModal"
+		aria-hidden = "true"
+	>
+		<div class = "profile-crop-wrapper">
+			<div class = "profile-crop-container">
+				<canvas id = "profileCropCanvas"></canvas >
+			</div >
+			<div class = "profile-crop-actions">
+				<button
+					type = "button"
+					class = "profile-crop-cancel"
+					id = "cropCancelButton"
+					aria-label = "Cancel crop"
+				>
+					<i class = "bi bi-x-lg"></i >
+				</button >
+				<button
+					type = "button"
+					class = "profile-crop-confirm"
+					id = "cropConfirmButton"
+					aria-label = "Confirm crop"
+				>
+					<i class = "bi bi-check-lg"></i >
+				</button >
+			</div >
+		</div >
+	</div >
+	<script
+		src = "components/profile_crop.js?v=<?php echo filemtime(
+			__DIR__."/components/profile_crop.js"
+		); ?>"
+	></script >
 	<script
 		src = "components/file_upload.js?v=<?php echo filemtime(
 			__DIR__."/components/file_upload.js"
 		); ?>"
 	></script >
 	<?php if ( $_SESSION["type"] === "admin" ): ?>
-	<script
-		src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-	></script >
+		<script
+			src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+		></script >
 	<?php endif; ?>
 	</body >
 </html >

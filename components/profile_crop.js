@@ -6,8 +6,11 @@ document.addEventListener( "DOMContentLoaded", function () {
     const cropCancelButton = document.getElementById( "cropCancelButton" );
     const cropConfirmButton = document.getElementById( "cropConfirmButton" );
     const profileImage = document.getElementById( "profileImage" );
+    const cropInputs = document.querySelectorAll( "[data-profile-crop-input]" );
+    let activeUploadInput = uploadInput;
 
-    if ( !uploadButton || !uploadInput || !cropModal || !cropCanvas || !cropCancelButton || !cropConfirmButton ) {
+    if ( !cropModal || !cropCanvas || !cropCancelButton || !cropConfirmButton ||
+        (!uploadInput && cropInputs.length === 0) ) {
         console.error( "Profile crop: required elements were not found." );
         return;
     }
@@ -26,12 +29,25 @@ document.addEventListener( "DOMContentLoaded", function () {
     let startImageX = 0;
     let startImageY = 0;
 
-    uploadButton.addEventListener( "click", function () {
-        uploadInput.click();
+    if ( uploadButton && uploadInput ) {
+        uploadButton.addEventListener( "click", function () {
+            uploadInput.click();
+        } );
+    }
+
+    document.querySelectorAll( "[data-profile-crop-trigger]" ).forEach( function ( button ) {
+        button.addEventListener( "click", function () {
+            const input = document.getElementById( button.dataset.profileCropTrigger );
+
+            if ( input ) {
+                input.click();
+            }
+        } );
     } );
 
-    uploadInput.addEventListener( "change", function () {
-        const file = uploadInput.files[0];
+    function beginCrop( input ) {
+        activeUploadInput = input;
+        const file = activeUploadInput.files[0];
 
         if ( !file ) {
             return;
@@ -39,7 +55,7 @@ document.addEventListener( "DOMContentLoaded", function () {
 
         if ( !file.type.startsWith( "image/" ) ) {
             alert( "Please select an image file." );
-            uploadInput.value = "";
+            activeUploadInput.value = "";
             return;
         }
 
@@ -55,7 +71,7 @@ document.addEventListener( "DOMContentLoaded", function () {
 
             image.onerror = function () {
                 alert( "The selected image could not be loaded." );
-                uploadInput.value = "";
+                activeUploadInput.value = "";
             };
 
             image.src = event.target.result;
@@ -63,10 +79,22 @@ document.addEventListener( "DOMContentLoaded", function () {
 
         reader.onerror = function () {
             alert( "The image could not be read." );
-            uploadInput.value = "";
+            activeUploadInput.value = "";
         };
 
         reader.readAsDataURL( file );
+    }
+
+    if ( uploadInput ) {
+        uploadInput.addEventListener( "change", function () {
+            beginCrop( uploadInput );
+        } );
+    }
+
+    cropInputs.forEach( function ( input ) {
+        input.addEventListener( "change", function () {
+            beginCrop( input );
+        } );
     } );
 
     function openCropWindow() {
@@ -241,7 +269,7 @@ document.addEventListener( "DOMContentLoaded", function () {
         cropModal.style.display = "none";
         cropModal.setAttribute( "aria-hidden", "true" );
         document.body.style.overflow = "";
-        uploadInput.value = "";
+        activeUploadInput.value = "";
         imageLoaded = false;
     } );
 
@@ -315,7 +343,7 @@ document.addEventListener( "DOMContentLoaded", function () {
             const dataTransfer = new DataTransfer();
 
             dataTransfer.items.add( croppedFile );
-            uploadInput.files = dataTransfer.files;
+            activeUploadInput.files = dataTransfer.files;
 
             /*
              * Close crop window
@@ -324,6 +352,10 @@ document.addEventListener( "DOMContentLoaded", function () {
             cropModal.setAttribute( "aria-hidden", "true" );
             document.body.style.overflow = "";
             imageLoaded = false;
+
+            if ( activeUploadInput.hasAttribute( "data-profile-crop-auto-submit" ) ) {
+                activeUploadInput.form.requestSubmit();
+            }
         }, "image/jpeg", 0.9 );
     } );
 
