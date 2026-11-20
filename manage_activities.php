@@ -232,7 +232,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 							</thead >
 							<tbody
 								data-admin-pagination = "<?= $paginationId ?>"
-								data-admin-page-size = "4"
+								data-admin-page-size = "5"
 							>
 							<?php foreach ( $registrationRows as $row ): ?>
 								<tr >
@@ -249,14 +249,14 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 										<div class = "admin-actions">
 											<?php adminTableActions(
 												$heading === 'Pending' ? 'review' : 'edit_delete', [
-												'id' => (int)$row['id'],
-												'status' => $row['status'],
-												'subject' => 'registration',
-												'edit_url' => 'manage_activities.php?edit='.(int)$row['id'],
-												'confirm' => 'Delete this registration?',
-												'delete_action' => 'delete',
-												'id_field' => 'id'
-											]
+													'id' => (int)$row['id'],
+													'status' => $row['status'],
+													'subject' => 'registration',
+													'edit_url' => 'manage_activities.php?edit='.(int)$row['id'],
+													'confirm' => 'Delete this registration?',
+													'delete_action' => 'delete',
+													'id_field' => 'id'
+												]
 											); ?>
 										</div >
 									</td >

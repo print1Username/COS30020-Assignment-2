@@ -337,7 +337,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 								</thead >
 								<tbody
 									data-admin-pagination = "<?= $paginationId ?>"
-									data-admin-page-size = "4"
+									data-admin-page-size = "5"
 								>
 								<?php foreach ( $postRows as $row ): ?>
 									<tr >
@@ -487,7 +487,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 							</thead >
 							<tbody
 								data-admin-pagination = "communities-pagination"
-								data-admin-page-size = "4"
+								data-admin-page-size = "5"
 							>
 							<?php foreach ( $communityRows as $communityRow ): ?>
 								<tr >
@@ -505,12 +505,12 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 									<div class = "admin-actions admin-post-actions">
 										<?php adminTableActions(
 											'edit_delete', [
-											'id' => (int)$communityRow['id'],
-											'edit_url' => 'manage_community.php?community_edit='.(int)$communityRow['id'],
-											'confirm' => 'Delete this community?',
-											'delete_action' => 'community_delete',
-											'id_field' => 'community_id'
-										]
+												'id' => (int)$communityRow['id'],
+												'edit_url' => 'manage_community.php?community_edit='.(int)$communityRow['id'],
+												'confirm' => 'Delete this community?',
+												'delete_action' => 'community_delete',
+												'id_field' => 'community_id'
+											]
 										); ?>
 									</div >
 								</td >
@@ -550,7 +550,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 							</thead >
 							<tbody
 								data-admin-pagination = "join-pagination"
-								data-admin-page-size = "4"
+								data-admin-page-size = "5"
 							>
 							<?php foreach ( $joinRows as $joinRow ): ?>
 								<tr >
@@ -601,7 +601,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 								<th >Actions</th >
 							</tr >
 							</thead >
-							<tbody data-admin-pagination = "members-pagination" data-admin-page-size = "4">
+							<tbody data-admin-pagination = "members-pagination" data-admin-page-size = "5">
 							<?php foreach ( $memberRows as $memberRow ): ?>
 								<tr >
 								<td ><?= (int)$memberRow['id'] ?></td >
@@ -614,11 +614,11 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 									<div class = "admin-actions admin-post-actions">
 										<?php adminTableActions(
 											'delete_only', [
-											'id' => (int)$memberRow['id'],
-											'confirm' => 'Remove this member from the community?',
-											'delete_action' => 'member_remove',
-											'id_field' => 'member_id'
-										]
+												'id' => (int)$memberRow['id'],
+												'confirm' => 'Remove this member from the community?',
+												'delete_action' => 'member_remove',
+												'id_field' => 'member_id'
+											]
 										); ?>
 									</div >
 								</td >

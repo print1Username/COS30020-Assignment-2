@@ -7,10 +7,10 @@ $dbPass = "";
 try {
 	$pdo = new PDO(
 		"mysql:host=$host;charset=utf8mb4", $dbUser, $dbPass, [
-		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-		PDO::ATTR_EMULATE_PREPARES => false
-	]
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+			PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+			PDO::ATTR_EMULATE_PREPARES => false
+		]
 	);
 	$databaseExists = $pdo -> query(
 			"SELECT schema_name FROM information_schema.schemata WHERE schema_name = 'cos30020a2'"

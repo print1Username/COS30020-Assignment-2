@@ -188,20 +188,20 @@ unset($_SESSION["activity_registration_notice"]);
 											<span class = "activity-detail-value">
                                                     <?php
 													echo htmlspecialchars(
-	                                                    date(
-		                                                    "g:i A",
+														date(
+															"g:i A",
 															strtotime($activity["start_time"])
-	                                                    )
-                                                    );
+														)
+													);
 													?>
                                                     -
                                                     <?php
 													echo htmlspecialchars(
-	                                                    date(
-		                                                    "g:i A",
+														date(
+															"g:i A",
 															strtotime($activity["end_time"])
-	                                                    )
-                                                    );
+														)
+													);
 													?>
                                                 </span >
 										</div >

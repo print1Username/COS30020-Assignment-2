@@ -167,13 +167,13 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 							<div class = "admin-actions">
 								<?php adminTableActions(
 									'edit_delete', [
-									'id' => $account['email'],
-									'edit_url' => 'manage_accounts.php?edit='.urlencode($account['email']),
-									'confirm' => 'Delete this account?',
-									'delete_action' => 'delete',
-									'id_field' => 'email',
-									'disable_delete' => $account['email'] === $_SESSION['email']
-								]
+										'id' => $account['email'],
+										'edit_url' => 'manage_accounts.php?edit='.urlencode($account['email']),
+										'confirm' => 'Delete this account?',
+										'delete_action' => 'delete',
+										'id_field' => 'email',
+										'disable_delete' => $account['email'] === $_SESSION['email']
+									]
 								); ?>
 							</div >
 						</td ></tr ><?php endforeach; ?></tbody >
