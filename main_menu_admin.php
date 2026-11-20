@@ -22,7 +22,10 @@
 			href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
 			rel = "stylesheet"
 		>
-		<link rel = "stylesheet" href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+		<link
+			rel = "stylesheet"
+			href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+		>
 		<link
 			rel = "stylesheet"
 			href = "style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"
@@ -52,12 +55,12 @@
 				</article >
 			</div >
 			<div class = "col-md-6">
-                <article class = "admin-card">
-                    <h2 >Manage Catalog</h2 >
-                    <p >Create, edit or delete board games in the catalog.</p >
-                    <a class = "btn admin-action" href = "manage_catalog.php">Manage Catalog</a >
-                </article >
-            </div >
+				<article class = "admin-card">
+					<h2 >Manage Catalog</h2 >
+					<p >Create, edit or delete board games in the catalog.</p >
+					<a class = "btn admin-action" href = "manage_catalog.php">Manage Catalog</a >
+				</article >
+			</div >
 			<div class = "col-md-6">
 				<article class = "admin-card">
 					<h2 >Manage Communities</h2 >
@@ -110,7 +113,7 @@
 			</div >
 			<span class = "btn admin-about-button">Learn More <i class = "bi bi-arrow-right" aria-hidden = "true"></i ></span >
 		</a >
-    </main >
+	</main >
 	<script src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script >
 	</body >
 </html >

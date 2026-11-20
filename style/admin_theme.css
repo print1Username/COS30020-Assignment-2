@@ -257,6 +257,10 @@ body {
     overflow: hidden;
 }
 
+.admin-form-gap > .admin-disclosure {
+    margin-top: 48px;
+}
+
 .admin-disclosure-header {
     display: flex;
     align-items: center;
@@ -535,28 +539,33 @@ main > h1 {
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(50, 32, 82, 0.18);
 }
+
 .admin-about-content {
     display: flex;
     align-items: center;
     gap: 18px;
 }
+
 .admin-about-content > i {
     flex-shrink: 0;
     color: var(--admin-white);
     font-size: 2.25rem;
 }
+
 .admin-about-content h2 {
     margin-bottom: 5px;
     color: var(--admin-white);
     font-size: 1.3rem;
     font-weight: 600;
 }
+
 .admin-about-content p {
     margin: 0;
     color: rgba(255, 255, 255, 0.85);
     font-size: 0.9rem;
     line-height: 1.5;
 }
+
 .admin-about-button {
     display: inline-flex;
     flex-shrink: 0;
@@ -571,17 +580,33 @@ main > h1 {
     border-radius: 6px;
     font-weight: 600;
 }
+
 .admin-about-button:hover,
 .admin-about-card:focus-visible .admin-about-button {
     color: var(--admin-purple-dark);
     background-color: #f3f0f8;
     border-color: #f3f0f8;
 }
+
 @media (max-width: 767.98px) {
-    .admin-about-card { flex-direction: column; align-items: stretch; padding: 24px; }
-    .admin-about-button { width: 100%; }
+    .admin-about-card {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 24px;
+    }
+
+    .admin-about-button {
+        width: 100%;
+    }
 }
+
 @media (max-width: 575.98px) {
-    .admin-about-content { align-items: flex-start; gap: 14px; }
-    .admin-about-content > i { font-size: 1.9rem; }
+    .admin-about-content {
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .admin-about-content > i {
+        font-size: 1.9rem;
+    }
 }

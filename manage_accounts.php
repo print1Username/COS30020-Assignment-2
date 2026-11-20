@@ -35,7 +35,7 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 	</head >
 	<body >
 	<?php include __DIR__."/admin_nav.php"; ?>
-	<main class = "container py-5">
+	<main class = "container py-5 admin-form-gap">
 		<h1 >Manage Users' Accounts</h1 >
 		<p >
 			<a
@@ -73,69 +73,71 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 			<div class = "col-12">
 				<div class = "admin-post-form-section">
 					<div class = "row g-3">
-			<?php
-			foreach ( [ 'email' => 'Email', 'first_name' => 'First Name', 'last_name' => 'Last Name', 'dob' => 'Date of Birth', 'hometown' => 'Hometown' ]
-				as $field => $label
-			): ?>
-				<div class = "col-md-4">
-				<label
-					class = "form-label"
-					for = "<?= $field ?>"
-				><?= $label ?></label >
-				<input
-					class = "form-control"
-					id = "<?= $field ?>"
-					name = "<?= $field ?>"
-					type = "<?= $field === 'dob' ? 'date' : ($field === 'email' ? 'email' : 'text') ?>"
-					maxlength = "50"
-					value = "<?= adminEscape($edit[$field] ?? '') ?>" <?= $field === 'dob' ? '' : 'required' ?>>
-				</div ><?php endforeach; ?>
-			<div class = "col-md-4">
-				<label
-					class = "form-label"
-					for = "gender"
-				>Gender
-				</label >
-				<select
-					class = "form-select"
-					id = "gender"
-					name = "gender"
-					required
-				>
-					<option value = "">Select</option ><?php foreach ( [ 'Male', 'Female' ] as $option ): ?>
-						<option
-						value = "<?= $option ?>" <?= ($edit['gender'] ?? '') === $option ? 'selected' : '' ?>><?= $option ?></option ><?php
-					endforeach; ?></select >
-			</div >
-			<div class = "col-md-4">
-				<label
-					class = "form-label"
-					for = "type"
-				>Account Type
-				</label >
-				<select
-					class = "form-select"
-					id = "type"
-					name = "type"
-					required
-				><?php foreach ( [ 'user', 'admin' ] as $option ): ?>
-						<option
-						value = "<?= $option ?>" <?= ($edit['type'] ?? 'user') === $option ? 'selected' : '' ?>><?= ucfirst(
-						$option
-					) ?></option ><?php
-					endforeach; ?></select >
-			</div >
-			<div class = "col-md-4">
-				<label
-					class = "form-label"
-					for = "password"
-				>Password <?= $edit ? '(leave blank to keep)' : '' ?></label >
-				<input
-					class = "form-control"
-					id = "password"
-					name = "password"
-					type = "password" <?= $edit ? '' : 'required' ?>>
-			</div >
+						<?php
+						foreach ( [ 'email' => 'Email', 'first_name' => 'First Name', 'last_name' => 'Last Name', 'dob' => 'Date of Birth', 'hometown' => 'Hometown' ]
+							as $field => $label
+						): ?>
+							<div class = "col-md-4">
+							<label
+								class = "form-label"
+								for = "<?= $field ?>"
+							><?= $label ?></label >
+							<input
+								class = "form-control"
+								id = "<?= $field ?>"
+								name = "<?= $field ?>"
+								type = "<?= $field === 'dob' ? 'date' : ($field === 'email' ? 'email' : 'text') ?>"
+								maxlength = "50"
+								value = "<?= adminEscape(
+									$edit[$field] ?? ''
+								) ?>" <?= $field === 'dob' ? '' : 'required' ?>>
+							</div ><?php endforeach; ?>
+						<div class = "col-md-4">
+							<label
+								class = "form-label"
+								for = "gender"
+							>Gender
+							</label >
+							<select
+								class = "form-select"
+								id = "gender"
+								name = "gender"
+								required
+							>
+								<option value = "">Select</option ><?php foreach ( [ 'Male', 'Female' ] as $option ): ?>
+									<option
+									value = "<?= $option ?>" <?= ($edit['gender'] ?? '') === $option ? 'selected' : '' ?>><?= $option ?></option ><?php
+								endforeach; ?></select >
+						</div >
+						<div class = "col-md-4">
+							<label
+								class = "form-label"
+								for = "type"
+							>Account Type
+							</label >
+							<select
+								class = "form-select"
+								id = "type"
+								name = "type"
+								required
+							><?php foreach ( [ 'user', 'admin' ] as $option ): ?>
+									<option
+									value = "<?= $option ?>" <?= ($edit['type'] ?? 'user') === $option ? 'selected' : '' ?>><?= ucfirst(
+									$option
+								) ?></option ><?php
+								endforeach; ?></select >
+						</div >
+						<div class = "col-md-4">
+							<label
+								class = "form-label"
+								for = "password"
+							>Password <?= $edit ? '(leave blank to keep)' : '' ?></label >
+							<input
+								class = "form-control"
+								id = "password"
+								name = "password"
+								type = "password" <?= $edit ? '' : 'required' ?>>
+						</div >
 					</div >
 				</div >
 			</div >
