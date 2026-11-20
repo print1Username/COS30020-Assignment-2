@@ -2,6 +2,30 @@
     min-width: 0;
 }
 
+.admin-community-posts .admin-community-post-picker {
+    width: 100%;
+    margin-bottom: 36px;
+}
+
+.admin-community-posts .admin-community-post-status-tabs {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.admin-community-posts .admin-community-post-status-tabs .admin-community-tab {
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.admin-community-posts .admin-community-post-status-tabs .admin-community-tab:hover,
+.admin-community-posts .admin-community-post-status-tabs .admin-community-tab:focus-visible,
+.admin-community-posts .admin-community-post-status-tabs .admin-community-tab.active {
+    background: #f1ebf8;
+}
+
 .admin-community-posts .admin-community-post-scroll {
     max-width: 100%;
     overflow-x: auto;
@@ -13,23 +37,23 @@
 }
 
 .admin-community-posts .admin-post-table th:nth-child(1) {
-    width: 5%;
+    width: 4%;
 }
 
 .admin-community-posts .admin-post-table th:nth-child(2) {
-    width: 10%;
+    width: 9%;
 }
 
 .admin-community-posts .admin-post-table th:nth-child(3) {
-    width: 14%;
+    width: 13%;
 }
 
 .admin-community-posts .admin-post-table th:nth-child(4) {
-    width: 12%;
+    width: 11%;
 }
 
 .admin-community-posts .admin-post-table th:nth-child(5) {
-    width: 17%;
+    width: 16%;
 }
 
 .admin-community-posts .admin-post-table th:nth-child(6) {
@@ -41,11 +65,11 @@
 }
 
 .admin-community-posts .admin-post-table th:nth-child(8) {
-    width: 13%;
+    width: 12%;
 }
 
 .admin-community-posts .admin-post-table th:nth-child(9) {
-    width: 14%;
+    width: 20%;
 }
 
 .admin-community-posts .admin-post-table td:nth-child(2),

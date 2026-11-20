@@ -302,149 +302,134 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 						</a ><?php endif; ?></div >
 			</form >
 			<?php adminDisclosureEnd(); ?>
-			<?php
-			$postSearch = is_string($_GET['search'] ?? null) ? trim($_GET['search']) : '';
-			$postStatus = is_string($_GET['status'] ?? null) ? $_GET['status'] : 'all';
-			if ( !in_array($postStatus, [ 'all', 'pending', 'approved', 'rejected' ], true) ) $postStatus = 'all';
-			$displayRows = array_values(
-				array_filter(
-					$rows, function($row) use ($postSearch, $postStatus) {
-					if ( $postStatus !== 'all' && $row['status'] !== $postStatus ) return false;
-					if ( $postSearch === '' ) return true;
-					return mb_stripos(
-							implode(
-								' ', [
-								$row['id'], $row['community_title'] ?? '', $row['first_name'], $row['last_name'],
-								$row['email'] ?? '', $row['title'], $row['description'], $row['status']
-							]
-							), $postSearch
-						) !== false;
-				}
-				)
-			);
-			$filterActive = $postSearch !== '' || $postStatus !== 'all';
-			$pendingRows = array_values(array_filter($displayRows, fn($row) => $row['status'] === 'pending'));
-			$reviewedRows = array_values(
-				array_filter(
-					$displayRows,
-					fn($row) => in_array($row['status'], [ 'approved', 'rejected' ], true)
-				)
-			);
-			?>
 			<section class = "admin-panel admin-community-posts">
 				<h2 class = "h4">Community Posts</h2 >
-				<form method = "get" class = "row g-2 align-items-end admin-community-post-filters mb-4">
-					<input type = "hidden" name = "tab" value = "post">
-					<div class = "col-12 col-md-6">
-						<label class = "form-label" for = "post-search">Search</label >
-						<input
-							class = "form-control" type = "search" id = "post-search" name = "search"
-							placeholder = "Search community posts" value = "<?= adminEscape($postSearch) ?>"
-						>
-					</div >
-					<div class = "col-12 col-sm-7 col-md-3">
-						<label class = "form-label" for = "post-status">Status</label >
-						<select class = "form-select" id = "post-status" name = "status">
-							<?php
-							foreach ( [ 'all' => 'All', 'pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected' ]
-								as $value => $label
-							): ?>
-								<option value = "<?= $value ?>" <?= $postStatus === $value ? 'selected' : '' ?>><?= $label ?></option >
-							<?php endforeach; ?>
-						</select >
-					</div >
-					<div class = "col-12 col-sm-5 col-md-3">
-						<button type = "submit" class = "btn btn-primary w-100">Search</button >
-					</div >
-				</form >
-				<?php foreach ( [
-					[ 'Pending', $pendingRows, 'pending-posts-pagination', 'No pending community posts are available.' ],
-					[ 'Approved / Rejected', $reviewedRows, 'reviewed-posts-pagination', 'No reviewed community posts are available.' ]
-				] as [$heading, $postRows, $paginationId, $emptyMessage]
-				): ?>
-					<?php if ( $heading === 'Approved / Rejected' ): ?>
-						<hr class = "admin-registration-divider"><?php endif; ?>
-					<h3 class = "h5"><?= $heading ?></h3 >
-					<?php if ( !$postRows ): ?>
-						<p class = "mb-0 admin-registration-empty"><?= $filterActive ? 'No matching posts.' : $emptyMessage ?></p >
-					<?php else: ?>
-						<div class = "table-responsive admin-community-post-scroll">
-							<table class = "table table-striped align-middle admin-post-table">
-								<thead >
-								<tr >
-									<th >ID</th >
-									<th >Community</th >
-									<th >Author</th >
-									<th >Title</th >
-									<th >Description</th >
-									<th >Image</th >
-									<th >Status</th >
-									<th >Posted At</th >
-									<th >Actions</th >
-								</tr >
-								</thead >
-								<tbody
-									data-admin-pagination = "<?= $paginationId ?>"
-									data-admin-page-size = "5"
-								>
-								<?php foreach ( $postRows as $row ): ?>
-									<tr >
-										<td ><?= (int)$row['id'] ?></td >
-										<td ><?= adminEscape($row['community_title'] ?? 'Unknown community') ?></td >
-										<td class = "admin-community-post-author"><?= adminEscape(
-												trim($row['first_name'].' '.$row['last_name'])
-											) ?><?php if ( $row['email'] ): ?>
-												<small
-													class = "text-muted"
-												><?= adminEscape($row['email']) ?></small ><?php endif; ?></td >
-										<td >
-											<strong ><?= adminEscape($row['title']) ?></strong >
-										</td >
-										<td class = "admin-post-description"><span
-												class = "admin-community-post-description"
-												title = "<?= adminEscape($row['description']) ?>"
-											><?= adminEscape($row['description']) ?></span >
-										</td >
-										<td ><?php if ( !empty($row['has_community_image']) ): ?>
-												<img
-												class = "admin-post-thumbnail"
-												src = "community_image.php?id=<?= (int)$row['id'] ?>"
-												alt = "Post image"
-												><?php endif; ?></td >
-										<td ><?= adminEscape(ucfirst($row['status'])) ?></td >
-										<td ><?= adminEscape(adminFormatDateTime($row['created_at'])) ?></td >
-										<td >
-											<div class = "admin-actions admin-post-actions">
-												<?php adminTableActions(
-													$heading === 'Pending' ? 'review' : 'edit_delete',
-													[
-														'id' => (int)$row['id'],
-														'status' => $row['status'],
-														'subject' => 'post',
-														'edit_url' => 'manage_community.php?edit='.(int)$row['id'],
-														'confirm' => 'Delete this post?',
-														'delete_action' => 'delete',
-														'id_field' => 'id'
-													]
-												); ?>
-											</div >
-										</td >
-									</tr >
-								<?php endforeach; ?>
-								</tbody >
-							</table >
+				<div class = "admin-community-post-picker" data-post-community-picker>
+					<label class = "form-label" for = "post-community-search">Search Community</label >
+					<div class = "admin-activity-search-menu">
+						<div class = "input-group admin-activity-search-group">
+							<input
+								class = "form-control" id = "post-community-search" type = "search"
+								placeholder = "Search communities by name"
+								autocomplete = "off" aria-controls = "post-community-results" aria-expanded = "false"
+							>
+							<button
+								type = "button"
+								class = "btn admin-activity-toggle"
+								aria-label = "Show community options"
+								aria-controls = "post-community-results"
+								aria-expanded = "false"
+							>
+								<i class = "bi bi-chevron-down" aria-hidden = "true"></i >
+							</button >
 						</div >
-						<nav
-							class = "admin-pagination"
-							aria-label = "<?= $heading ?> posts pagination"
+						<div
+							class = "admin-activity-results" id = "post-community-results"
+							aria-label = "Matching communities" hidden
 						>
-							<ul
-								id = "<?= $paginationId ?>"
-								class = "pagination justify-content-center mb-0"
-							></ul >
-						</nav >
-					<?php endif; ?>
-				<?php endforeach; ?>
+							<button
+								type = "button" class = "admin-activity-result" data-community-id = ""
+								data-community-title = "All Communities"
+							>All Communities
+							</button >
+							<?php foreach ( $communities as $community ): ?>
+								<button
+									type = "button" class = "admin-activity-result"
+									data-community-id = "<?= (int)$community['id'] ?>"
+									data-community-title = "<?= adminEscape($community['title']) ?>"
+								><?= adminEscape($community['title']) ?></button >
+							<?php endforeach; ?>
+							<p class = "admin-activity-no-results text-muted" hidden>No matching communities.</p >
+						</div >
+					</div >
+				</div >
+				<nav
+					class = "admin-community-tabs admin-community-post-status-tabs" role = "tablist"
+					aria-label = "Post status"
+				>
+					<?php foreach ( [ 'pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected' ] as
+						$status => $label
+					): ?>
+						<button
+							type = "button" class = "admin-community-tab<?= $status === 'pending' ? ' active' : '' ?>"
+							role = "tab" data-post-status = "<?= $status ?>"
+							aria-selected = "<?= $status === 'pending' ? 'true' : 'false' ?>"
+							aria-controls = "community-post-results"
+						><?= $label ?></button >
+					<?php endforeach; ?>
+				</nav >
+				<div id = "community-post-results" role = "tabpanel">
+					<div class = "table-responsive admin-community-post-scroll">
+						<table class = "table table-striped align-middle admin-post-table">
+							<thead >
+							<tr >
+								<th >ID</th >
+								<th >Community</th >
+								<th >Author</th >
+								<th >Title</th >
+								<th >Description</th >
+								<th >Image</th >
+								<th >Status</th >
+								<th >Posted At</th >
+								<th >Actions</th >
+							</tr >
+							</thead >
+							<tbody data-post-pagination>
+							<?php foreach ( $rows as $row ): ?>
+								<tr
+									data-community-id = "<?= (int)$row['community_id'] ?>"
+									data-post-status = "<?= adminEscape($row['status']) ?>"
+								>
+									<td ><?= (int)$row['id'] ?></td >
+									<td ><?= adminEscape($row['community_title'] ?? 'Unknown community') ?></td >
+									<td class = "admin-community-post-author"><?= adminEscape(
+											trim($row['first_name'].' '.$row['last_name'])
+										) ?><?php if ( $row['email'] ): ?>
+											<small
+												class = "text-muted"
+											><?= adminEscape($row['email']) ?></small ><?php endif; ?></td >
+									<td >
+										<strong ><?= adminEscape($row['title']) ?></strong >
+									</td >
+									<td class = "admin-post-description"><span
+											class = "admin-community-post-description"
+											title = "<?= adminEscape($row['description']) ?>"
+										><?= adminEscape($row['description']) ?></span >
+									</td >
+									<td ><?php if ( !empty($row['has_community_image']) ): ?>
+											<img
+											class = "admin-post-thumbnail"
+											src = "community_image.php?id=<?= (int)$row['id'] ?>"
+											alt = "Post image"
+											><?php endif; ?></td >
+									<td ><?= adminEscape(ucfirst($row['status'])) ?></td >
+									<td ><?= adminEscape(adminFormatDateTime($row['created_at'])) ?></td >
+									<td >
+										<div class = "admin-actions admin-post-actions">
+											<?php if ( $row['status'] === 'pending' ) adminReviewActions(
+												(int)$row['id'], $row['status'], 'post'
+											); ?>
+											<?php adminTableActions(
+												'edit_delete', [
+												'id' => (int)$row['id'],
+												'edit_url' => 'manage_community.php?edit='.(int)$row['id'],
+												'confirm' => 'Delete this post?',
+												'delete_action' => 'delete',
+												'id_field' => 'id'
+											]
+											); ?>
+										</div >
+									</td >
+								</tr >
+							<?php endforeach; ?>
+							</tbody >
+						</table >
+					</div >
+					<nav class = "admin-pagination" aria-label = "Community posts pagination">
+						<ul id = "posts-pagination" class = "pagination justify-content-center mb-0"></ul >
+					</nav >
+					<p class = "mb-0 admin-registration-empty" data-post-empty hidden></p >
+				</div >
 			</section >
 		</div >
 		<div <?= $communityTab !== 'create' ? 'hidden' : '' ?>>
@@ -692,6 +677,11 @@ require_once __DIR__."/admin_table_actions.php"; ?>
 		src = "components/admin_community_picker.js?v=<?php echo filemtime(
 			__DIR__.'/components/admin_community_picker.js'
 		); ?>"
+	></script >
+	<script
+		src = "components/admin_community_posts.js?v=<?= filemtime(
+			__DIR__."/components/admin_community_posts.js"
+		) ?>"
 	></script >
 	<script
 		src = "components/file_upload.js?v=<?php echo filemtime(
