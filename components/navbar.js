@@ -49,14 +49,14 @@ const navbar = `
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="activities.php">
-                        Activities
+                    <a class="nav-link" href="community.php">
+                        Community
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="community.php">
-                        Community
+                    <a class="nav-link" href="activities.php">
+                        Activities
                     </a>
                 </li>
 
@@ -76,11 +76,11 @@ const navbar = `
 </nav>
 `;
 
-document.addEventListener("DOMContentLoaded", () => {
-    const navbarContainer = document.getElementById("navbar-container");
+document.addEventListener( "DOMContentLoaded", () => {
+    const navbarContainer = document.getElementById( "navbar-container" );
 
-    if (!navbarContainer) {
-        console.error("Navbar container #navbar-container was not found.");
+    if ( !navbarContainer ) {
+        console.error( "Navbar container #navbar-container was not found." );
         return;
     }
 
@@ -92,35 +92,35 @@ document.addEventListener("DOMContentLoaded", () => {
      * and apply Bootstrap's active state.
      */
     const currentPage =
-        window.location.pathname.split("/").pop() || "index.php";
+        window.location.pathname.split( "/" ).pop() || "index.php";
 
-    const navLinks = navbarContainer.querySelectorAll(".nav-link");
+    const navLinks = navbarContainer.querySelectorAll( ".nav-link" );
 
-    navLinks.forEach((link) => {
-        const href = link.getAttribute("href");
+    navLinks.forEach( ( link ) => {
+        const href = link.getAttribute( "href" );
 
-        if (!href) {
+        if ( !href ) {
             return;
         }
 
         const linkPage = href
-            .split("/")
+            .split( "/" )
             .pop()
-            .split("?")[0]
-            .split("#")[0];
+            .split( "?" )[0]
+            .split( "#" )[0];
 
-        if (linkPage === currentPage) {
-            link.classList.add("active");
-            link.setAttribute("aria-current", "page");
+        if ( linkPage === currentPage ) {
+            link.classList.add( "active" );
+            link.setAttribute( "aria-current", "page" );
         }
-    });
+    } );
 
     /*
      * Display authentication buttons based on PHP Session.
      */
-    const authContainer = document.getElementById("navbar-auth");
+    const authContainer = document.getElementById( "navbar-auth" );
 
-    if (window.isLoggedIn === true) {
+    if ( window.isLoggedIn === true ) {
         // Logged in: show Account button
         authContainer.innerHTML = `
             <a
@@ -150,4 +150,4 @@ document.addEventListener("DOMContentLoaded", () => {
             </a>
         `;
     }
-});
+} );

@@ -1,20 +1,20 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector(".activity-registration-form");
-    const submitButton = document.querySelector(".activity-submit-button");
-    const contactInput = document.getElementById("contact_number");
+document.addEventListener( "DOMContentLoaded", function () {
+    const form = document.querySelector( ".activity-registration-form" );
+    const submitButton = document.querySelector( ".activity-submit-button" );
+    const contactInput = document.getElementById( "contact_number" );
 
-    if (!form) {
+    if ( !form ) {
         return;
     }
 
-    if (contactInput) {
-        contactInput.addEventListener("input", function () {
-            this.value = this.value.replace(/[^0-9+\-\s]/g, "");
-        });
+    if ( contactInput ) {
+        contactInput.addEventListener( "input", function () {
+            this.value = this.value.replace( /[^0-9+\-\s]/g, "" );
+        } );
     }
 
-    form.addEventListener("submit", function () {
-        if (!submitButton) {
+    form.addEventListener( "submit", function () {
+        if ( !submitButton ) {
             return;
         }
 
@@ -22,6 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
         submitButton.innerHTML =
             '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>' +
             "Registering...";
-        submitButton.classList.add("disabled");
-    });
-});
+        submitButton.classList.add( "disabled" );
+    } );
+} );

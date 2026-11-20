@@ -474,7 +474,7 @@ require_once __DIR__."/file_upload.php";
 	></script >
 	<?php if ( $postError !== "" && $joinStatus === "approved" ): ?>
 		<script >
-            bootstrap.Modal.getOrCreateInstance(document.getElementById("communityPostModal")).show();
+            bootstrap.Modal.getOrCreateInstance( document.getElementById( "communityPostModal" ) ).show();
 		</script >
 	<?php endif; ?>
 	</body >

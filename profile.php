@@ -41,8 +41,11 @@ require_once __DIR__."/file_upload.php";
 			href = "style/navbar.css"
 		>
 		<?php if ( $_SESSION["type"] === "admin" ): ?>
-			<link rel = "stylesheet"
-			href = "style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"><?php endif; ?>
+		<link
+			rel = "stylesheet"
+			href = "style/admin_theme.css?v=<?php echo filemtime(__DIR__."/style/admin_theme.css"); ?>"
+		>
+		<?php endif; ?>
 		<link
 			rel = "stylesheet"
 			href = "style/profile.css?v=<?php echo filemtime(__DIR__."/style/profile.css"); ?>"
@@ -55,9 +58,9 @@ require_once __DIR__."/file_upload.php";
 
 	<body<?php if ( $_SESSION["type"] === "admin" ) echo ' class="admin-profile"'; ?>>
 	<?php if ( $_SESSION["type"] === "admin" ): ?>
-		<?php include __DIR__."/admin_nav.php"; ?>
+	<?php include __DIR__."/admin_nav.php"; ?>
 	<?php else: ?>
-		<?php include "navbar.php"; ?>
+	<?php include "navbar.php"; ?>
 	<?php endif; ?>
 
 	<main class = "profile-page container py-5">
@@ -66,10 +69,10 @@ require_once __DIR__."/file_upload.php";
 			<p >View and manage your personal information.</p >
 		</div >
 		<?php if ( $uploadError !== "" ): ?>
-			<div
-				class = "alert alert-danger"
-				role = "alert"
-			><?php echo htmlspecialchars($uploadError); ?></div >
+		<div
+			class = "alert alert-danger"
+			role = "alert"
+		><?php echo htmlspecialchars($uploadError); ?></div >
 		<?php endif; ?>
 
 		<div class = "profile-layout">
@@ -77,18 +80,18 @@ require_once __DIR__."/file_upload.php";
 				<section class = "profile-card">
 					<div class = "profile-picture-container">
 						<?php if ( $profileImagePath !== "" ): ?>
-							<img
-								src = "<?php echo htmlspecialchars($profileImagePath); ?>"
-								alt = "Profile picture"
-								class = "profile-picture"
-							>
+						<img
+							src = "<?php echo htmlspecialchars($profileImagePath); ?>"
+							alt = "Profile picture"
+							class = "profile-picture"
+						>
 						<?php else: ?>
-							<div
-								class = "profile-picture profile-picture-default"
-								aria-label = "Default profile picture"
-							>
-								<i class = "bi bi-person-fill"></i >
-							</div >
+						<div
+							class = "profile-picture profile-picture-default"
+							aria-label = "Default profile picture"
+						>
+							<i class = "bi bi-person-fill"></i >
+						</div >
 						<?php endif; ?>
 					</div >
 
@@ -259,13 +262,15 @@ require_once __DIR__."/file_upload.php";
 		</div >
 	</main >
 	<script >
-        for (const [buttonId, inputId] of [["profilePhotoButton", "profilePhotoInput"], ["profileCameraButton", "profileCameraInput"]]) {
-            const button = document.getElementById(buttonId);
-            const input = document.getElementById(inputId);
-            button.addEventListener("click", () => input.click());
-            input.addEventListener("change", () => {
-                if (input.files.length) input.form.requestSubmit();
-            });
+        for ( const [ buttonId, inputId ] of [ [ "profilePhotoButton", "profilePhotoInput" ], [ "profileCameraButton", "profileCameraInput" ] ] ) {
+            const button = document.getElementById( buttonId );
+            const input = document.getElementById( inputId );
+            button.addEventListener( "click", () => input.click() );
+            input.addEventListener( "change", () => {
+                if ( input.files.length ) {
+                    input.form.requestSubmit();
+                }
+            } );
         }
 	</script >
 	<script
@@ -274,8 +279,9 @@ require_once __DIR__."/file_upload.php";
 		); ?>"
 	></script >
 	<?php if ( $_SESSION["type"] === "admin" ): ?>
-		<script
-			src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-		></script ><?php endif; ?>
+	<script
+		src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+	></script >
+	<?php endif; ?>
 	</body >
 </html >

@@ -1,18 +1,18 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const uploadButton = document.getElementById("uploadPhotoButton");
-    const uploadInput = document.getElementById("profileImageInput");
-    const cropModal = document.getElementById("profileCropModal");
-    const cropCanvas = document.getElementById("profileCropCanvas");
-    const cropCancelButton = document.getElementById("cropCancelButton");
-    const cropConfirmButton = document.getElementById("cropConfirmButton");
-    const profileImage = document.getElementById("profileImage");
+document.addEventListener( "DOMContentLoaded", function () {
+    const uploadButton = document.getElementById( "uploadPhotoButton" );
+    const uploadInput = document.getElementById( "profileImageInput" );
+    const cropModal = document.getElementById( "profileCropModal" );
+    const cropCanvas = document.getElementById( "profileCropCanvas" );
+    const cropCancelButton = document.getElementById( "cropCancelButton" );
+    const cropConfirmButton = document.getElementById( "cropConfirmButton" );
+    const profileImage = document.getElementById( "profileImage" );
 
-    if (!uploadButton || !uploadInput || !cropModal || !cropCanvas || !cropCancelButton || !cropConfirmButton) {
-        console.error("Profile crop: required elements were not found.");
+    if ( !uploadButton || !uploadInput || !cropModal || !cropCanvas || !cropCancelButton || !cropConfirmButton ) {
+        console.error( "Profile crop: required elements were not found." );
         return;
     }
 
-    const ctx = cropCanvas.getContext("2d");
+    const ctx = cropCanvas.getContext( "2d" );
 
     let image = new Image();
     let imageLoaded = false;
@@ -26,26 +26,26 @@ document.addEventListener("DOMContentLoaded", function () {
     let startImageX = 0;
     let startImageY = 0;
 
-    uploadButton.addEventListener("click", function () {
+    uploadButton.addEventListener( "click", function () {
         uploadInput.click();
-    });
+    } );
 
-    uploadInput.addEventListener("change", function () {
+    uploadInput.addEventListener( "change", function () {
         const file = uploadInput.files[0];
 
-        if (!file) {
+        if ( !file ) {
             return;
         }
 
-        if (!file.type.startsWith("image/")) {
-            alert("Please select an image file.");
+        if ( !file.type.startsWith( "image/" ) ) {
+            alert( "Please select an image file." );
             uploadInput.value = "";
             return;
         }
 
         const reader = new FileReader();
 
-        reader.onload = function (event) {
+        reader.onload = function ( event ) {
             image = new Image();
 
             image.onload = function () {
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             };
 
             image.onerror = function () {
-                alert("The selected image could not be loaded.");
+                alert( "The selected image could not be loaded." );
                 uploadInput.value = "";
             };
 
@@ -62,16 +62,16 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         reader.onerror = function () {
-            alert("The image could not be read.");
+            alert( "The image could not be read." );
             uploadInput.value = "";
         };
 
-        reader.readAsDataURL(file);
-    });
+        reader.readAsDataURL( file );
+    } );
 
     function openCropWindow() {
         cropModal.style.display = "flex";
-        cropModal.setAttribute("aria-hidden", "false");
+        cropModal.setAttribute( "aria-hidden", "false" );
         document.body.style.overflow = "hidden";
         resizeCanvas();
         setInitialImagePosition();
@@ -80,16 +80,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function resizeCanvas() {
         const container = cropCanvas.parentElement;
-        let size = Math.min(container.clientWidth, container.clientHeight);
+        let size = Math.min( container.clientWidth, container.clientHeight );
 
-        if (!size || size < 100) {
+        if ( !size || size < 100 ) {
             size = 300;
         }
 
         cropCanvas.width = size;
         cropCanvas.height = size;
 
-        if (imageLoaded) {
+        if ( imageLoaded ) {
             drawCanvas();
         }
     }
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function drawCanvas() {
-        if (!imageLoaded) {
+        if ( !imageLoaded ) {
             return;
         }
 
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const imageWidth = image.width * scale;
         const imageHeight = image.height * scale;
 
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        ctx.clearRect( 0, 0, canvasWidth, canvasHeight );
 
         ctx.drawImage(
             image,
@@ -144,8 +144,8 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.restore();
     }
 
-    cropCanvas.addEventListener("pointerdown", function (event) {
-        if (!imageLoaded) {
+    cropCanvas.addEventListener( "pointerdown", function ( event ) {
+        if ( !imageLoaded ) {
             return;
         }
 
@@ -155,11 +155,11 @@ document.addEventListener("DOMContentLoaded", function () {
         startImageX = imageX;
         startImageY = imageY;
 
-        cropCanvas.setPointerCapture(event.pointerId);
-    });
+        cropCanvas.setPointerCapture( event.pointerId );
+    } );
 
-    cropCanvas.addEventListener("pointermove", function (event) {
-        if (!isDragging) {
+    cropCanvas.addEventListener( "pointermove", function ( event ) {
+        if ( !isDragging ) {
             return;
         }
 
@@ -171,18 +171,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         constrainImage();
         drawCanvas();
-    });
+    } );
 
-    cropCanvas.addEventListener("pointerup", function () {
+    cropCanvas.addEventListener( "pointerup", function () {
         isDragging = false;
-    });
+    } );
 
-    cropCanvas.addEventListener("pointercancel", function () {
+    cropCanvas.addEventListener( "pointercancel", function () {
         isDragging = false;
-    });
+    } );
 
-    cropCanvas.addEventListener("wheel", function (event) {
-        if (!imageLoaded) {
+    cropCanvas.addEventListener( "wheel", function ( event ) {
+        if ( !imageLoaded ) {
             return;
         }
 
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         constrainImage();
         drawCanvas();
-    }, {passive: false});
+    }, { passive: false } );
 
     function constrainImage() {
         const canvasWidth = cropCanvas.width;
@@ -216,45 +216,45 @@ document.addEventListener("DOMContentLoaded", function () {
         const imageWidth = image.width * scale;
         const imageHeight = image.height * scale;
 
-        if (imageWidth <= canvasWidth) {
+        if ( imageWidth <= canvasWidth ) {
             imageX = (canvasWidth - imageWidth) / 2;
         } else {
             const minimumX = canvasWidth - imageWidth;
             imageX = Math.max(
                 minimumX,
-                Math.min(0, imageX)
+                Math.min( 0, imageX )
             );
         }
 
-        if (imageHeight <= canvasHeight) {
+        if ( imageHeight <= canvasHeight ) {
             imageY = (canvasHeight - imageHeight) / 2;
         } else {
             const minimumY = canvasHeight - imageHeight;
             imageY = Math.max(
                 minimumY,
-                Math.min(0, imageY)
+                Math.min( 0, imageY )
             );
         }
     }
 
-    cropCancelButton.addEventListener("click", function () {
+    cropCancelButton.addEventListener( "click", function () {
         cropModal.style.display = "none";
-        cropModal.setAttribute("aria-hidden", "true");
+        cropModal.setAttribute( "aria-hidden", "true" );
         document.body.style.overflow = "";
         uploadInput.value = "";
         imageLoaded = false;
-    });
+    } );
 
-    cropConfirmButton.addEventListener("click", function () {
-        if (!imageLoaded) {
+    cropConfirmButton.addEventListener( "click", function () {
+        if ( !imageLoaded ) {
             return;
         }
 
-        const outputCanvas = document.createElement("canvas");
+        const outputCanvas = document.createElement( "canvas" );
         outputCanvas.width = 600;
         outputCanvas.height = 600;
 
-        const outputContext = outputCanvas.getContext("2d");
+        const outputContext = outputCanvas.getContext( "2d" );
 
         const sourceX = -imageX / scale;
         const sourceY = -imageY / scale;
@@ -280,32 +280,32 @@ document.addEventListener("DOMContentLoaded", function () {
         /*
          * Update profile picture preview
          */
-        if (profileImage) {
-            if (profileImage.tagName.toLowerCase() === "img") {
+        if ( profileImage ) {
+            if ( profileImage.tagName.toLowerCase() === "img" ) {
                 profileImage.src = croppedImage;
             } else {
-                const newProfileImage = document.createElement("img");
+                const newProfileImage = document.createElement( "img" );
 
                 newProfileImage.src = croppedImage;
                 newProfileImage.alt = "Profile picture";
                 newProfileImage.className = "profile-picture";
                 newProfileImage.id = "profileImage";
 
-                profileImage.replaceWith(newProfileImage);
+                profileImage.replaceWith( newProfileImage );
             }
         }
 
         /*
          * Convert cropped image to file
          */
-        outputCanvas.toBlob(function (blob) {
-            if (!blob) {
-                alert("Unable to create cropped image.");
+        outputCanvas.toBlob( function ( blob ) {
+            if ( !blob ) {
+                alert( "Unable to create cropped image." );
                 return;
             }
 
             const croppedFile = new File(
-                [blob],
+                [ blob ],
                 "profile_image.jpg",
                 {
                     type: "image/jpeg"
@@ -314,25 +314,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const dataTransfer = new DataTransfer();
 
-            dataTransfer.items.add(croppedFile);
+            dataTransfer.items.add( croppedFile );
             uploadInput.files = dataTransfer.files;
 
             /*
              * Close crop window
              */
             cropModal.style.display = "none";
-            cropModal.setAttribute("aria-hidden", "true");
+            cropModal.setAttribute( "aria-hidden", "true" );
             document.body.style.overflow = "";
             imageLoaded = false;
-        }, "image/jpeg", 0.9);
-    });
+        }, "image/jpeg", 0.9 );
+    } );
 
-    window.addEventListener("resize", function () {
+    window.addEventListener( "resize", function () {
         if (
             imageLoaded &&
             cropModal.style.display === "flex"
         ) {
             resizeCanvas();
         }
-    });
-});
+    } );
+} );

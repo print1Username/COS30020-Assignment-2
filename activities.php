@@ -290,16 +290,16 @@ unset($_SESSION["activity_registration_notice"]);
 	<script src = "components/pagination.js"></script >
 
 	<script >
-        document.addEventListener("DOMContentLoaded", function () {
-            const activityItems = document.querySelectorAll(".activity-card");
+        document.addEventListener( "DOMContentLoaded", function () {
+            const activityItems = document.querySelectorAll( ".activity-card" );
 
-            if (activityItems.length > 0) {
-                createPagination({
+            if ( activityItems.length > 0 ) {
+                createPagination( {
                     itemsPerPage: 6,
                     paginationId: "activity-pagination"
-                }).setItems(activityItems);
+                } ).setItems( activityItems );
             }
-        });
+        } );
 	</script >
 	</body >
 </html >
