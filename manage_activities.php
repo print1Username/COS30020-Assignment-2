@@ -1,7 +1,7 @@
 <?php $reviewKind = "activities";
 require_once __DIR__."/manage_review_db.php";
 require_once __DIR__."/admin_disclosure.php";
-require_once __DIR__."/admin_review_actions.php"; ?>
+require_once __DIR__."/admin_table_actions.php"; ?>
 <!DOCTYPE html>
 <html lang = "en">
 	<head >
@@ -233,38 +233,15 @@ require_once __DIR__."/admin_review_actions.php"; ?>
 									<td ><?= adminEscape($row['status']) ?></td >
 									<td >
 										<div class = "admin-actions">
-											<?php adminReviewActions((int)$row['id'], $row['status'],
-												'registration'); ?>
-											<a
-												class = "btn btn-sm btn-outline-primary<?= $row['status'] === 'pending' ? ' ms-2' : '' ?>"
-												href = "manage_activities.php?edit=<?= (int)$row['id'] ?>"
-											>Edit
-											</a >
-											<form
-												method = "post"
-												onsubmit = "return confirm('Delete this registration?')"
-											>
-												<input
-													type = "hidden"
-													name = "token"
-													value = "<?= adminEscape(adminToken()) ?>"
-												>
-												<input
-													type = "hidden"
-													name = "action"
-													value = "delete"
-												>
-												<input
-													type = "hidden"
-													name = "id"
-													value = "<?= (int)$row['id'] ?>"
-												>
-												<button
-													type = "submit"
-													class = "btn btn-sm btn-outline-danger"
-												>Delete
-												</button >
-											</form >
+											<?php adminTableActions($heading === 'Pending' ? 'review' : 'edit_delete', [
+												'id' => (int)$row['id'],
+												'status' => $row['status'],
+												'subject' => 'registration',
+												'edit_url' => 'manage_activities.php?edit='.(int)$row['id'],
+												'confirm' => 'Delete this registration?',
+												'delete_action' => 'delete',
+												'id_field' => 'id'
+											]); ?>
 										</div >
 									</td >
 								</tr >

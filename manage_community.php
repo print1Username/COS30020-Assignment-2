@@ -3,7 +3,7 @@ require_once __DIR__."/manage_review_db.php";
 require_once __DIR__."/manage_community_info_db.php";
 require_once __DIR__."/file_upload.php";
 require_once __DIR__."/admin_disclosure.php";
-require_once __DIR__."/admin_review_actions.php"; ?>
+require_once __DIR__."/admin_table_actions.php"; ?>
 <!DOCTYPE html>
 <html lang = "en">
 	<head >
@@ -341,37 +341,16 @@ require_once __DIR__."/admin_review_actions.php"; ?>
 										<td ><?= adminEscape(adminFormatDateTime($row['created_at'])) ?></td >
 										<td >
 											<div class = "admin-actions admin-post-actions">
-												<?php adminReviewActions((int)$row['id'], $row['status'], 'post'); ?>
-												<a
-													class = "btn btn-sm btn-outline-primary<?= $row['status'] === 'pending' ? ' ms-2' : '' ?>"
-													href = "manage_community.php?edit=<?= (int)$row['id'] ?>"
-												>Edit
-												</a >
-												<form
-													method = "post"
-													onsubmit = "return confirm('Delete this post?')"
-												>
-													<input
-														type = "hidden"
-														name = "token"
-														value = "<?= adminEscape(adminToken()) ?>"
-													>
-													<input
-														type = "hidden"
-														name = "action"
-														value = "delete"
-													>
-													<input
-														type = "hidden"
-														name = "id"
-														value = "<?= (int)$row['id'] ?>"
-													>
-													<button
-														type = "submit"
-														class = "btn btn-sm btn-outline-danger"
-													>Delete
-													</button >
-												</form >
+												<?php adminTableActions($heading === 'Pending' ? 'review' : 'edit_delete',
+													[
+														'id' => (int)$row['id'],
+														'status' => $row['status'],
+														'subject' => 'post',
+														'edit_url' => 'manage_community.php?edit='.(int)$row['id'],
+														'confirm' => 'Delete this post?',
+														'delete_action' => 'delete',
+														'id_field' => 'id'
+													]); ?>
 											</div >
 										</td >
 									</tr >
@@ -491,32 +470,13 @@ require_once __DIR__."/admin_review_actions.php"; ?>
 								<td ><?= adminEscape(adminFormatDate($communityRow['created_at'])) ?></td >
 								<td >
 									<div class = "admin-actions admin-post-actions">
-										<a
-											class = "btn btn-sm btn-outline-primary"
-											href = "manage_community.php?community_edit=<?= (int)$communityRow['id'] ?>"
-										>Edit
-										</a >
-										<form
-											method = "post"
-											onsubmit = "return confirm('Delete this community?')"
-										>
-											<input
-												type = "hidden"
-												name = "token"
-												value = "<?= adminEscape(adminToken()) ?>"
-											>
-											<input
-												type = "hidden"
-												name = "action"
-												value = "community_delete"
-											>
-											<input
-												type = "hidden"
-												name = "community_id"
-												value = "<?= (int)$communityRow['id'] ?>"
-											>
-											<button class = "btn btn-sm btn-outline-danger">Delete</button >
-										</form >
+										<?php adminTableActions('edit_delete', [
+											'id' => (int)$communityRow['id'],
+											'edit_url' => 'manage_community.php?community_edit='.(int)$communityRow['id'],
+											'confirm' => 'Delete this community?',
+											'delete_action' => 'community_delete',
+											'id_field' => 'community_id'
+										]); ?>
 									</div >
 								</td >
 								</tr ><?php endforeach; ?>
@@ -571,8 +531,12 @@ require_once __DIR__."/admin_review_actions.php"; ?>
 								<td >Pending</td >
 								<td >
 									<div class = "admin-actions admin-post-actions">
-										<?php adminReviewActions((int)$joinRow['id'], 'pending', 'join request',
-											true); ?>
+										<?php adminTableActions('review', [
+											'id' => (int)$joinRow['id'],
+											'status' => 'pending',
+											'subject' => 'join request',
+											'join_request' => true
+										]); ?>
 									</div >
 								</td >
 								</tr ><?php endforeach; ?>

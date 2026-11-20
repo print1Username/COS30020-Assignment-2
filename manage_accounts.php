@@ -1,5 +1,6 @@
 <?php require_once __DIR__."/manage_accounts_db.php";
-require_once __DIR__."/admin_disclosure.php"; ?>
+require_once __DIR__."/admin_disclosure.php";
+require_once __DIR__."/admin_table_actions.php"; ?>
 <!DOCTYPE html>
 <html lang = "en">
 	<head >
@@ -159,36 +160,14 @@ require_once __DIR__."/admin_disclosure.php"; ?>
 						<td ><?= adminEscape($account['type']) ?></td >
 						<td >
 							<div class = "admin-actions">
-								<a
-									class = "btn btn-sm btn-outline-primary"
-									href = "manage_accounts.php?edit=<?= urlencode($account['email']) ?>"
-								>Edit
-								</a >
-								<form
-									method = "post"
-									onsubmit = "return confirm('Delete this account?')"
-								>
-									<input
-										type = "hidden"
-										name = "token"
-										value = "<?= adminEscape(adminToken()) ?>"
-									>
-									<input
-										type = "hidden"
-										name = "action"
-										value = "delete"
-									>
-									<input
-										type = "hidden"
-										name = "email"
-										value = "<?= adminEscape($account['email']) ?>"
-									>
-									<button
-										class = "btn btn-sm btn-outline-danger"
-										type = "submit" <?= $account['email'] === $_SESSION['email'] ? 'disabled' : '' ?>>
-										Delete
-									</button >
-								</form >
+								<?php adminTableActions('edit_delete', [
+									'id' => $account['email'],
+									'edit_url' => 'manage_accounts.php?edit='.urlencode($account['email']),
+									'confirm' => 'Delete this account?',
+									'delete_action' => 'delete',
+									'id_field' => 'email',
+									'disable_delete' => $account['email'] === $_SESSION['email']
+								]); ?>
 							</div >
 						</td ></tr ><?php endforeach; ?></tbody >
 				</table >
