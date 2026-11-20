@@ -24,7 +24,7 @@ require_once __DIR__."/community_db.php";
 		<link rel="stylesheet" href="style/navbar.css">
 
 		<!-- Community CSS -->
-		<link rel="stylesheet" href="style/community.css?v=4">
+		<link rel="stylesheet" href="style/community.css?v=6">
 
 		<link rel="stylesheet" href="style/pagination.css">
 
@@ -67,12 +67,14 @@ require_once __DIR__."/community_db.php";
 
 			<div class="community-control-group">
 
+				<span class="community-control-label">Filter:</span>
+
 				<!-- Membership Filter -->
 				<details class="community-sort-dropdown">
 
 					<summary class="community-sort-trigger">
 						<i class="bi bi-funnel"></i>
-						<span>Filter: <?php echo match ($membershipFilter) {
+						<span><?php echo match ($membershipFilter) {
 								"joined" => "Joined",
 								"pending" => "Pending",
 								"not_joined" => "Not Joined",
@@ -112,13 +114,14 @@ require_once __DIR__."/community_db.php";
 				<span class="community-control-divider" aria-hidden="true"></span>
 
 				<div class="community-sort-group">
+					<span class="community-control-label">Sorting:</span>
 
 					<!-- Sorting Type -->
 					<details class="community-sort-dropdown">
 
 						<summary class="community-sort-trigger">
 							<i class="bi bi-clock-history"></i>
-							<span>Sorting Type: <?php echo $sortType === "alphabetical" ? "Alphabetical" : "Time"; ?></span>
+							<span><?php echo $sortType === "alphabetical" ? "Alphabetical" : "Time"; ?></span>
 							<i class="bi bi-chevron-down community-sort-chevron"></i>
 						</summary>
 
@@ -142,22 +145,22 @@ require_once __DIR__."/community_db.php";
 									<input
 										type="radio"
 										name="sort_type"
-										value="time"
-										<?php echo communitySelected($sortType, "time"); ?>
+										value="alphabetical"
+										<?php echo communitySelected($sortType, "alphabetical"); ?>
 										onchange="this.form.submit()"
 									>
-									<span>Time</span>
+									<span>Alphabetical</span>
 								</label>
 
 								<label class="community-sort-option">
 									<input
 										type="radio"
 										name="sort_type"
-										value="alphabetical"
-										<?php echo communitySelected($sortType, "alphabetical"); ?>
+										value="time"
+										<?php echo communitySelected($sortType, "time"); ?>
 										onchange="this.form.submit()"
 									>
-									<span>Alphabetical</span>
+									<span>Time</span>
 								</label>
 
 							</form>
@@ -171,7 +174,7 @@ require_once __DIR__."/community_db.php";
 
 						<summary class="community-sort-trigger">
 							<i class="bi bi-sort-down"></i>
-							<span>Sorting Order: <?php echo $sortOrder === "descending" ? "Descending" : "Ascending"; ?></span>
+							<span><?php echo $sortOrder === "descending" ? "Descending" : "Ascending"; ?></span>
 							<i class="bi bi-chevron-down community-sort-chevron"></i>
 						</summary>
 
