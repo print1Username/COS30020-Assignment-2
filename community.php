@@ -24,7 +24,7 @@ require_once __DIR__."/community_db.php";
 		<link rel="stylesheet" href="style/navbar.css">
 
 		<!-- Community CSS -->
-		<link rel="stylesheet" href="style/community.css?v=6">
+		<link rel="stylesheet" href="style/community.css?v=7">
 
 		<link rel="stylesheet" href="style/pagination.css">
 
@@ -67,14 +67,16 @@ require_once __DIR__."/community_db.php";
 
 			<div class="community-control-group">
 
-				<span class="community-control-label">Filter:</span>
+				<span class="community-control-heading">
+					<i class="bi bi-funnel" aria-hidden="true"></i>
+					<span class="community-control-label">Filter:</span>
+				</span>
 
 				<!-- Membership Filter -->
 				<details class="community-sort-dropdown">
 
 					<summary class="community-sort-trigger">
-						<i class="bi bi-funnel"></i>
-						<span><?php echo match ($membershipFilter) {
+						<span>Membership: <?php echo match ($membershipFilter) {
 								"joined" => "Joined",
 								"pending" => "Pending",
 								"not_joined" => "Not Joined",
@@ -114,14 +116,16 @@ require_once __DIR__."/community_db.php";
 				<span class="community-control-divider" aria-hidden="true"></span>
 
 				<div class="community-sort-group">
-					<span class="community-control-label">Sorting:</span>
+					<span class="community-control-heading">
+						<i class="bi bi-sort-down" aria-hidden="true"></i>
+						<span class="community-control-label">Sorting:</span>
+					</span>
 
 					<!-- Sorting Type -->
 					<details class="community-sort-dropdown">
 
 						<summary class="community-sort-trigger">
-							<i class="bi bi-clock-history"></i>
-							<span><?php echo $sortType === "alphabetical" ? "Alphabetical" : "Time"; ?></span>
+							<span>Type: <?php echo $sortType === "alphabetical" ? "Alphabetical" : "Time"; ?></span>
 							<i class="bi bi-chevron-down community-sort-chevron"></i>
 						</summary>
 
@@ -173,8 +177,7 @@ require_once __DIR__."/community_db.php";
 					<details class="community-sort-dropdown">
 
 						<summary class="community-sort-trigger">
-							<i class="bi bi-sort-down"></i>
-							<span><?php echo $sortOrder === "descending" ? "Descending" : "Ascending"; ?></span>
+							<span>Direction: <?php echo $sortOrder === "descending" ? "Descending" : "Ascending"; ?></span>
 							<i class="bi bi-chevron-down community-sort-chevron"></i>
 						</summary>
 

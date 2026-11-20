@@ -123,6 +123,17 @@
     font-weight: 600;
 }
 
+.community-control-heading {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.community-control-heading > i {
+    color: var(--community-purple);
+    font-size: 1.1rem;
+}
+
 .community-control-divider {
     align-self: stretch;
     width: 1px;
@@ -185,11 +196,6 @@
     background-color: var(--community-purple-soft);
     color: var(--community-purple-dark);
     box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.08);
-}
-
-.community-sort-trigger > i:first-child {
-    color: var(--community-purple);
-    font-size: 1rem;
 }
 
 .community-sort-chevron {
