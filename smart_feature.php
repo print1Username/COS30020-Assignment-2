@@ -35,7 +35,7 @@
 			href = "style/smart_feature_css.css"
 		>
 	</head >
-	<body class = "smart-feature-page">
+	<body class = "smart-feature-page smart-feature-search-page">
 	<?php include "navbar.php"; ?>
 	<main >
 		<header class = "smart-feature-hero">
@@ -57,27 +57,25 @@
 							class = "form-label"
 						>Name or category
 						</label >
-						<input
-							id = "search"
-							name = "search"
-							class = "form-control"
-							value = "<?php echo smartFeatureEscape($search); ?>"
-							maxlength = "50"
-							required
-						>
+						<div class = "input-group">
+							<span class = "input-group-text"><i class = "bi bi-search" aria-hidden = "true"></i></span>
+							<input
+								id = "search"
+								name = "search"
+								class = "form-control"
+								value = "<?php echo smartFeatureEscape($search); ?>"
+								maxlength = "50"
+								placeholder = "Try a game name or category"
+								required
+							>
+						</div >
 					</div >
 					<button
 						type = "submit"
-						class = "btn smart-feature-button"
-					>Find Game
+						class = "btn smart-feature-button smart-feature-button-secondary"
+					><i class = "bi bi-search" aria-hidden = "true"></i> Find Game
 					</button >
 				</form >
-				<p class = "smart-feature-contribute-link">Want to Contribute a Board Game?
-					<a
-						href = "smart_feature_add.php"
-					>Click Here
-					</a >
-				</p >
 				<section class = "smart-feature-panel smart-feature-recommendation">
 					<h2 >Board Game Recommendation</h2 >
 					<p >Choose your group size, maximum playing time and optional categories.</p >
@@ -86,23 +84,40 @@
 						<div class = "row g-3">
 							<div class = "col-sm-6">
 								<label class = "form-label" for = "player-count">Players</label >
-								<input class = "form-control" id = "player-count" name = "player_count" type = "number" min = "1" max = "99" required value = "<?php echo smartFeatureEscape($recommendationPlayers); ?>">
+								<div class = "input-group">
+									<span class = "input-group-text"><i class = "bi bi-people" aria-hidden = "true"></i></span>
+									<input class = "form-control" id = "player-count" name = "player_count" type = "number" min = "1" max = "99" required value = "<?php echo smartFeatureEscape($recommendationPlayers); ?>" placeholder = "e.g. 4">
+								</div >
 							</div >
 							<div class = "col-sm-6">
 								<label class = "form-label" for = "max-duration">Maximum playing time (minutes)</label >
-								<input class = "form-control" id = "max-duration" name = "max_duration" type = "number" min = "1" max = "999" required value = "<?php echo smartFeatureEscape($recommendationDuration); ?>">
+								<div class = "input-group">
+									<span class = "input-group-text"><i class = "bi bi-clock" aria-hidden = "true"></i></span>
+									<input class = "form-control" id = "max-duration" name = "max_duration" type = "number" min = "1" max = "999" required value = "<?php echo smartFeatureEscape($recommendationDuration); ?>" placeholder = "e.g. 60">
+								</div >
 							</div >
+							<fieldset class = "col-12 smart-feature-duration-options">
+								<legend class = "form-label fs-6">Common durations</legend >
+								<div class = "smart-feature-quick-options">
+									<button class = "smart-feature-quick-option" type = "button" data-duration = "30" aria-pressed = "false">30 min</button >
+									<button class = "smart-feature-quick-option" type = "button" data-duration = "60" aria-pressed = "false">60 min</button >
+									<button class = "smart-feature-quick-option" type = "button" data-duration = "90" aria-pressed = "false">90 min</button >
+									<button class = "smart-feature-quick-option" type = "button" data-duration = "120" aria-pressed = "false">120 min</button >
+								</div >
+							</fieldset >
 							<fieldset class = "col-12">
 								<legend class = "form-label fs-6">Category preferences (optional)</legend >
-								<?php foreach ( $availablePreferences as $preference ): ?>
-									<div class = "form-check form-check-inline">
-										<input class = "form-check-input" type = "checkbox" id = "preference-<?php echo smartFeatureEscape(strtolower(str_replace(' ', '-', $preference))); ?>" name = "preferences[]" value = "<?php echo smartFeatureEscape($preference); ?>" <?php echo in_array($preference, $selectedPreferences, true) ? 'checked' : ''; ?>>
-										<label class = "form-check-label" for = "preference-<?php echo smartFeatureEscape(strtolower(str_replace(' ', '-', $preference))); ?>"><?php echo smartFeatureEscape($preference); ?></label >
-									</div >
-								<?php endforeach; ?>
+								<div class = "smart-feature-preference-options">
+									<?php foreach ( $availablePreferences as $preference ): ?>
+										<div class = "smart-feature-preference-option">
+											<input class = "smart-feature-preference-input" type = "checkbox" id = "preference-<?php echo smartFeatureEscape(strtolower(str_replace(' ', '-', $preference))); ?>" name = "preferences[]" value = "<?php echo smartFeatureEscape($preference); ?>" <?php echo in_array($preference, $selectedPreferences, true) ? 'checked' : ''; ?>>
+											<label class = "smart-feature-preference-chip" for = "preference-<?php echo smartFeatureEscape(strtolower(str_replace(' ', '-', $preference))); ?>"><i class = "bi bi-check2" aria-hidden = "true"></i><?php echo smartFeatureEscape($preference); ?></label >
+										</div >
+									<?php endforeach; ?>
+								</div >
 							</fieldset >
 						</div >
-						<button class = "btn smart-feature-button mt-3" type = "submit">Recommend Games</button >
+						<button class = "btn smart-feature-button smart-feature-recommend-button" type = "submit"><i class = "bi bi-stars" aria-hidden = "true"></i> Recommend Games</button >
 					</form >
 				</section >
 				<?php if ( isset($_GET['recommend']) ): ?>
@@ -166,8 +181,36 @@
 						</div >
 					</article >
 				<?php endif; ?>
+				<p class = "smart-feature-contribute-link">
+					<a href = "smart_feature_add.php"><i class = "bi bi-plus-circle" aria-hidden = "true"></i> Contribute a Board Game</a >
+				</p >
 			</div >
 		</section >
 	</main >
+	<script>
+		const durationInput = document.getElementById('max-duration');
+		const durationOptions = document.querySelectorAll('.smart-feature-quick-option');
+
+		if (durationInput instanceof HTMLInputElement) {
+			const updateDurationSelection = () => {
+				durationOptions.forEach((option) => {
+					const selected = option.dataset.duration === durationInput.value;
+					option.setAttribute('aria-pressed', String(selected));
+				});
+			};
+
+			durationOptions.forEach((option) => {
+				option.addEventListener('click', () => {
+					if (option.dataset.duration) {
+						durationInput.value = option.dataset.duration;
+						updateDurationSelection();
+					}
+				});
+			});
+
+			durationInput.addEventListener('input', updateDurationSelection);
+			updateDurationSelection();
+		}
+	</script>
 	</body >
 </html >
