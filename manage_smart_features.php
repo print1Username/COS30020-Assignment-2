@@ -33,6 +33,15 @@ $formValue = static fn(string $key): string =>
 		<p >
 			<a class = "btn admin-back-button" href = "main_menu_admin.php">Back to Admin Menu</a >
 		</p >
+		<nav class = "admin-community-tabs" aria-label = "Smart Feature status filters">
+			<?php foreach ( $smartFeatureStatuses as $filterStatus ): ?>
+				<a
+					class = "admin-community-tab<?= $status === $filterStatus ? ' active' : '' ?>"
+					href = "manage_smart_features.php?status=<?= adminEscape($filterStatus) ?>"
+					<?= $status === $filterStatus ? 'aria-current="page"' : '' ?>
+				><?= adminEscape(ucfirst($filterStatus)) ?></a >
+			<?php endforeach; ?>
+		</nav >
 		<?php if ( $error !== "" ): ?>
 			<div class = "alert alert-danger" role = "alert"><?= adminEscape($error) ?></div >
 		<?php endif; ?>
@@ -159,20 +168,11 @@ $formValue = static fn(string $key): string =>
 		<?php endif; ?>
 
 		<section class = "admin-panel smart-feature-submissions" aria-labelledby = "smart-feature-submissions-heading">
-			<nav class = "nav nav-pills smart-feature-review-filters" aria-label = "Smart Feature status filters">
-				<?php foreach ( $smartFeatureStatuses as $filterStatus ): ?>
-					<a
-						class = "nav-link<?= $status === $filterStatus ? ' active' : '' ?>"
-						href = "manage_smart_features.php?status=<?= adminEscape($filterStatus) ?>"
-						<?= $status === $filterStatus ? 'aria-current="page"' : '' ?>
-					><?= adminEscape(ucfirst($filterStatus)) ?></a >
-				<?php endforeach; ?>
-			</nav >
 			<h2 id = "smart-feature-submissions-heading" class = "h4"><?= adminEscape(ucfirst($status)) ?> submissions</h2 >
 			<?php if ( !$smartFeatureSubmissions ): ?>
 				<p class = "mb-0">No <?= adminEscape($status) ?> Smart Feature submissions.</p >
 			<?php else: ?>
-				<div class = "table-responsive smart-feature-table-responsive">
+				<div class = "table-responsive">
 					<table class = "table table-striped align-middle smart-feature-table">
 						<thead >
 						<tr >
@@ -245,7 +245,7 @@ $formValue = static fn(string $key): string =>
 								</div >
 							</td >
 							<td >
-								<div class = "smart-feature-table-actions">
+								<div class = "admin-actions admin-post-actions smart-feature-table-actions">
 									<a
 										class = "btn btn-sm btn-outline-primary"
 										href = "manage_smart_features.php?status=<?= adminEscape($status) ?>&amp;edit=<?= (int)$entry["id"] ?>"
