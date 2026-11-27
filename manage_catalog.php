@@ -140,6 +140,7 @@ require_once __DIR__."/file_upload.php";
 							<th >Categories</th >
 							<th >Players</th >
 							<th >Duration</th >
+							<th >Status</th >
 							<th >Actions</th >
 						</tr >
 						</thead >
@@ -155,6 +156,7 @@ require_once __DIR__."/file_upload.php";
 									) ?></td >
 								<td ><?= adminEscape($game['players']) ?></td >
 								<td ><?= adminEscape($game['duration']) ?></td >
+								<td ><?= adminEscape(ucfirst($game['status'])) ?></td >
 								<td >
 									<div class = "admin-actions admin-post-actions"><?php adminTableActions(
 											'edit_delete',

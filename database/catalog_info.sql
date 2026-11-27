@@ -7,5 +7,6 @@ CREATE TABLE IF NOT EXISTS catalog_info (
 	duration VARCHAR(50) NOT NULL,
 	image VARCHAR(255) NULL,
 	image_data LONGBLOB NULL,
-	image_mime VARCHAR(30) NULL
+	image_mime VARCHAR(30) NULL,
+	status VARCHAR(10) NOT NULL DEFAULT 'approved'
 ) ENGINE = InnoDB;

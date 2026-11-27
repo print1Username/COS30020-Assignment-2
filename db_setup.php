@@ -9,7 +9,7 @@ try {
 	$catalogSeeds = json_decode(file_get_contents($catalogFile), true);
 	if ( !is_array($catalogSeeds) ) throw new RuntimeException("Catalogue seed data is invalid.");
 	$insertCatalog = $pdo -> prepare(
-		"INSERT INTO catalog_info (id,name,categories,description,players,duration,image,image_data,image_mime) VALUES (?,?,?,?,?,?,?,?,?)"
+		"INSERT INTO catalog_info (id,name,categories,description,players,duration,image,image_data,image_mime,status) VALUES (?,?,?,?,?,?,?,?,?,'approved')"
 	);
 	foreach ( $catalogSeeds as $catalogSeed ) {
 		$insertCatalog -> execute(

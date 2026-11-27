@@ -76,6 +76,57 @@
     color: var(--smart-purple-dark);
 }
 
+.smart-feature-recommendation {
+    margin-top: 24px;
+}
+
+.smart-feature-recommendation h2,
+.smart-feature-recommendation-results h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.smart-feature-recommendation > p {
+    color: var(--smart-muted);
+}
+
+.smart-feature-recommendation-results {
+    margin-top: 24px;
+}
+
+.smart-feature-recommendation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+}
+
+.smart-feature-recommendation-card {
+    overflow: hidden;
+    border: 1px solid var(--smart-border);
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.smart-feature-recommendation-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.smart-feature-recommendation-card h3,
+.smart-feature-recommendation-card p {
+    margin: 14px 16px;
+}
+
+.smart-feature-recommendation-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.smart-feature-recommendation-card p {
+    color: var(--smart-muted);
+}
+
 .smart-feature-page .form-label {
     color: var(--smart-text);
     font-weight: 600;

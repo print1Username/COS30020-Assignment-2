@@ -9,7 +9,7 @@ unset($_SESSION["admin_notice"]);
 $id = filter_var($_GET["edit"] ?? $_POST["id"] ?? 0, FILTER_VALIDATE_INT);
 if ( $id ) {
 	$query = $pdo -> prepare(
-		"SELECT id,name,categories,description,players,duration,image,image_data IS NOT NULL AS has_image_data FROM catalog_info WHERE id=?"
+		"SELECT id,name,categories,description,players,duration,image,status,image_data IS NOT NULL AS has_image_data FROM catalog_info WHERE id=?"
 	);
 	$query -> execute([ $id ]);
 	$edit = $query -> fetch();
@@ -84,6 +84,7 @@ if ( $_SERVER["REQUEST_METHOD"] === "POST" ) {
 			$query = $pdo -> prepare($sql." WHERE id=?");
 			$query -> execute($values);
 		}
+		synchronizeCatalogSmartFeature($pdo);
 		adminRedirect("manage_catalog.php", "Catalog entry saved.");
 	} catch ( PDOException $exception ) {
 		if ( $pdo -> inTransaction() ) $pdo -> rollBack();
@@ -93,4 +94,4 @@ if ( $_SERVER["REQUEST_METHOD"] === "POST" ) {
 		$error = $exception -> getMessage();
 	}
 }
-$games = $pdo -> query("SELECT id,name,categories,players,duration FROM catalog_info ORDER BY id") -> fetchAll();
+$games = $pdo -> query("SELECT id,name,categories,players,duration,status FROM catalog_info ORDER BY id") -> fetchAll();
