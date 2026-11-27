@@ -44,7 +44,7 @@ const navbar = `
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="smart_feature.php">
-                        Search
+                        Feature
                     </a>
                 </li>
 
