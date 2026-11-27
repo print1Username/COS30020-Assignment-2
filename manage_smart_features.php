@@ -169,7 +169,20 @@ $formValue = static fn(string $key): string =>
 			<?php if ( !$smartFeatureSubmissions ): ?>
 				<p class = "admin-panel mb-0">No <?= adminEscape($status) ?> Smart Feature submissions.</p >
 			<?php else: ?>
-				<div class = "smart-feature-submission-list">
+				<div class = "table-responsive smart-feature-table-responsive">
+					<table class = "table table-striped align-middle smart-feature-table">
+						<thead >
+						<tr >
+							<th scope = "col">ID</th >
+							<th scope = "col">Feature</th >
+							<th scope = "col">Description</th >
+							<th scope = "col">Players</th >
+							<th scope = "col">Duration</th >
+							<th scope = "col">Attachments</th >
+							<th scope = "col">Actions</th >
+						</tr >
+						</thead >
+						<tbody >
 					<?php foreach ( $smartFeatureSubmissions as $entry ): ?>
 						<?php
 						$image = smartFeatureAdminAsset($entry["item_image"], "image");
@@ -180,94 +193,77 @@ $formValue = static fn(string $key): string =>
 							default => "text-bg-warning"
 						};
 						?>
-						<article class = "admin-panel smart-feature-submission-card">
-							<div class = "row g-4">
-								<div class = "col-lg-7">
-									<div class = "smart-feature-submission-heading">
-										<div>
-											<p class = "smart-feature-submission-id">Submission #<?= (int)$entry["id"] ?></p >
-											<h3 class = "h5 mb-1"><?= adminEscape($entry["item_name"]) ?></h3 >
-										</div >
-										<span class = "badge <?= $badgeClass ?>"><?= adminEscape(ucfirst($entry["status"])) ?></span >
-									</div >
-									<p class = "smart-feature-submission-category">
-										<strong>Category:</strong> <?= adminEscape($entry["item_category"]) ?>
-									</p >
-									<p class = "smart-feature-submission-description">
-										<?= $entry["item_description"] !== null && $entry["item_description"] !== ""
-											? nl2br(adminEscape($entry["item_description"]))
-											: '<span class="text-secondary">No description provided.</span>' ?>
-									</p >
-									<p class = "mb-0 text-secondary">
-										<strong>Players:</strong> <?= adminEscape($entry["players"] ?: "Not specified") ?>
-										<span class = "mx-2" aria-hidden = "true">·</span>
-										<strong>Duration:</strong> <?= adminEscape($entry["duration"] ?: "Not specified") ?>
-									</p >
+						<tr >
+							<td ><?= (int)$entry["id"] ?></td >
+							<td class = "smart-feature-table-feature">
+								<strong ><?= adminEscape($entry["item_name"]) ?></strong >
+								<div class = "smart-feature-table-meta">
+									<span class = "badge text-bg-light"><?= adminEscape($entry["item_category"]) ?></span >
+									<span class = "badge <?= $badgeClass ?>"><?= adminEscape(ucfirst($entry["status"])) ?></span >
 								</div >
-								<div class = "col-lg-5">
-									<div class = "smart-feature-submission-previews">
-										<div>
-											<h4 class = "smart-feature-preview-title">Image</h4 >
-											<?php if ( $image !== null ): ?>
-												<a href = "<?= adminEscape($image) ?>" target = "_blank" rel = "noopener">
-													<img
-														class = "smart-feature-preview-image"
-														src = "<?= adminEscape($image) ?>"
-														alt = "<?= adminEscape($entry["item_name"]) ?> image preview"
-													>
-												</a >
-											<?php else: ?>
-												<p class = "text-secondary mb-0">No image available.</p >
-											<?php endif; ?>
-										</div >
-										<div>
-											<h4 class = "smart-feature-preview-title">PDF description</h4 >
-											<?php if ( $pdf !== null ): ?>
-												<details class = "smart-feature-pdf-preview">
-													<summary>Preview PDF</summary >
-													<object
-														data = "<?= adminEscape($pdf) ?>"
-														type = "application/pdf"
-														aria-label = "PDF description for <?= adminEscape($entry["item_name"]) ?>"
-													>
-														<p >
-															Preview unavailable.
-															<a href = "<?= adminEscape($pdf) ?>" target = "_blank" rel = "noopener">Open PDF</a >
-														</p >
-													</object >
-												</details >
-												<a href = "<?= adminEscape($pdf) ?>" target = "_blank" rel = "noopener">Open PDF in new tab</a >
-											<?php else: ?>
-												<p class = "text-secondary mb-0">No PDF available.</p >
-											<?php endif; ?>
-										</div >
-									</div >
+							</td >
+							<td >
+								<div class = "smart-feature-table-description">
+									<?= $entry["item_description"] !== null && $entry["item_description"] !== ""
+										? nl2br(adminEscape($entry["item_description"]))
+										: '<span class="text-secondary">No description provided.</span>' ?>
 								</div >
-								<div class = "col-12">
-									<div class = "smart-feature-submission-actions">
+							</td >
+							<td ><?= adminEscape($entry["players"] ?: "—") ?></td >
+							<td ><?= adminEscape($entry["duration"] ?: "—") ?></td >
+							<td >
+								<div class = "smart-feature-table-attachments">
+									<?php if ( $image !== null ): ?>
 										<a
-											class = "btn btn-sm btn-outline-primary"
-											href = "manage_smart_features.php?status=<?= adminEscape($status) ?>&amp;edit=<?= (int)$entry["id"] ?>"
-										>Edit
+											class = "btn btn-sm btn-outline-secondary"
+											href = "<?= adminEscape($image) ?>"
+											target = "_blank"
+											rel = "noopener"
+											aria-label = "Open image for <?= adminEscape($entry["item_name"]) ?>"
+										><i class = "bi bi-image" aria-hidden = "true"></i> Image
 										</a >
-										<?php adminTableActions(
-											"review",
-											[ "id" => $entry["id"], "status" => $entry["status"], "subject" => $entry["item_name"] ]
-										); ?>
-										<?php adminTableActions(
-											"delete_only",
-											[
-												"confirm" => "Delete this user-submitted Smart Feature?",
-												"delete_action" => "delete",
-												"id_field" => "id",
-												"id" => $entry["id"]
-											]
-										); ?>
-									</div >
+									<?php endif; ?>
+									<?php if ( $pdf !== null ): ?>
+										<a
+											class = "btn btn-sm btn-outline-secondary"
+											href = "<?= adminEscape($pdf) ?>"
+											target = "_blank"
+											rel = "noopener"
+											aria-label = "Open PDF description for <?= adminEscape($entry["item_name"]) ?>"
+										><i class = "bi bi-file-earmark-pdf" aria-hidden = "true"></i> PDF
+										</a >
+									<?php endif; ?>
+									<?php if ( $image === null && $pdf === null ): ?>
+										<span class = "text-secondary">None</span >
+									<?php endif; ?>
 								</div >
-							</div >
-						</article >
+							</td >
+							<td >
+								<div class = "smart-feature-table-actions">
+									<a
+										class = "btn btn-sm btn-outline-primary"
+										href = "manage_smart_features.php?status=<?= adminEscape($status) ?>&amp;edit=<?= (int)$entry["id"] ?>"
+									>Edit
+									</a >
+									<?php adminTableActions(
+										"review",
+										[ "id" => $entry["id"], "status" => $entry["status"], "subject" => $entry["item_name"] ]
+									); ?>
+									<?php adminTableActions(
+										"delete_only",
+										[
+											"confirm" => "Delete this user-submitted Smart Feature?",
+											"delete_action" => "delete",
+											"id_field" => "id",
+											"id" => $entry["id"]
+										]
+									); ?>
+								</div >
+							</td >
+						</tr >
 					<?php endforeach; ?>
+						</tbody >
+					</table >
 				</div >
 			<?php endif; ?>
 		</section >

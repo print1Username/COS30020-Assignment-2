@@ -34,91 +34,64 @@
     margin-top: 1.75rem;
 }
 
-.smart-feature-submission-list {
-    display: grid;
-    gap: 1rem;
+.smart-feature-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
-.smart-feature-submission-card {
-    margin: 0;
+.smart-feature-table {
+    min-width: 900px;
+    margin-bottom: 0;
 }
 
-.smart-feature-submission-heading {
+.smart-feature-table th {
+    white-space: nowrap;
+}
+
+.smart-feature-table-feature {
+    min-width: 170px;
+}
+
+.smart-feature-table-meta {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.4rem;
 }
 
-.smart-feature-submission-id {
-    margin: 0 0 0.25rem;
-    color: var(--admin-muted);
-    font-size: 0.85rem;
-}
-
-.smart-feature-submission-category {
-    margin-bottom: 0.75rem;
-}
-
-.smart-feature-submission-description {
+.smart-feature-table-description {
+    display: -webkit-box;
+    max-width: 24rem;
+    min-width: 14rem;
+    overflow: hidden;
     overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }
 
-.smart-feature-submission-previews {
-    display: grid;
-    gap: 1rem;
-}
-
-.smart-feature-preview-title {
-    margin: 0 0 0.5rem;
-    font-size: 0.95rem;
-    font-weight: 700;
-}
-
-.smart-feature-preview-image {
-    display: block;
-    width: 100%;
-    max-height: 180px;
-    border: 1px solid var(--admin-border);
-    border-radius: 0.5rem;
-    background: var(--admin-background);
-    object-fit: contain;
-}
-
-.smart-feature-pdf-preview summary {
-    color: var(--admin-purple);
-    cursor: pointer;
-    font-weight: 600;
-}
-
-.smart-feature-pdf-preview object {
-    display: block;
-    width: 100%;
-    height: 240px;
-    margin-top: 0.5rem;
-    border: 1px solid var(--admin-border);
-    border-radius: 0.5rem;
-}
-
-.smart-feature-submission-actions {
+.smart-feature-table-attachments,
+.smart-feature-table-actions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
 }
 
-.smart-feature-submission-actions form {
+.smart-feature-table-actions {
+    min-width: 230px;
+}
+
+.smart-feature-table-actions form {
     margin: 0;
 }
 
-@media (max-width: 575.98px) {
-    .smart-feature-edit-actions,
-    .smart-feature-submission-actions {
-        align-items: stretch;
-    }
+.smart-feature-table-actions .btn {
+    white-space: nowrap;
+}
 
-    .smart-feature-pdf-preview object {
-        height: 200px;
+@media (max-width: 575.98px) {
+    .smart-feature-edit-actions {
+        align-items: stretch;
     }
 }
