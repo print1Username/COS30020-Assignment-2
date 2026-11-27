@@ -19,6 +19,10 @@ $formValue = static fn(string $key): string =>
 		<link rel = "stylesheet" href = "style/admin_theme.css?v=<?= filemtime(__DIR__."/style/admin_theme.css") ?>">
 		<link
 			rel = "stylesheet"
+			href = "style/admin_pagination.css?v=2"
+		>
+		<link
+			rel = "stylesheet"
 			href = "style/manage_smart_features.css?v=<?= filemtime(__DIR__."/style/manage_smart_features.css") ?>"
 		>
 	</head >
@@ -35,16 +39,6 @@ $formValue = static fn(string $key): string =>
 		<?php if ( $notice !== "" ): ?>
 			<div class = "alert alert-success" role = "status"><?= adminEscape($notice) ?></div >
 		<?php endif; ?>
-
-		<nav class = "nav nav-pills smart-feature-review-filters" aria-label = "Smart Feature status filters">
-			<?php foreach ( $smartFeatureStatuses as $filterStatus ): ?>
-				<a
-					class = "nav-link<?= $status === $filterStatus ? ' active' : '' ?>"
-					href = "manage_smart_features.php?status=<?= adminEscape($filterStatus) ?>"
-					<?= $status === $filterStatus ? 'aria-current="page"' : '' ?>
-				><?= adminEscape(ucfirst($filterStatus)) ?></a >
-			<?php endforeach; ?>
-		</nav >
 
 		<?php if ( $showEditForm && $submission !== null ): ?>
 			<section class = "admin-panel smart-feature-edit-panel">
@@ -164,10 +158,19 @@ $formValue = static fn(string $key): string =>
 			</section >
 		<?php endif; ?>
 
-		<section class = "smart-feature-submissions" aria-labelledby = "smart-feature-submissions-heading">
+		<section class = "admin-panel smart-feature-submissions" aria-labelledby = "smart-feature-submissions-heading">
+			<nav class = "nav nav-pills smart-feature-review-filters" aria-label = "Smart Feature status filters">
+				<?php foreach ( $smartFeatureStatuses as $filterStatus ): ?>
+					<a
+						class = "nav-link<?= $status === $filterStatus ? ' active' : '' ?>"
+						href = "manage_smart_features.php?status=<?= adminEscape($filterStatus) ?>"
+						<?= $status === $filterStatus ? 'aria-current="page"' : '' ?>
+					><?= adminEscape(ucfirst($filterStatus)) ?></a >
+				<?php endforeach; ?>
+			</nav >
 			<h2 id = "smart-feature-submissions-heading" class = "h4"><?= adminEscape(ucfirst($status)) ?> submissions</h2 >
 			<?php if ( !$smartFeatureSubmissions ): ?>
-				<p class = "admin-panel mb-0">No <?= adminEscape($status) ?> Smart Feature submissions.</p >
+				<p class = "mb-0">No <?= adminEscape($status) ?> Smart Feature submissions.</p >
 			<?php else: ?>
 				<div class = "table-responsive smart-feature-table-responsive">
 					<table class = "table table-striped align-middle smart-feature-table">
@@ -182,7 +185,10 @@ $formValue = static fn(string $key): string =>
 							<th scope = "col">Actions</th >
 						</tr >
 						</thead >
-						<tbody >
+						<tbody
+							data-admin-pagination = "smart-features-pagination"
+							data-admin-page-size = "5"
+						>
 					<?php foreach ( $smartFeatureSubmissions as $entry ): ?>
 						<?php
 						$image = smartFeatureAdminAsset($entry["item_image"], "image");
@@ -265,8 +271,17 @@ $formValue = static fn(string $key): string =>
 						</tbody >
 					</table >
 				</div >
+				<nav class = "admin-pagination" aria-label = "Smart feature submissions pagination">
+					<ul id = "smart-features-pagination" class = "pagination justify-content-center mb-0"></ul>
+				</nav>
 			<?php endif; ?>
 		</section >
 	</main >
+	<script src = "components/pagination.js?v=<?= filemtime(__DIR__."/components/pagination.js") ?>"></script>
+	<script
+		src = "components/admin_pagination.js?v=<?= filemtime(
+			__DIR__."/components/admin_pagination.js"
+		) ?>"
+	></script>
 	</body >
 </html >

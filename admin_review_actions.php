@@ -1,7 +1,7 @@
 <?php
 function adminReviewActions(int $id, string $status, string $subject, bool $joinRequest = false): void
 {
-	foreach ( [ 'approved' => [ 'Approve', 'bi-check-lg', 'btn-success' ], 'rejected' => [ 'Reject', 'bi-x-lg', 'btn-danger' ] ]
+	foreach ( [ 'approved' => [ 'Approve', 'bi-check-lg', 'btn-outline-success' ], 'rejected' => [ 'Reject', 'bi-x-lg', 'btn-outline-danger' ] ]
 		as $action => [$label, $icon, $buttonClass]
 	): ?>
 		<form method = "post">

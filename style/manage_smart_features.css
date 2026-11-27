@@ -1,17 +1,32 @@
+/* ── Status filter tabs ─────────────────────────────────────────────── */
 .smart-feature-review-filters {
-    gap: 0.4rem;
-    margin: 1.25rem 0 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 0 0 24px;
+    padding: 0;
+    border-bottom: 1px solid var(--admin-border);
 }
 
 .smart-feature-review-filters .nav-link {
-    color: var(--admin-purple);
+    display: block;
+    padding: 14px 8px;
+    border-top: 3px solid transparent;
+    border-radius: 0;
+    color: var(--admin-purple-dark);
+    text-align: center;
+    text-decoration: none;
 }
 
+.smart-feature-review-filters .nav-link:hover,
+.smart-feature-review-filters .nav-link:focus-visible,
 .smart-feature-review-filters .nav-link.active {
-    background: var(--admin-purple);
-    color: var(--admin-white);
+    border-top-color: var(--admin-purple);
+    background: #f1ebf8;
+    color: var(--admin-purple-dark);
 }
 
+/* ── Edit panel ────────────────────────────────────────────────────── */
 .smart-feature-edit-panel {
     margin-bottom: 1.5rem;
 }
@@ -30,10 +45,16 @@
     margin-top: 1.25rem;
 }
 
+/* ── Submissions card ──────────────────────────────────────────────── */
 .smart-feature-submissions {
-    margin-top: 1.75rem;
+    margin-top: 0;
 }
 
+.smart-feature-submissions .h4 {
+    margin-bottom: 20px;
+}
+
+/* ── Table ─────────────────────────────────────────────────────────── */
 .smart-feature-table-responsive {
     width: 100%;
     overflow-x: auto;
