@@ -63,6 +63,13 @@
 			</div >
 			<div class = "col-md-6">
 				<article class = "admin-card">
+					<h2 >Manage Smart Features</h2 >
+					<p >Review, edit or remove user-submitted board game features.</p >
+					<a class = "btn admin-action" href = "manage_smart_features.php">Manage Smart Features</a >
+				</article >
+			</div >
+			<div class = "col-md-6">
+				<article class = "admin-card">
 					<h2 >Manage Communities</h2 >
 					<p >Manage communities, membership requests and posts.</p >
 					<div class = "admin-community-actions">
