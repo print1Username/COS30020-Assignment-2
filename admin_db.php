@@ -10,9 +10,11 @@ if ( isset($_GET["logout"]) ) {
 	exit;
 }
 
-requireAdmin();
+if ( hasAdminSession() ) {
+	require_once __DIR__."/db_connect.php";
+}
 
-require_once __DIR__."/db_connect.php";
+requireAdmin();
 
 function adminEscape($value): string
 {
